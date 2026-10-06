@@ -1,0 +1,17 @@
+# Dependencias y temporales de desarrollo
+node_modules/
+.vscode/
+.idea/
+*.log
+
+# Archivos de compilacion de Java (para cuando el backend agregue codigo)
+*.class
+bin/
+out/
+build/
+target/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
