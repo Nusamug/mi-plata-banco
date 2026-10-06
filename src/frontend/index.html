@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Plata - Banco Digital & Cajero Inteligente</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Header Institucional -->
+    <header class="site-header">
+        <div class="header-container">
+            <a href="index.html" class="brand-logo" title="Ir al inicio">
+                <span class="logo-icon">MP</span>
+                <span>Mi Plata</span>
+            </a>
+            <nav class="site-nav">
+                <a href="#productos" class="nav-link">Productos</a>
+                <a href="#simulador" class="nav-link">Simulador de Cuotas</a>
+                <a href="login.html" class="btn btn-outline" style="color: #ffffff; border-color: rgba(255,255,255,0.4);">Iniciar Sesión</a>
+                <a href="login.html?tab=register" class="btn btn-accent">Abrir mi Cuenta</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <span class="hero-tag">Banca Segura e Inteligente</span>
+                <h1 class="hero-title">Tu dinero con mayor rendimiento y respaldo garantizado</h1>
+                <p class="hero-subtitle">
+                    Descubre una experiencia financiera transparente con rendimientos del 1.5% en tus ahorros,
+                    línea de sobregiro del 20% en cuenta corriente y compras sin intereses hasta en 2 cuotas con tu tarjeta.
+                </p>
+                <div class="hero-actions">
+                    <a href="login.html" class="btn btn-accent btn-lg">Acceder a mi Cajero</a>
+                    <a href="#simulador" class="btn btn-outline" style="color: #ffffff; border-color: rgba(255,255,255,0.5);">Simular Tarjeta de Crédito</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portafolio de Productos Financieros -->
+        <section id="productos" class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">Portafolio Financiero "Mi Plata"</h2>
+                <p class="section-subtitle">Diseñamos soluciones a la medida de tus necesidades personales y comerciales con reglas transparentes.</p>
+            </div>
+
+            <div class="products-grid">
+                <!-- Cuenta de Ahorros -->
+                <div class="product-card">
+                    <span class="product-badge badge-ahorros">Ahorro y Futuro</span>
+                    <h3 style="font-size: 1.4rem;">Cuenta de Ahorros</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                        Premia tu disciplina de ahorro con rendimientos automáticos al momento de cada retiro.
+                    </p>
+                    <ul class="product-feature-list">
+                        <li><strong>1.5% de rendimiento</strong> mensual sobre el monto a retirar.</li>
+                        <li>Retiros seguros limitados a tu saldo disponible.</li>
+                        <li>Cero costo de cuota de manejo o administración.</li>
+                        <li>Apertura con bono de bienvenida inmediato.</li>
+                    </ul>
+                    <a href="login.html?tab=register" class="btn btn-primary" style="margin-top: auto;">Abrir Cuenta de Ahorros</a>
+                </div>
+
+                <!-- Cuenta Corriente -->
+                <div class="product-card">
+                    <span class="product-badge badge-corriente">Comercial & Negocios</span>
+                    <h3 style="font-size: 1.4rem;">Cuenta Corriente</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                        Liquidez ágil para transacciones de alta frecuencia con respaldo financiero inmediato.
+                    </p>
+                    <ul class="product-feature-list">
+                        <li><strong>Sobregiro autorizado del 20%</strong> sobre tu saldo actual.</li>
+                        <li>Ideal para pagos urgentes e imprevistos comerciales.</li>
+                        <li>Transferencias inmediatas a cualquier entidad.</li>
+                        <li>Extracto mensual detallado y auditable.</li>
+                    </ul>
+                    <a href="login.html?tab=register" class="btn btn-primary" style="margin-top: auto;">Solicitar Cuenta Corriente</a>
+                </div>
+
+                <!-- Tarjeta de Crédito -->
+                <div class="product-card">
+                    <span class="product-badge badge-credito">Crédito Flexible</span>
+                    <h3 style="font-size: 1.4rem;">Tarjeta de Crédito</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                        Cupo rotativo disponible al instante con tasas preferenciales calculadas con amortización francesa.
+                    </p>
+                    <ul class="product-feature-list">
+                        <li><strong>0% de interés</strong> pagando en 1 o 2 cuotas.</li>
+                        <li>Tasa preferencial de <strong>1.9% mensual</strong> (3 a 6 cuotas).</li>
+                        <li>Tasa fija de <strong>2.3% mensual</strong> (7 o más cuotas).</li>
+                        <li>Avances en efectivo inmediatos desde el cajero.</li>
+                    </ul>
+                    <a href="login.html?tab=register" class="btn btn-primary" style="margin-top: auto;">Pedir mi Tarjeta</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulador Interactivo de Tarjeta de Crédito -->
+        <section id="simulador" class="section-container" style="background-color: var(--surface-white); border-radius: var(--radius-lg); margin-bottom: 3.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);">
+            <div class="section-header">
+                <span class="product-badge badge-credito">Calculadora Financiera</span>
+                <h2 class="section-title" style="margin-top: 0.5rem;">Simulador de Cuotas de Tarjeta de Crédito</h2>
+                <p class="section-subtitle">
+                    Calcula con total transparencia el valor mensual de tu cuota según la fórmula matemática de amortización:
+                    <em>Cuota = (Capital × i) / [1 - (1 + i)<sup>-n</sup>]</em>
+                </p>
+            </div>
+
+            <div class="simulator-box" style="margin-top: 0;">
+                <form id="form-simulador">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="sim-monto">Monto de la compra (COP):</label>
+                            <input type="number" id="sim-monto" class="form-control" placeholder="Ej: 1500000" min="50000" step="10000" value="1200000" required>
+                            <span class="form-helper">Ingresa el valor total a financiar.</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sim-cuotas">Número de cuotas diferidas:</label>
+                            <select id="sim-cuotas" class="form-control" required>
+                                <option value="1">1 cuota (0% interés)</option>
+                                <option value="2">2 cuotas (0% interés)</option>
+                                <option value="3">3 cuotas (1.9% mensual)</option>
+                                <option value="4">4 cuotas (1.9% mensual)</option>
+                                <option value="6" selected>6 cuotas (1.9% mensual)</option>
+                                <option value="12">12 cuotas (2.3% mensual)</option>
+                                <option value="24">24 cuotas (2.3% mensual)</option>
+                                <option value="36">36 cuotas (2.3% mensual)</option>
+                            </select>
+                            <span class="form-helper">Elige el plazo de pago deseado.</span>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 1rem;">
+                        <button type="button" id="btn-calcular-simulador" class="btn btn-accent">
+                            Calcular Cuota Mensual
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Resultados del Simulador -->
+                <div class="sim-results-grid" id="sim-resultados">
+                    <div class="sim-result-item">
+                        <span class="sim-result-label">Tasa Aplicada</span>
+                        <div class="sim-result-value" id="sim-tasa-aplicada" style="color: var(--navy-600);">1.9% mes</div>
+                    </div>
+                    <div class="sim-result-item">
+                        <span class="sim-result-label">Cuota Mensual</span>
+                        <div class="sim-result-value" id="sim-cuota-mensual" style="color: var(--emerald-600);">$213.567</div>
+                    </div>
+                    <div class="sim-result-item">
+                        <span class="sim-result-label">Intereses Totales</span>
+                        <div class="sim-result-value" id="sim-intereses-totales" style="color: var(--gold-600);">$81.402</div>
+                    </div>
+                    <div class="sim-result-item">
+                        <span class="sim-result-label">Total a Pagar</span>
+                        <div class="sim-result-value" id="sim-total-pagar">$1.281.402</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Corporativo -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div>
+                <div class="brand-logo" style="margin-bottom: 0.75rem;">
+                    <span class="logo-icon">MP</span>
+                    <span>Mi Plata</span>
+                </div>
+                <p style="max-width: 320px; font-size: 0.85rem;">
+                    Sistema Bancario y Cajero Inteligente. Proyecto Integrador de Front-end I, Back-end y Metodologías Ágiles.
+                </p>
+            </div>
+            <div>
+                <h4 style="color: #ffffff; margin-bottom: 0.75rem; font-size: 0.95rem;">Información Académica</h4>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem;">
+                    <li><strong>Institución:</strong> CESDE</li>
+                    <li><strong>Programa:</strong> Desarrollo de Software</li>
+                    <li><strong>Docente:</strong> Jorge Albeiro Muriel Vélez</li>
+                    <li><strong>Momento Evaluativo:</strong> Momento 2</li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: #ffffff; margin-bottom: 0.75rem; font-size: 0.95rem;">Acceso Rápido</h4>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem;">
+                    <li><a href="login.html" style="color: var(--navy-100);">Banca en Línea</a></li>
+                    <li><a href="login.html?tab=register" style="color: var(--navy-100);">Registro de Cuentahabientes</a></li>
+                    <li><a href="cajero.html" style="color: var(--navy-100);">Panel Transaccional</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-copy">
+            &copy; 2026 Banco "Mi Plata" - Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <!-- Scripts de Modelos y Lógica -->
+    <script src="js/models/Transaccion.js"></script>
+    <script src="js/models/Cuenta.js"></script>
+    <script src="js/models/CuentaAhorros.js"></script>
+    <script src="js/models/CuentaCorriente.js"></script>
+    <script src="js/models/TarjetaCredito.js"></script>
+    <script src="js/models/Cliente.js"></script>
+    <script src="js/services/StorageService.js"></script>
+    <script src="js/landing.js"></script>
+</body>
+</html>

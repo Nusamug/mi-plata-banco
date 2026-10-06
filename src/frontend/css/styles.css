@@ -1,0 +1,1050 @@
+/* Estilos generales y responsive */
+:root {
+    /* Paleta Institucional "Mi Plata" */
+    --navy-900: #07132b;
+    --navy-800: #0a1f44;
+    --navy-700: #102a5c;
+    --navy-600: #1a3d82;
+    --navy-500: #2554ab;
+    --navy-100: #eaf0fa;
+    --navy-50:  #f4f7fc;
+
+    /* Acentos de Marca */
+    --emerald-500: #10b981;
+    --emerald-600: #059669;
+    --emerald-100: #d1fae5;
+    --emerald-50:  #ecfdf5;
+
+    --gold-500: #f59e0b;
+    --gold-600: #d97706;
+    --gold-100: #fef3c7;
+
+    --crimson-500: #ef4444;
+    --crimson-600: #dc2626;
+    --crimson-100: #fee2e2;
+
+    /* Neutros y Superficies */
+    --surface-white: #ffffff;
+    --surface-card:  #ffffff;
+    --text-primary:  #0f172a;
+    --text-secondary:#475569;
+    --text-muted:    #94a3b8;
+    --border-light:  #e2e8f0;
+    --border-focus:  #2554ab;
+
+    /* Tipografía y Espaciados */
+    --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --radius-full: 9999px;
+
+    /* Sombras */
+    --shadow-sm: 0 1px 3px rgba(10, 31, 68, 0.08);
+    --shadow-md: 0 4px 12px rgba(10, 31, 68, 0.10);
+    --shadow-lg: 0 10px 25px rgba(10, 31, 68, 0.15);
+    --shadow-glow: 0 0 15px rgba(37, 84, 171, 0.25);
+
+    /* Transiciones */
+    --transition-fast: 0.18s ease-in-out;
+    --transition-base: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset y caja */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-main);
+    color: var(--text-primary);
+    background-color: var(--navy-50);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tipografía Base */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--navy-900);
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+a {
+    color: var(--navy-600);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--navy-800);
+}
+
+/* ==========================================================================
+   HEADER Y NAVBAR
+   ========================================================================== */
+.site-header {
+    background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 100%);
+    color: var(--surface-white);
+    padding: 1rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-md);
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--surface-white);
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.brand-logo .logo-icon {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, var(--gold-500), var(--gold-600));
+    color: var(--navy-900);
+    border-radius: var(--radius-md);
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+.site-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-link {
+    color: var(--navy-100);
+    font-weight: 500;
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.nav-link:hover {
+    color: var(--surface-white);
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ==========================================================================
+   BOTONES Y COMPONENTES UI
+   ========================================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.7rem 1.4rem;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    text-align: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--navy-600), var(--navy-700));
+    color: var(--surface-white);
+    box-shadow: 0 3px 8px rgba(26, 61, 130, 0.35);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--navy-500), var(--navy-600));
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(26, 61, 130, 0.45);
+}
+
+.btn-accent {
+    background: linear-gradient(135deg, var(--gold-500), var(--gold-600));
+    color: var(--navy-900);
+    box-shadow: 0 3px 8px rgba(245, 158, 11, 0.35);
+}
+
+.btn-accent:hover {
+    background: linear-gradient(135deg, #fbbf24, var(--gold-500));
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--emerald-500), var(--emerald-600));
+    color: var(--surface-white);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #34d399, var(--emerald-500));
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--crimson-500), var(--crimson-600));
+    color: var(--surface-white);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--navy-600);
+    border: 1.5px solid var(--navy-600);
+}
+
+.btn-outline:hover {
+    background: var(--navy-600);
+    color: var(--surface-white);
+}
+
+.btn:disabled, .btn[disabled] {
+    opacity: 0.55;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none;
+    transform: none;
+}
+
+/* ==========================================================================
+   FORMULARIOS
+   ========================================================================== */
+.form-group {
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    text-align: left;
+}
+
+.form-label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--navy-800);
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    border: 1.5px solid var(--border-light);
+    border-radius: var(--radius-md);
+    background-color: var(--surface-white);
+    color: var(--text-primary);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(37, 84, 171, 0.18);
+}
+
+.form-control:disabled {
+    background-color: #f1f5f9;
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+.form-helper {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   ALERTS Y NOTIFICACIONES DE SEGURIDAD
+   ========================================================================== */
+.alert {
+    padding: 0.9rem 1.2rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    animation: fadeIn 0.3s ease;
+}
+
+.alert-info {
+    background-color: var(--navy-100);
+    color: var(--navy-700);
+    border-left: 4px solid var(--navy-600);
+}
+
+.alert-success {
+    background-color: var(--emerald-100);
+    color: var(--emerald-600);
+    border-left: 4px solid var(--emerald-500);
+}
+
+.alert-warning {
+    background-color: var(--gold-100);
+    color: var(--gold-600);
+    border-left: 4px solid var(--gold-500);
+}
+
+.alert-danger {
+    background-color: var(--crimson-100);
+    color: var(--crimson-600);
+    border-left: 4px solid var(--crimson-500);
+}
+
+/* Contador de Intentos Visibles */
+.attempts-counter-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    border: 1.5px solid var(--border-light);
+    padding: 0.6rem 0.9rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.2rem;
+    font-size: 0.88rem;
+}
+
+.attempts-badge {
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+}
+
+.attempts-badge.safe {
+    background-color: var(--emerald-100);
+    color: var(--emerald-600);
+}
+
+.attempts-badge.warning {
+    background-color: var(--gold-100);
+    color: var(--gold-600);
+}
+
+.attempts-badge.danger {
+    background-color: var(--crimson-100);
+    color: var(--crimson-600);
+}
+
+/* ==========================================================================
+   LANDING PAGE (index.html)
+   ========================================================================== */
+.hero-section {
+    background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 60%, var(--navy-700) 100%);
+    color: var(--surface-white);
+    padding: 4rem 1.5rem 5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-content {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.hero-tag {
+    background: rgba(245, 158, 11, 0.18);
+    color: var(--gold-500);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    padding: 0.35rem 1rem;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--surface-white);
+    letter-spacing: -1px;
+}
+
+.hero-subtitle {
+    font-size: 1.15rem;
+    color: var(--navy-100);
+    max-width: 700px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+/* Sección de Productos */
+.section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.section-title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.75rem;
+}
+
+.product-card {
+    background: var(--surface-card);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.product-badge {
+    align-self: flex-start;
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.badge-ahorros {
+    background-color: var(--emerald-100);
+    color: var(--emerald-600);
+}
+
+.badge-corriente {
+    background-color: var(--navy-100);
+    color: var(--navy-700);
+}
+
+.badge-credito {
+    background-color: var(--gold-100);
+    color: var(--gold-600);
+}
+
+.product-feature-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+}
+
+.product-feature-list li::before {
+    content: "✓ ";
+    color: var(--emerald-500);
+    font-weight: 800;
+}
+
+/* Simulador Rápido de Tarjeta de Crédito */
+.simulator-box {
+    background: var(--surface-card);
+    border-radius: var(--radius-lg);
+    padding: 2.2rem;
+    box-shadow: var(--shadow-md);
+    border: 1.5px solid var(--gold-500);
+    margin-top: 2rem;
+}
+
+.sim-results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+    background: var(--navy-50);
+    padding: 1.2rem;
+    border-radius: var(--radius-md);
+}
+
+.sim-result-item {
+    text-align: center;
+}
+
+.sim-result-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.sim-result-value {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--navy-900);
+}
+
+/* ==========================================================================
+   VISTA LOGIN Y REGISTRO (login.html)
+   ========================================================================== */
+.auth-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1.5rem;
+}
+
+.auth-card {
+    background: var(--surface-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 480px;
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+}
+
+.auth-header {
+    background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+    color: var(--surface-white);
+    padding: 1.8rem;
+    text-align: center;
+}
+
+.auth-tabs {
+    display: flex;
+    border-bottom: 1.5px solid var(--border-light);
+    background: #f8fafc;
+}
+
+.auth-tab-btn {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    background: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.auth-tab-btn.active {
+    color: var(--navy-700);
+    background: var(--surface-white);
+    border-bottom-color: var(--navy-600);
+}
+
+.auth-body {
+    padding: 2rem;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+    animation: fadeIn 0.25s ease;
+}
+
+/* ==========================================================================
+   PANEL DEL CAJERO (cajero.html)
+   ========================================================================== */
+.atm-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex: 1;
+}
+
+.user-welcome-bar {
+    background: var(--surface-card);
+    border-radius: var(--radius-md);
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+}
+
+.user-info-text h2 {
+    font-size: 1.3rem;
+}
+
+.user-info-text p {
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+}
+
+/* Tarjetas de Cuentas */
+.accounts-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.bank-card {
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    color: var(--surface-white);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    border: 2px solid transparent;
+}
+
+.bank-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.bank-card.active-account {
+    border-color: var(--gold-500);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.4);
+}
+
+.bank-card.card-ahorros {
+    background: linear-gradient(135deg, #065f46 0%, #047857 50%, #059669 100%);
+}
+
+.bank-card.card-corriente {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+}
+
+.bank-card.card-credito {
+    background: linear-gradient(135deg, #78350f 0%, #92400e 50%, #b45309 100%);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.card-type-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+}
+
+.card-chip {
+    width: 38px;
+    height: 28px;
+    background: linear-gradient(135deg, #fbbf24, #d97706);
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.card-number {
+    font-family: monospace;
+    font-size: 1.15rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.8rem;
+}
+
+.card-balance-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+.card-balance-value {
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.card-extra-info {
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Panel de Operaciones Rápidas */
+.atm-actions-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 1.75rem;
+}
+
+.operations-panel, .transactions-panel {
+    background: var(--surface-card);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+}
+
+.operations-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+    margin-top: 1.25rem;
+}
+
+.op-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 1.2rem 0.8rem;
+    background: #f8fafc;
+    border: 1.5px solid var(--border-light);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--navy-800);
+    transition: all var(--transition-fast);
+}
+
+.op-btn:hover, .op-btn.active {
+    background: var(--navy-100);
+    border-color: var(--navy-600);
+    color: var(--navy-900);
+    transform: translateY(-2px);
+}
+
+.op-icon {
+    font-size: 1.4rem;
+}
+
+/* Formulario Activo de la Operación */
+.active-op-form {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1.5px dashed var(--border-light);
+}
+
+/* Historial de Movimientos */
+.table-responsive {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    text-align: left;
+}
+
+.transactions-table th {
+    background-color: #f1f5f9;
+    color: var(--navy-900);
+    font-weight: 700;
+    padding: 0.75rem 0.9rem;
+    border-bottom: 2px solid var(--border-light);
+}
+
+.transactions-table td {
+    padding: 0.8rem 0.9rem;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-primary);
+}
+
+.transactions-table tr:hover {
+    background-color: #f8fafc;
+}
+
+.tx-amount {
+    font-weight: 700;
+}
+
+.tx-amount.positive {
+    color: var(--emerald-600);
+}
+
+.tx-amount.negative {
+    color: var(--crimson-600);
+}
+
+/* Modales */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(7, 19, 43, 0.65);
+    backdrop-filter: blur(3px);
+    display: none;
+    place-items: center;
+    z-index: 200;
+    padding: 1.5rem;
+}
+
+.modal-overlay.active {
+    display: grid;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal-card {
+    background: var(--surface-card);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 520px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+
+.modal-header {
+    background: var(--navy-900);
+    color: var(--surface-white);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 1.75rem;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    background: #f8fafc;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.close-modal-btn {
+    background: none;
+    border: none;
+    color: var(--surface-white);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Footer Corporativo */
+.site-footer {
+    background: var(--navy-900);
+    color: var(--text-muted);
+    padding: 2.5rem 1.5rem 1.5rem;
+    margin-top: auto;
+    font-size: 0.88rem;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-copy {
+    text-align: center;
+    padding-top: 1.5rem;
+    font-size: 0.8rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Móvil */
+@media (max-width: 460px) {
+    .header-container {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .site-nav {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .hero-title {
+        font-size: 1.9rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-actions .btn {
+        width: 100%;
+    }
+
+    .products-grid, .accounts-overview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .atm-actions-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .operations-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .user-welcome-bar {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .user-welcome-bar .btn {
+        width: 100%;
+    }
+
+    .auth-card {
+        border-radius: var(--radius-md);
+    }
+
+    .auth-body {
+        padding: 1.25rem;
+    }
+
+    .card-balance-value {
+        font-size: 1.45rem;
+    }
+}
+
+/* Tablet */
+@media (min-width: 461px) and (max-width: 786px) {
+    .hero-title {
+        font-size: 2.3rem;
+    }
+
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .accounts-overview-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .atm-actions-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .operations-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .user-welcome-bar {
+        flex-direction: row;
+    }
+}
+
+/* Pantallas grandes */
+@media (min-width: 1920px) {
+    :root {
+        font-size: 17px; /* Escala tipográfica ergonómica para 1920px */
+    }
+
+    .header-container,
+    .section-container,
+    .atm-container,
+    .footer-container {
+        max-width: 1600px;
+    }
+
+    .hero-section {
+        padding: 6rem 2rem 7rem;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.35rem;
+        max-width: 850px;
+    }
+
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2.5rem;
+    }
+
+    .accounts-overview-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+
+    .atm-actions-layout {
+        grid-template-columns: 420px 1fr;
+        gap: 2.5rem;
+    }
+
+    .operations-panel, .transactions-panel {
+        padding: 2.5rem;
+    }
+
+    .card-balance-value {
+        font-size: 2.1rem;
+    }
+}

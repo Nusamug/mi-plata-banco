@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Cajero Automático - Banco "Mi Plata"</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Header Cajero -->
+    <header class="site-header">
+        <div class="header-container">
+            <div class="brand-logo">
+                <span class="logo-icon">MP</span>
+                <span>Mi Plata · Cajero Digital</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <button type="button" id="btn-abrir-perfil" class="btn btn-outline" style="color: #ffffff; border-color: rgba(255,255,255,0.4); padding: 0.5rem 1rem;">
+                    👤 Mi Perfil
+                </button>
+                <button type="button" id="btn-cerrar-sesion" class="btn btn-danger" style="padding: 0.5rem 1rem;">
+                    🚪 Salir
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="atm-container">
+        <!-- Barra de Bienvenida y Datos del Cuentahabiente -->
+        <div class="user-welcome-bar">
+            <div class="user-info-text">
+                <h2>Bienvenido(a), <span id="txt-nombre-usuario">Cargando...</span></h2>
+                <p>Identificación: <strong id="txt-doc-usuario">---</strong> | Celular: <span id="txt-cel-usuario">---</span></p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <span style="font-size: 0.85rem; color: var(--text-secondary);">Estado de Seguridad:</span>
+                <span class="attempts-badge safe" id="txt-estado-cuenta">Activa y Segura</span>
+            </div>
+        </div>
+
+        <!-- Alerta de Notificación Rápida del Cajero -->
+        <div id="cajero-alerta" style="display: none;"></div>
+
+        <!-- Carrusel / Grid de Tarjetas de Productos Financieros -->
+        <div>
+            <h3 style="margin-bottom: 0.75rem; font-size: 1.15rem;">Tus Productos Financieros (Haz clic en una cuenta para operarla)</h3>
+            <div class="accounts-overview-grid" id="contenedor-cuentas">
+                <!-- Se generan dinámicamente mediante cajero.js -->
+            </div>
+        </div>
+
+        <!-- Panel Transaccional: Operaciones + Historial -->
+        <div class="atm-actions-layout">
+            <!-- Columna Izquierda: Operaciones del Cajero -->
+            <div class="operations-panel">
+                <h3 style="font-size: 1.2rem; margin-bottom: 0.35rem;">Operaciones de Cajero</h3>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                    Cuenta seleccionada: <strong id="txt-cuenta-activa-label">---</strong>
+                </p>
+
+                <!-- Botonera de Opciones Rápidas -->
+                <div class="operations-grid">
+                    <button type="button" class="op-btn active" data-op="consignar">
+                        <span class="op-icon">📥</span>
+                        <span>Consignar</span>
+                    </button>
+                    <button type="button" class="op-btn" data-op="retirar">
+                        <span class="op-icon">📤</span>
+                        <span>Retirar</span>
+                    </button>
+                    <button type="button" class="op-btn" data-op="transferir">
+                        <span class="op-icon">🔄</span>
+                        <span>Transferir</span>
+                    </button>
+                    <button type="button" class="op-btn" data-op="credito">
+                        <span class="op-icon">💳</span>
+                        <span>T. Crédito / Cuotas</span>
+                    </button>
+                </div>
+
+                <!-- Formularios de Operaciones -->
+                <div class="active-op-form">
+                    <!-- 1. Formulario Consignar -->
+                    <form id="form-op-consignar">
+                        <div class="form-group">
+                            <label class="form-label" for="consignar-monto">Monto a Consignar (COP):</label>
+                            <input type="number" id="consignar-monto" class="form-control" placeholder="Ej: 200000" min="1000" step="1000" required>
+                            <span class="form-helper">Debe ser un valor positivo mayor a $0.</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="consignar-concepto">Concepto (Opcional):</label>
+                            <input type="text" id="consignar-concepto" class="form-control" placeholder="Ej: Depósito quincena" value="Depósito cajero">
+                        </div>
+                        <button type="submit" class="btn btn-success" style="width: 100%;">
+                            Confirmar Consignación
+                        </button>
+                    </form>
+
+                    <!-- 2. Formulario Retirar -->
+                    <form id="form-op-retirar" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label" for="retirar-monto">Monto a Retirar (COP):</label>
+                            <input type="number" id="retirar-monto" class="form-control" placeholder="Ej: 100000" min="1000" step="1000" required>
+                            <span class="form-helper" id="helper-regla-retiro">
+                                Regla de cuenta: Rendimiento 1.5% en Ahorros o 20% sobregiro en Corriente.
+                            </span>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            Efectuar Retiro en Efectivo
+                        </button>
+                    </form>
+
+                    <!-- 3. Formulario Transferir -->
+                    <form id="form-op-transferir" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label" for="transferir-destino">Número de Cuenta Destino:</label>
+                            <input type="text" id="transferir-destino" class="form-control" placeholder="Ej: AH-7801-92 o AH-9900-11" required>
+                            <span class="form-helper">No permite transferir a la misma cuenta de origen.</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="transferir-monto">Monto a Transferir (COP):</label>
+                            <input type="number" id="transferir-monto" class="form-control" placeholder="Ej: 50000" min="1000" step="1000" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="transferir-concepto">Motivo de la Transferencia:</label>
+                            <input type="text" id="transferir-concepto" class="form-control" placeholder="Ej: Pago de almuerzo" value="Transferencia inmediata">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            Enviar Transferencia
+                        </button>
+                    </form>
+
+                    <!-- 4. Formulario Operaciones Tarjeta de Crédito (Compra y Pago) -->
+                    <form id="form-op-credito" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label" for="tc-accion">Acción con la Tarjeta:</label>
+                            <select id="tc-accion" class="form-control">
+                                <option value="compra">Realizar Compra / Avance a Cuotas</option>
+                                <option value="pago">Pagar / Abonar a la Deuda</option>
+                            </select>
+                        </div>
+                        <div id="tc-bloque-compra">
+                            <div class="form-group">
+                                <label class="form-label" for="tc-comercio">Establecimiento / Comercio:</label>
+                                <input type="text" id="tc-comercio" class="form-control" placeholder="Ej: Almacenes Éxito" value="Supermercado">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="tc-monto-compra">Monto de la Compra (COP):</label>
+                                <input type="number" id="tc-monto-compra" class="form-control" placeholder="Ej: 450000" min="10000">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="tc-cuotas">Número de Cuotas:</label>
+                                <select id="tc-cuotas" class="form-control">
+                                    <option value="1">1 cuota (0% interés)</option>
+                                    <option value="2">2 cuotas (0% interés)</option>
+                                    <option value="3">3 cuotas (1.9% mensual)</option>
+                                    <option value="6" selected>6 cuotas (1.9% mensual)</option>
+                                    <option value="12">12 cuotas (2.3% mensual)</option>
+                                    <option value="24">24 cuotas (2.3% mensual)</option>
+                                </select>
+                            </div>
+                            <div id="tc-sim-preview" style="font-size: 0.82rem; background: var(--navy-50); padding: 0.6rem; border-radius: var(--radius-sm); margin-bottom: 0.8rem;">
+                                Cuota estimada: <strong>$0</strong>
+                            </div>
+                            <button type="submit" id="btn-tc-ejecutar" class="btn btn-accent" style="width: 100%;">
+                                Autorizar Compra a Cuotas
+                            </button>
+                        </div>
+                        <div id="tc-bloque-pago" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label" for="tc-monto-pago">Valor a Pagar (COP):</label>
+                                <input type="number" id="tc-monto-pago" class="form-control" placeholder="Ej: 100000" min="1000">
+                                <span class="form-helper">Se descontará de la deuda y liberará cupo.</span>
+                            </div>
+                            <button type="submit" id="btn-tc-pagar" class="btn btn-success" style="width: 100%;">
+                                Pagar Deuda de Tarjeta
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Historial de Movimientos -->
+            <div class="transactions-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+                    <div>
+                        <h3 style="font-size: 1.2rem;">Historial de Movimientos</h3>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary);">Orden cronológico descendente (últimos movimientos primero)</p>
+                    </div>
+                    <div>
+                        <select id="filtro-tipo-movimiento" class="form-control" style="font-size: 0.82rem; padding: 0.4rem 0.6rem;">
+                            <option value="TODOS">Todos los tipos</option>
+                            <option value="CONSIGNACION">Consignaciones</option>
+                            <option value="RETIRO">Retiros</option>
+                            <option value="TRANSFERENCIA_ENVIADA">Transferencias Enviadas</option>
+                            <option value="TRANSFERENCIA_RECIBIDA">Transferencias Recibidas</option>
+                            <option value="COMPRA_CREDITO">Compras Tarjeta</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha & Hora</th>
+                                <th>Tipo</th>
+                                <th>Detalle</th>
+                                <th>Monto</th>
+                                <th>Saldo Resultante</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-movimientos">
+                            <!-- Se renderiza mediante cajero.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Perfil del Usuario (CRUD de Cliente) -->
+    <div class="modal-overlay" id="modal-perfil">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 style="color: #ffffff; font-size: 1.15rem;">Mi Perfil y Seguridad</h3>
+                <button type="button" class="close-modal-btn" id="btn-cerrar-modal-perfil">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="perfil-feedback" style="display: none;"></div>
+
+                <form id="form-editar-perfil">
+                    <div class="form-group">
+                        <label class="form-label" for="perfil-doc">Documento (No editable):</label>
+                        <input type="text" id="perfil-doc" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="perfil-username">Usuario (No editable):</label>
+                        <input type="text" id="perfil-username" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="perfil-nombre">Nombre Completo:</label>
+                        <input type="text" id="perfil-nombre" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="perfil-celular">Celular:</label>
+                        <input type="tel" id="perfil-celular" class="form-control" required>
+                    </div>
+
+                    <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border-light);">
+                    <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem; color: var(--navy-800);">Cambio de Contraseña</h4>
+
+                    <div class="form-group">
+                        <label class="form-label" for="perfil-pass-actual">Contraseña Actual:</label>
+                        <input type="password" id="perfil-pass-actual" class="form-control" placeholder="Ingresa tu clave actual">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="perfil-pass-nueva">Nueva Contraseña:</label>
+                        <input type="password" id="perfil-pass-nueva" class="form-control" placeholder="Mínimo 6 caracteres">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="perfil-pass-confirm">Confirmar Nueva Contraseña:</label>
+                        <input type="password" id="perfil-pass-confirm" class="form-control" placeholder="Repite la nueva clave">
+                    </div>
+
+                    <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">Guardar Cambios</button>
+                    </div>
+                </form>
+
+                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1.5px dashed var(--crimson-500); text-align: center;">
+                    <h4 style="color: var(--crimson-600); font-size: 0.9rem; margin-bottom: 0.5rem;">Zona de Peligro</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                        Eliminar tu cuenta borrará todos tus datos bancarios y productos financieros.
+                    </p>
+                    <button type="button" id="btn-eliminar-cuenta" class="btn btn-danger" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+                        🗑️ Eliminar Mi Cuenta de Usuario
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-copy">
+            &copy; 2026 Banco "Mi Plata"
+        </div>
+    </footer>
+
+    <!-- Scripts de Modelos y Lógica -->
+    <script src="js/models/Transaccion.js"></script>
+    <script src="js/models/Cuenta.js"></script>
+    <script src="js/models/CuentaAhorros.js"></script>
+    <script src="js/models/CuentaCorriente.js"></script>
+    <script src="js/models/TarjetaCredito.js"></script>
+    <script src="js/models/Cliente.js"></script>
+    <script src="js/services/StorageService.js"></script>
+    <script src="js/cajero.js"></script>
+</body>
+</html>
