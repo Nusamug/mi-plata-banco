@@ -2,6 +2,7 @@
 node_modules/
 .vscode/
 .idea/
+*.iml
 *.log
 
 # Archivos de compilacion de Java (para cuando el backend agregue codigo)
