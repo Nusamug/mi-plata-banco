@@ -42,11 +42,14 @@
         <!-- Alerta de Notificación Rápida del Cajero -->
         <div id="cajero-alerta" style="display: none;"></div>
 
-        <!-- Carrusel / Grid de Tarjetas de Productos Financieros -->
+        <!-- Portafolio y Tarjetas de Productos Financieros -->
         <div>
-            <h3 style="margin-bottom: 0.75rem; font-size: 1.15rem;">Tus Productos Financieros (Haz clic en una cuenta para operarla)</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+                <h3 style="font-size: 1.15rem;">Tus Productos Financieros</h3>
+                <span style="font-size: 0.82rem; color: var(--text-secondary);">Haz clic sobre una cuenta para seleccionarla</span>
+            </div>
             <div class="accounts-overview-grid" id="contenedor-cuentas">
-                <!-- Se generan dinámicamente mediante cajero.js -->
+                <!-- Se generan dinámicamente mediante cajero.js (cuentas activas + tarjetas de productos para solicitar) -->
             </div>
         </div>
 
@@ -56,7 +59,7 @@
             <div class="operations-panel">
                 <h3 style="font-size: 1.2rem; margin-bottom: 0.35rem;">Operaciones de Cajero</h3>
                 <p style="font-size: 0.85rem; color: var(--text-secondary);">
-                    Cuenta seleccionada: <strong id="txt-cuenta-activa-label">---</strong>
+                    Cuenta activa: <strong id="txt-cuenta-activa-label">---</strong>
                 </p>
 
                 <!-- Botonera de Opciones Rápidas -->
@@ -70,8 +73,8 @@
                         <span>Retirar</span>
                     </button>
                     <button type="button" class="op-btn" data-op="transferir">
-                        <span class="op-icon">🔄</span>
-                        <span>Transferir</span>
+                        <span class="op-icon">⚡</span>
+                        <span>Transferir (Bre-B)</span>
                     </button>
                     <button type="button" class="op-btn" data-op="credito">
                         <span class="op-icon">💳</span>
@@ -90,7 +93,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="consignar-concepto">Concepto (Opcional):</label>
-                            <input type="text" id="consignar-concepto" class="form-control" placeholder="Ej: Depósito quincena" value="Depósito cajero">
+                            <input type="text" id="consignar-concepto" class="form-control" placeholder="Ej: Depósito quincena" value="Depósito en cajero">
                         </div>
                         <button type="submit" class="btn btn-success" style="width: 100%;">
                             Confirmar Consignación
@@ -111,12 +114,20 @@
                         </button>
                     </form>
 
-                    <!-- 3. Formulario Transferir -->
+                    <!-- 3. Formulario Transferir con Llave Bre-B -->
                     <form id="form-op-transferir" style="display: none;">
                         <div class="form-group">
-                            <label class="form-label" for="transferir-destino">Número de Cuenta Destino:</label>
-                            <input type="text" id="transferir-destino" class="form-control" placeholder="Ej: AH-7801-92 o AH-9900-11" required>
-                            <span class="form-helper">No permite transferir a la misma cuenta de origen.</span>
+                            <label class="form-label" for="transferir-canal">Canal de Transferencia:</label>
+                            <select id="transferir-canal" class="form-control">
+                                <option value="LLAVE_CELULAR">⚡ Llave Bre-B (Número de Celular)</option>
+                                <option value="LLAVE_DOCUMENTO">⚡ Llave Bre-B (Cédula / Documento)</option>
+                                <option value="CUENTA">Número de Cuenta Tradicional</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" id="label-transferir-destino" for="transferir-destino">Celular del Destinatario (Bre-B):</label>
+                            <input type="text" id="transferir-destino" class="form-control" placeholder="Ej: 3209876543 (María Fernanda)" required>
+                            <span class="form-helper" id="helper-transferir-destino">Transfiere en segundos a cualquier usuario usando su llave.</span>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="transferir-monto">Monto a Transferir (COP):</label>
@@ -133,49 +144,59 @@
 
                     <!-- 4. Formulario Operaciones Tarjeta de Crédito (Compra y Pago) -->
                     <form id="form-op-credito" style="display: none;">
-                        <div class="form-group">
-                            <label class="form-label" for="tc-accion">Acción con la Tarjeta:</label>
-                            <select id="tc-accion" class="form-control">
-                                <option value="compra">Realizar Compra / Avance a Cuotas</option>
-                                <option value="pago">Pagar / Abonar a la Deuda</option>
-                            </select>
+                        <div id="tc-aviso-no-cuenta" style="display: none; padding: 1rem; background: var(--gold-100); border-radius: var(--radius-md); border: 1px solid var(--gold-500); margin-bottom: 1rem; font-size: 0.88rem; color: var(--navy-900);">
+                            <strong>Aún no tienes Tarjeta de Crédito.</strong>
+                            <p style="margin-top: 0.25rem;">Completa un breve estudio de crédito con tus ingresos para solicitarla.</p>
+                            <button type="button" id="btn-ir-estudio-tc" class="btn btn-accent" style="margin-top: 0.5rem; font-size: 0.82rem; padding: 0.4rem 0.8rem;">
+                                Iniciar Estudio de Crédito
+                            </button>
                         </div>
-                        <div id="tc-bloque-compra">
+
+                        <div id="tc-contenedor-operaciones">
                             <div class="form-group">
-                                <label class="form-label" for="tc-comercio">Establecimiento / Comercio:</label>
-                                <input type="text" id="tc-comercio" class="form-control" placeholder="Ej: Almacenes Éxito" value="Supermercado">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="tc-monto-compra">Monto de la Compra (COP):</label>
-                                <input type="number" id="tc-monto-compra" class="form-control" placeholder="Ej: 450000" min="10000">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="tc-cuotas">Número de Cuotas:</label>
-                                <select id="tc-cuotas" class="form-control">
-                                    <option value="1">1 cuota (0% interés)</option>
-                                    <option value="2">2 cuotas (0% interés)</option>
-                                    <option value="3">3 cuotas (1.9% mensual)</option>
-                                    <option value="6" selected>6 cuotas (1.9% mensual)</option>
-                                    <option value="12">12 cuotas (2.3% mensual)</option>
-                                    <option value="24">24 cuotas (2.3% mensual)</option>
+                                <label class="form-label" for="tc-accion">Acción con la Tarjeta:</label>
+                                <select id="tc-accion" class="form-control">
+                                    <option value="compra">Realizar Compra / Avance a Cuotas</option>
+                                    <option value="pago">Pagar / Abonar a la Deuda</option>
                                 </select>
                             </div>
-                            <div id="tc-sim-preview" style="font-size: 0.82rem; background: var(--navy-50); padding: 0.6rem; border-radius: var(--radius-sm); margin-bottom: 0.8rem;">
-                                Cuota estimada: <strong>$0</strong>
+                            <div id="tc-bloque-compra">
+                                <div class="form-group">
+                                    <label class="form-label" for="tc-comercio">Establecimiento / Comercio:</label>
+                                    <input type="text" id="tc-comercio" class="form-control" placeholder="Ej: Almacenes Éxito" value="Supermercado">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="tc-monto-compra">Monto de la Compra (COP):</label>
+                                    <input type="number" id="tc-monto-compra" class="form-control" placeholder="Ej: 450000" min="10000">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="tc-cuotas">Número de Cuotas:</label>
+                                    <select id="tc-cuotas" class="form-control">
+                                        <option value="1">1 cuota (0% interés)</option>
+                                        <option value="2">2 cuotas (0% interés)</option>
+                                        <option value="3">3 cuotas (1.9% mensual)</option>
+                                        <option value="6" selected>6 cuotas (1.9% mensual)</option>
+                                        <option value="12">12 cuotas (2.3% mensual)</option>
+                                        <option value="24">24 cuotas (2.3% mensual)</option>
+                                    </select>
+                                </div>
+                                <div id="tc-sim-preview" style="font-size: 0.82rem; background: var(--navy-50); padding: 0.6rem; border-radius: var(--radius-sm); margin-bottom: 0.8rem;">
+                                    Cuota estimada: <strong>$0</strong>
+                                </div>
+                                <button type="submit" id="btn-tc-ejecutar" class="btn btn-accent" style="width: 100%;">
+                                    Autorizar Compra a Cuotas
+                                </button>
                             </div>
-                            <button type="submit" id="btn-tc-ejecutar" class="btn btn-accent" style="width: 100%;">
-                                Autorizar Compra a Cuotas
-                            </button>
-                        </div>
-                        <div id="tc-bloque-pago" style="display: none;">
-                            <div class="form-group">
-                                <label class="form-label" for="tc-monto-pago">Valor a Pagar (COP):</label>
-                                <input type="number" id="tc-monto-pago" class="form-control" placeholder="Ej: 100000" min="1000">
-                                <span class="form-helper">Se descontará de la deuda y liberará cupo.</span>
+                            <div id="tc-bloque-pago" style="display: none;">
+                                <div class="form-group">
+                                    <label class="form-label" for="tc-monto-pago">Valor a Pagar (COP):</label>
+                                    <input type="number" id="tc-monto-pago" class="form-control" placeholder="Ej: 100000" min="1000">
+                                    <span class="form-helper">Se descontará de la deuda y liberará cupo disponible.</span>
+                                </div>
+                                <button type="submit" id="btn-tc-pagar" class="btn btn-success" style="width: 100%;">
+                                    Pagar Deuda de Tarjeta
+                                </button>
                             </div>
-                            <button type="submit" id="btn-tc-pagar" class="btn btn-success" style="width: 100%;">
-                                Pagar Deuda de Tarjeta
-                            </button>
                         </div>
                     </form>
                 </div>
@@ -186,7 +207,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
                     <div>
                         <h3 style="font-size: 1.2rem;">Historial de Movimientos</h3>
-                        <p style="font-size: 0.82rem; color: var(--text-secondary);">Orden cronológico descendente (últimos movimientos primero)</p>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary);">Orden cronológico descendente</p>
                     </div>
                     <div>
                         <select id="filtro-tipo-movimiento" class="form-control" style="font-size: 0.82rem; padding: 0.4rem 0.6rem;">
@@ -220,7 +241,82 @@
         </div>
     </main>
 
-    <!-- Modal de Perfil del Usuario (CRUD de Cliente) -->
+    <!-- Modal 1: Estudio y Solicitud de Cuenta Corriente -->
+    <div class="modal-overlay" id="modal-solicitud-corriente">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 style="color: #ffffff; font-size: 1.15rem;">Estudio para Cuenta Corriente</h3>
+                <button type="button" class="close-modal-btn" id="btn-cerrar-modal-corriente">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    La Cuenta Corriente incluye un margen de sobregiro autorizado del 20% para transacciones comerciales. Para su habilitación, se requiere certificar ingresos mensuales mínimos de $2.000.000 COP.
+                </p>
+                <div id="corriente-feedback" style="display: none;"></div>
+                <form id="form-solicitar-corriente">
+                    <div class="form-group">
+                        <label class="form-label" for="corriente-ingresos">Ingresos Mensuales Certificados (COP):</label>
+                        <input type="number" id="corriente-ingresos" class="form-control" placeholder="Ej: 2500000" min="500000" step="50000" required>
+                        <span class="form-helper">Requisito mínimo para sobregiro: $2.000.000 COP.</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="corriente-actividad">Actividad Económica:</label>
+                        <select id="corriente-actividad" class="form-control" required>
+                            <option value="Empleado">Empleado con contrato laboral</option>
+                            <option value="Independiente">Independiente con RUT</option>
+                            <option value="Empresario">Empresario / Comerciante</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer" style="padding: 1rem 0 0 0; background: none; border-top: none;">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            Evaluar y Aperturar Cuenta Corriente
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Estudio Crediticio para Tarjeta de Crédito -->
+    <div class="modal-overlay" id="modal-solicitud-credito">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 style="color: #ffffff; font-size: 1.15rem;">Estudio Crediticio: Tarjeta de Crédito</h3>
+                <button type="button" class="close-modal-btn" id="btn-cerrar-modal-credito">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    Calcula tu capacidad de endeudamiento para emitir tu tarjeta con compras diferidas hasta 36 cuotas y tasa 0% en 1 o 2 cuotas.
+                </p>
+                <div id="credito-feedback" style="display: none;"></div>
+                <form id="form-solicitar-credito">
+                    <div class="form-group">
+                        <label class="form-label" for="credito-ingresos">Ingresos Mensuales Comprobables (COP):</label>
+                        <input type="number" id="credito-ingresos" class="form-control" placeholder="Ej: 3800000" min="500000" step="50000" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="credito-actividad">Tipo de Ocupación:</label>
+                        <select id="credito-actividad" class="form-control" required>
+                            <option value="Empleado">Empleado a término fijo / indefinido</option>
+                            <option value="Prestación de Servicios">Contrato por prestación de servicios</option>
+                            <option value="Comerciante">Comerciante / Negocio propio</option>
+                        </select>
+                    </div>
+                    <div id="credito-preaprobado-box" style="display: none; padding: 0.85rem; background: var(--emerald-50); border: 1.5px solid var(--emerald-500); border-radius: var(--radius-md); margin-bottom: 1rem; font-size: 0.88rem;">
+                        <span style="font-weight: 700; color: var(--emerald-600);">¡Preaprobado Bancario!</span>
+                        <div id="credito-preaprobado-texto" style="margin-top: 0.25rem;"></div>
+                    </div>
+                    <div class="modal-footer" style="padding: 1rem 0 0 0; background: none; border-top: none;">
+                        <button type="submit" class="btn btn-accent" style="width: 100%;">
+                            Evaluar Capacidad y Emitir Tarjeta
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Perfil del Usuario -->
     <div class="modal-overlay" id="modal-perfil">
         <div class="modal-card">
             <div class="modal-header">
@@ -244,7 +340,7 @@
                         <input type="text" id="perfil-nombre" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="perfil-celular">Celular:</label>
+                        <label class="form-label" for="perfil-celular">Celular (Llave Bre-B):</label>
                         <input type="tel" id="perfil-celular" class="form-control" required>
                     </div>
 

@@ -1,10 +1,15 @@
 // Tarjeta de Crédito con cálculo de cuotas por amortización francesa
 class TarjetaCredito extends Cuenta {
-    constructor(numeroCuenta, titularId, cupoTotal = 3000000, deudaInicial = 0) {
+    constructor(numeroCuenta, titularId, cupoTotal = 3000000, deudaInicial = 0, opciones = {}) {
         super(numeroCuenta, titularId, cupoTotal - deudaInicial, 'CREDITO');
         this._cupoTotal = Number(cupoTotal);
         this._deudaActual = Math.max(0, Number(deudaInicial));
         this._comprasActivas = [];
+        
+        // Datos bancarios estándar de tarjeta plástica
+        this._franquicia = opciones.franquicia || 'VISA';
+        this._fechaVencimiento = opciones.fechaVencimiento || '10/31';
+        this._cvv = opciones.cvv || String(Math.floor(100 + Math.random() * 900));
     }
 
     get cupoTotal() {
@@ -17,6 +22,27 @@ class TarjetaCredito extends Cuenta {
 
     get cupoDisponible() {
         return Math.max(0, this._cupoTotal - this._deudaActual);
+    }
+
+    get franquicia() {
+        return this._franquicia;
+    }
+
+    get fechaVencimiento() {
+        return this._fechaVencimiento;
+    }
+
+    get cvv() {
+        return this._cvv;
+    }
+
+    // Formato de 16 dígitos en bloques de 4
+    get numeroFormateado() {
+        const digitos = String(this._numeroCuenta).replace(/\D/g, '');
+        if (digitos.length === 16) {
+            return digitos.replace(/(\d{4})(?=\d)/g, '$1 ');
+        }
+        return this._numeroCuenta;
     }
 
     get cupoTotalFormateado() {
@@ -150,7 +176,10 @@ class TarjetaCredito extends Cuenta {
             ...super.toJSON(),
             cupoTotal: this._cupoTotal,
             deudaActual: this._deudaActual,
-            comprasActivas: this._comprasActivas
+            comprasActivas: this._comprasActivas,
+            franquicia: this._franquicia,
+            fechaVencimiento: this._fechaVencimiento,
+            cvv: this._cvv
         };
     }
 }

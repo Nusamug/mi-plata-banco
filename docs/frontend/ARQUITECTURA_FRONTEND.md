@@ -36,6 +36,13 @@ src/frontend/
 │   └── landing.js                  # Controlador del simulador de crédito en la portada
 ```
 
+### 1.2 Flujo Bancario Realista y Adquisición Modular
+A diferencia de simulaciones simplistas donde el usuario tiene todas las cuentas asignadas automáticamente, **"Mi Plata"** replica el ciclo de vida de la banca real:
+1. **Apertura Base:** El onboarding solo emite la **Cuenta de Ahorros** (`401-XXXXXXX-X`) con bono de bienvenida.
+2. **Estudio para Cuenta Corriente:** Requiere certificar ingresos $\ge \$2.000.000\text{ COP}$ para habilitar el cupo de sobregiro comercial del **20%** (`201-XXXXXXX-X`).
+3. **Estudio Crediticio para Tarjeta de Crédito:** Evalúa ingresos declarados ($\ge \$1.500.000\text{ COP}$) para emitir la tarjeta plástica estándar de 16 dígitos (`4509 XXXX XXXX XXXX`), asignando cupo Visa Clásica (\$2.5M) o Visa Gold (\$6.0M) para compras a cuotas amortizadas.
+4. **Transferencias por Llaves Bre-B:** Permite transacciones interbancarias inmediatas usando como llave el **Celular**, la **Cédula/Documento** o el **Número de Cuenta**.
+
 ---
 
 ## 2. Paradigma Obligatorio: Programación Orientada a Objetos (POO)

@@ -1,5 +1,4 @@
-// Pruebas de cuentas y reglas de negocio
-// Carga en ámbito global simulando el navegador
+// Pruebas de cuentas y reglas de negocio bancarias
 global.Transaccion = require('./js/models/Transaccion');
 global.Cuenta = require('./js/models/Cuenta');
 global.CuentaAhorros = require('./js/models/CuentaAhorros');
@@ -28,9 +27,13 @@ function assert(condicion, descripcion) {
 }
 
 console.log('=== TEST 1: HERENCIA Y POLIMORFISMO DE CUENTAS ===');
-const ahorros = new CuentaAhorros('AH-01', '102030', 1000000);
-const corriente = new CuentaCorriente('CC-01', '102030', 1000000);
-const tc = new TarjetaCredito('TC-01', '102030', 5000000, 0);
+const ahorros = new CuentaAhorros('401-8392104-2', '102030', 1000000);
+const corriente = new CuentaCorriente('201-5120491-0', '102030', 1000000);
+const tc = new TarjetaCredito('4509812034915521', '102030', 5000000, 0, {
+    franquicia: 'VISA GOLD',
+    fechaVencimiento: '10/31',
+    cvv: '742'
+});
 
 assert(ahorros instanceof Cuenta, 'CuentaAhorros hereda de Cuenta');
 assert(corriente instanceof Cuenta, 'CuentaCorriente hereda de Cuenta');
@@ -63,7 +66,11 @@ assert(corriente.saldo === -150000, 'Saldo negativo por sobregiro exacto (-$150.
 const resExcesoCorriente = corriente.calcularRetiro(100000);
 assert(resExcesoCorriente.exito === false, 'Rechaza sobregiro mayor al 20% autorizado');
 
-console.log('\n=== TEST 4: TARJETA DE CRÉDITO Y FÓRMULA DE AMORTIZACIÓN ===');
+console.log('\n=== TEST 4: TARJETA DE CRÉDITO REALISTA Y FÓRMULA DE AMORTIZACIÓN ===');
+assert(tc.numeroFormateado === '4509 8120 3491 5521', 'Formato de 16 dígitos en bloques de 4');
+assert(tc.franquicia === 'VISA GOLD', 'Franquicia asignada correctamente');
+assert(tc.fechaVencimiento === '10/31', 'Fecha de vencimiento bancaria válida');
+
 // Rango 1: <= 2 cuotas -> 0%
 const cuota2 = tc.calcularCuotaMensual(1000000, 2);
 assert(cuota2.tasaMensual === 0, 'Tasa 0% para 2 cuotas');
@@ -72,7 +79,6 @@ assert(cuota2.cuotaMensual === 500000, 'Cuota exacta $500.000 sin interés');
 // Rango 2: 3-6 cuotas -> 1.9% mensual
 const cuota6 = tc.calcularCuotaMensual(1200000, 6);
 assert(cuota6.tasaMensual === 0.019, 'Tasa 1.9% para 6 cuotas');
-// Amortización francesa: (1200000 * 0.019) / (1 - (1+0.019)^-6) = 22800 / (1 - 0.89323) = ~213567
 assert(cuota6.cuotaMensual >= 213000 && cuota6.cuotaMensual <= 214000, 'Cuota amortizada calculada correctamente (~$213.567)');
 
 // Rango 3: >= 7 cuotas -> 2.3% mensual
@@ -84,19 +90,15 @@ console.log('\n=== TEST 5: SEGURIDAD Y BLOQUEO TRAS 3 INTENTOS FALLIDOS ===');
 const cliente = new Cliente('123', 'Pedro Gomez', '3001112233', 'pgomez', 'ClaveSegura1');
 assert(cliente.intentosRestantes === 3, 'Inicia con 3 intentos disponibles');
 
-// Intento 1 fallido
 const intento1 = cliente.validarPassword('ClaveErrada1');
 assert(intento1.exito === false && cliente.intentosRestantes === 2, 'Primer fallo: quedan 2 intentos');
 
-// Intento 2 fallido
 const intento2 = cliente.validarPassword('ClaveErrada2');
 assert(intento2.exito === false && cliente.intentosRestantes === 1, 'Segundo fallo: queda 1 intento');
 
-// Intento 3 fallido -> Bloqueo
 const intento3 = cliente.validarPassword('ClaveErrada3');
 assert(intento3.bloqueado === true && cliente.estaBloqueado === true, 'Tercer fallo: cuenta bloqueada automáticamente');
 
-// Intento posterior con clave correcta debe rechazarse por bloqueo
 const intento4 = cliente.validarPassword('ClaveSegura1');
 assert(intento4.exito === false && intento4.bloqueado === true, 'No permite acceso aun con clave correcta estando bloqueada');
 
