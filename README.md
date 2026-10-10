@@ -1,136 +1,118 @@
-# 🏦 Mi Plata – Sistema Bancario & Cajero Automático
+# Mi Plata - Sistema de Cajero y Gestión Bancaria
 
-> **Proyecto Integrador de Software**  
-> **Institución:** CESDE · Medellín, Colombia  
-> **Programa:** Técnico Laboral como Asistente en Desarrollo de Software  
-> **Momento:** Momento 2  
-
----
-
-## 🌟 ¿Qué es "Mi Plata"?
-
-**Mi Plata** es una solución bancaria digital desarrollada para ofrecer una experiencia sencilla, transparente y segura tanto para los usuarios que gestionan su dinero como para los administradores del banco.
-
-El proyecto simula el ecosistema completo de una entidad financiera moderna:
-- **Portal Web y Cajero Automático (Front-end):** Una interfaz web completamente adaptable (responsive para computador, tablet y celular) donde los clientes pueden registrarse, consultar sus saldos en cuentas de ahorros y corrientes, realizar transferencias y simular pagos con tarjeta de crédito a cuotas.
-- **Lógica de Negocio y Gestión de Clientes (Back-end Java):** Arquitectura orientada a objetos con control estricto de usuarios, encapsulamiento, colecciones dinámicas y operaciones CRUD por consola.
-- **Marco de Trabajo Ágil (Scrum):** Gestión iterativa e incremental del proyecto utilizando Scrum, versionado continuo con GitHub y GitFlow, descomposición vertical de historias (slicing) y adopción crítica y justificada de herramientas de IA.
+Proyecto integrador de software para el Momento 2.  
+**Institución:** CESDE  
+**Programa:** Técnico Laboral como Asistente en Desarrollo de Software  
+**Submódulo:** Metodologías Ágiles para la Programación  
+**Docente:** Ing. Jorge Eliécer Hernández S.  
 
 ---
 
-## 👥 Equipo de Trabajo & Roles Scrum
+## 1. Descripción del Proyecto y Problema Abordado
 
-| Rol Scrum | Integrante | Responsabilidad Principal |
-| :--- | :--- | :--- |
-| **Product Owner** | Equipo Mi Plata | Definición de la visión del producto, priorización del backlog y criterios de aceptación. |
-| **Scrum Master** | Equipo Mi Plata | Facilitación de ceremonias, remoción de impedimentos y cumplimiento de los artefactos ágiles en GitHub. |
-| **Frontend Developer** | Equipo Mi Plata | Maquetación web responsive (1920px, 786px, 460px), POO en JavaScript y reglas financieras en el cliente. |
-| **Backend Developer** | Equipo Mi Plata | Arquitectura de clases Java, vertical de usuario (CRUD sobre `ArrayList`), menú interactivo y GitFlow. |
+En el proceso de formación como desarrolladores de software, construir un sistema bancario permite integrar la lógica de negocio, la experiencia de usuario y las buenas prácticas de desarrollo.
 
----
+**Mi Plata** es un aplicativo que simula las operaciones principales de un cajero automático y la administración interna de usuarios de una entidad financiera:
 
-## 📚 Documentación Ágil (Acceso Rápido para el Docente)
-
-Para facilitar la revisión y consulta de los entregables solicitados en clase, organizamos la documentación en los siguientes enlaces directos:
-
-* 📋 **[Product Backlog Priorizado](docs/product-backlog.md):** Épicas, features, historias de usuario desglosadas con técnicas de slicing y estimación en Story Points.
-* 📖 **[Historias de Usuario Detalladas](docs/user-stories.md):** Fichas completas de cada historia con formato `"Como... quiero... para..."`, criterios de aceptación claros y condiciones de satisfacción.
-* 🏃‍♂️ **[Sprint 1: Sprint Backlog](docs/sprints/sprint-01/sprint-backlog.md):** Objetivo del primer sprint (Sprint Goal), historias seleccionadas y descomposición en tareas técnicas (Frontend, Backend, Pruebas y Docs).
-* 🏁 **[Sprint 1: Sprint Review](docs/sprints/sprint-01/sprint-review.md):** Cierre del Sprint 1, balance de lo entregado, métricas alcanzadas y evidencias de funcionamiento.
-* 🤖 **[Bitácora de Uso Reflexivo de IA](docs/ia-bitacora.md):** Registro de prompts utilizados, análisis crítico de las respuestas generadas y adaptaciones realizadas para la sustentación oral de 2 minutos.
+* **Módulo Web del Cajero (Front-end):** Una interfaz web adaptable (diseñada para computadores, tablets y celulares sin dependencias de frameworks externos). Permite el registro de nuevos clientes, inicio de sesión seguro con bloqueo automático al tercer intento fallido, consulta de saldos en cuentas de ahorro y corriente, retiros con reglas financieras (1.5% de rendimiento por retiro en ahorros y 20% de sobregiro en cuenta corriente) y simulación de compras con tarjeta de crédito amortizadas a cuotas fijas.
+* **Módulo Administrativo en Consola (Back-end Java):** Gestión de la vertical de usuarios mediante programación orientada a objetos en Java (clase base `Person` heredada por `User` y `Admin`), con persistencia en memoria (`ArrayList`) para consultar por documento o ID, actualizar datos de contacto, eliminar registros y auditar la cantidad total de clientes.
+* **Marco de Trabajo Ágil (Scrum):** Organización iterativa del desarrollo mediante GitHub, aplicando descomposición vertical de historias (slicing), estimación con puntos de historia y versionado estructurado con GitFlow.
 
 ---
 
-## 📁 Estructura del Repositorio
+## 2. Integrantes del Equipo
 
-Siguiendo las directrices del manual de Scrum + GitHub, el repositorio mantiene una estructura modular y limpia:
+* **Desarrollador:** Miguel David Rojas González
+* **Roles asumidos en el marco Scrum:**
+  * **Product Owner & Scrum Master:** Definición del alcance, priorización del Product Backlog, redacción de historias de usuario con criterios de aceptación y seguimiento de ceremonias.
+  * **Equipo de Desarrollo:** Maquetación e interactividad web (HTML5, CSS3 y JavaScript POO) y lógica de negocio en Java (POO, encapsulamiento y colecciones).
+
+---
+
+## 3. Documentación Ágil (Entregables para el Docente)
+
+Toda la documentación requerida por el docente se encuentra centralizada dentro del directorio `docs/` para su fácil consulta y revisión:
+
+* [Product Backlog](docs/product-backlog.md): Backlog completo priorizado con la técnica MoSCoW, organizado en Épicas y Features, con estimaciones en Story Points (secuencia Fibonacci) y estrategia de slicing.
+* [Historias de Usuario](docs/user-stories.md): Historias redactadas bajo el formato *"Como [rol], quiero [funcionalidad], para [beneficio]"*, detallando criterios de aceptación en formato Given-When-Then y checklist verificable.
+* [Sprint Backlog 1](docs/sprints/sprint-01/sprint-backlog.md): Planificación del primer sprint, objetivo acordado (Sprint Goal), historias comprometidas y lista de tareas técnicas divididas por frontend, backend y pruebas.
+* [Sprint Review 1](docs/sprints/sprint-01/sprint-review.md): Informe de cierre del Sprint 1, balance de cumplimiento (29 de 29 Story Points completados), demostración de lo entregado y retrospectiva del equipo.
+* [Bitácora de Uso de IA](docs/ia-bitacora.md): Registro reflexivo sobre las interacciones con herramientas de Inteligencia Artificial, análisis crítico de los resultados propuestos y guión para la sustentación oral de 2 minutos.
+
+---
+
+## 4. Estructura de Carpetas del Repositorio
+
+El proyecto mantiene una estructura modular, clara y ordenada:
 
 ```text
 mi-plata-banco/
-├── README.md                      <- Portada principal: visión, equipo, navegación y ejecución
-├── .gitignore                     <- Exclusiones de Git (node_modules, .class, .idea, etc.)
-│
-├── docs/                          <- Artefactos de gestión ágil y arquitectura
-│   ├── product-backlog.md         <- Backlog general ordenado por valor de negocio
-│   ├── user-stories.md            <- Historias con criterios de aceptación (Given-When-Then / Checklist)
-│   ├── ia-bitacora.md             <- Registro reflexivo del uso de IA para sustentación
-│   ├── PLAN_MAESTRO_ENTREGA.md    <- Guía integradora de las 3 materias (Front, Back y Scrum)
-│   ├── frontend/                  <- Documentación técnica de arquitectura frontend
-│   ├── backend/                   <- Documentación técnica y diagramas UML de backend
+├── README.md                      # Portada institucional y guía del proyecto
+├── .gitignore                     # Exclusiones de Git (archivos temporales, compilados y dependencias)
+├── docs/                          # Documentación ágil y técnica
+│   ├── product-backlog.md         # Product Backlog priorizado y estimado
+│   ├── user-stories.md            # Historias de usuario detalladas con criterios de aceptación
+│   ├── ia-bitacora.md             # Registro de uso crítico de IA (evaluación institucional)
+│   ├── PLAN_MAESTRO_ENTREGA.md    # Estrategia de entrega integradora (Front, Back y Scrum)
 │   └── sprints/
 │       └── sprint-01/
-│           ├── sprint-backlog.md  <- Planificación y tareas del Sprint 1
-│           └── sprint-review.md   <- Revisión y resultados del Sprint 1
-│
-└── src/                           <- Código fuente funcional
-    ├── frontend/                  <- Aplicación Web del Cajero (HTML5, CSS3, JS POO)
-    │   ├── index.html             <- Portada y bienvenida
-    │   ├── login.html             <- Inicio de sesión y registro (bloqueo tras 3 intentos)
-    │   ├── cajero.html            <- Panel de operaciones bancarias y tarjeta de crédito
-    │   ├── css/styles.css         <- Estilos adaptables (1920px, 786px y 460px)
-    │   ├── js/models/             <- Modelos POO (Cliente, CuentaAhorros, CuentaCorriente, TarjetaCredito)
-    │   └── test_runner.js         <- Suite de 26 pruebas automatizadas de Front-end
-    │
-    └── backend-java/              <- Aplicación de Consola en Java (Lógica y CRUD)
+│           ├── sprint-backlog.md  # Plan y tareas técnicas del Sprint 1
+│           └── sprint-review.md   # Cierre y resultados obtenidos en el Sprint 1
+└── src/
+    ├── frontend/                  # Código del aplicativo web del cajero
+    │   ├── index.html             # Landing page de bienvenida
+    │   ├── login.html             # Vistas de login (con bloqueo a 3 intentos) y registro
+    │   ├── cajero.html            # Panel interactivo de operaciones bancarias
+    │   ├── css/styles.css         # Estilos responsive (Desktop 1920px, Tablet 786px, Móvil 460px)
+    │   ├── js/                    # Modelos de POO (Cliente, Cuentas, Tarjeta) y lógica de eventos
+    │   └── test_runner.js         # Suite de 26 pruebas automatizadas en Node.js
+    └── backend-java/              # Código del módulo administrativo en Java
         └── src/
-            ├── models/            <- Clases Person, User, Admin
-            ├── services/          <- UserService con operaciones sobre ArrayList
-            ├── Main.java          <- Menú interactivo por consola (menuUser)
-            └── TestRunner.java    <- Suite de 5 pruebas automatizadas de Back-end
+            ├── models/            # Clases Person, User y Admin con herencia
+            ├── services/          # UserService con operaciones CRUD sobre ArrayList
+            ├── Main.java          # Menú interactivo por consola (menuUser)
+            └── TestRunner.java    # Suite de 5 pruebas automatizadas en Java
 ```
 
 ---
 
-## 🛠️ Tecnologías y Estándares Aplicados
+## 5. Tecnologías y Estándares
 
-- **Front-end:** HTML5 semántico, CSS3 moderno (Mobile-First, Flexbox y Grid sin frameworks pesados), JavaScript Vanilla ES6+ con Clases, Herencia y Polimorfismo.
-- **Back-end:** Java SE 17, Principios SOLID, encapsulamiento estricto, estructuras de datos en memoria (`ArrayList`).
-- **Control de Versiones & Calidad:** GitFlow (`main` estable, `develop` integrador, ramas temáticas `feat/`), commits bajo el estándar [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `chore:`, `test:`).
-- **Marco de Trabajo:** Scrum con ciclos de entrega cortos y foco en valor real para el usuario.
+* **Front-end:** HTML5 semántico, CSS3 adaptable sin frameworks, JavaScript ES6+ con clases, herencia y polimorfismo.
+* **Back-end:** Java 17 con programación orientada a objetos, encapsulamiento estricto y manejo de colecciones dinámicas (`ArrayList<User>`).
+* **Control de versiones:** Git y GitHub implementando GitFlow (`main`, `develop` y ramas `feat/`) con historial de commits bajo el estándar [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `chore:`, `test:`).
 
 ---
 
-## 🚀 ¿Cómo Ejecutar y Probar el Proyecto?
+## 6. Instrucciones de Ejecución y Pruebas
 
-### 1. Aplicación Web (Frontend)
-1. Clona el repositorio:
-   ```bash
-   git clone https://github.com/Nusamug/mi-plata-banco.git
-   ```
-2. Abre el archivo `src/frontend/index.html` directamente en tu navegador favorito (o usando la extensión *Live Server* de VS Code).
-3. **Credenciales de prueba inmediatas:**
-   - **Usuario:** `carlos.restrepo`
-   - **Contraseña:** `1234`
-4. **Prueba de seguridad:** Intenta ingresar con contraseña errónea 3 veces seguidas para observar el bloqueo automático y el contador visual de intentos.
-5. **Ejecutar pruebas del frontend (Node.js):**
+### 6.1 Probar la Aplicación Web (Frontend)
+1. Abrir directamente el archivo `src/frontend/index.html` en el navegador (o mediante la extensión Live Server de VS Code).
+2. Para acceder al panel del cajero se pueden utilizar las credenciales de prueba existentes:
+   * **Usuario:** `carlos.restrepo`
+   * **Contraseña:** `1234`
+3. También es posible crear un nuevo usuario desde el formulario de registro.
+4. **Verificación de seguridad:** Si se ingresa una contraseña incorrecta 3 veces consecutivas, el sistema bloquea automáticamente el acceso y notifica al usuario.
+5. **Ejecución de pruebas automatizadas del frontend:**
    ```bash
    node src/frontend/test_runner.js
    ```
-   *(Valida 26 pruebas: intereses de ahorro 1.5%, sobregiro 20%, amortización de tarjeta y bloqueo de seguridad).*
+   *(Verifica 26 pruebas de herencia, reglas de intereses, sobregiros, cuotas de tarjeta y bloqueo de login).*
 
-### 2. Módulo de Consola (Backend Java)
-1. Dirígete a la carpeta del backend:
+### 6.2 Probar la Consola Java (Backend)
+1. Abrir una terminal en la carpeta de código Java:
    ```bash
    cd src/backend-java/src
    ```
-2. Compila el código fuente:
+2. Compilar los archivos del proyecto:
    ```bash
    javac models/*.java services/*.java Main.java TestRunner.java
    ```
-3. Ejecuta el menú interactivo:
+3. Ejecutar el menú administrativo:
    ```bash
    java Main
    ```
-4. O ejecuta la suite de pruebas automatizadas:
+4. O ejecutar la suite de pruebas unitarias de Java:
    ```bash
    java TestRunner
    ```
-
----
-
-## 🌿 Flujo de Ramas (GitFlow)
-
-En cumplimiento con los requerimientos técnicos:
-* `main`: Rama de producción estable. Contiene las versiones terminadas y aprobadas de cada Sprint.
-* `develop`: Rama de integración donde convergen los desarrollos de Frontend, Backend y Documentación.
-* `feat/...`: Ramas de trabajo independientes por cada historia de usuario o tarea técnica (ej: `feat/hu03-user-crud`).

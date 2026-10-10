@@ -1,31 +1,36 @@
-# 📖 Historias de Usuario – Sistema Bancario "Mi Plata"
+# Historias de Usuario – Sistema Bancario "Mi Plata"
 
-> **Proyecto:** Mi Plata (Banca Digital & Cajero Automático)  
-> **Estándar:** INVEST · Formato Connextra (`Como... quiero... para...`)  
-> **Criterios de Aceptación:** Formato Híbrido (BDD *Given-When-Then* + Checklist Verificable)  
-
----
-
-## 📌 Guía Rápida de Lectura
-
-Cada historia de usuario documentada en este archivo representa una unidad de valor real entregada al usuario o al negocio. Cumplen con los principios **INVEST**:
-- **I**ndependiente: Se puede planificar y desarrollar con mínima dependencia directa.
-- **N**egociable: El alcance fino de los detalles se acordó en equipo.
-- **V**aliosa: Aporta un beneficio palpable para el cliente bancario o la administración.
-- **E**stimable: Posee un tamaño medible en Story Points según su complejidad.
-- **S**mall (Pequeña): Diseñada para completarse holgadamente dentro de un Sprint.
-- **T**esteable: Cuenta con criterios de aceptación objetivos y verificables mediante pruebas manuales o automatizadas.
+**Proyecto:** Mi Plata (Banca Digital y Cajero Automático)  
+**Institución:** CESDE  
+**Programa:** Técnico Laboral como Asistente en Desarrollo de Software  
+**Submódulo:** Metodologías Ágiles para la Programación  
+**Docente:** Ing. Jorge Eliécer Hernández S.  
+**Estudiante:** Miguel David Rojas González  
+**Estándar:** INVEST · Formato Oficial (`Como... quiero... para...`)  
+**Criterios de Aceptación:** Given-When-Then + Checklist de verificación  
 
 ---
 
-## 📑 Índice de Historias de Usuario
+## 1. Guía de Principios INVEST Aplicados
 
-- [US-01: Registro de Nuevos Clientes](#us-01-registro-de-nuevos-clientes) *(5 SP - Must Have)*
-- [US-02: Inicio de Sesión Seguro y Control de Intentos](#us-02-inicio-de-sesión-seguro-y-control-de-intentos) *(3 SP - Must Have)*
-- [US-03: Mantenimiento y Administración de Usuarios (CRUD Back-end)](#us-03-mantenimiento-y-administración-de-usuarios-crud-back-end) *(5 SP - Must Have)*
-- [US-04: Consulta de Saldos Consolidados y Consignación](#us-04-consulta-de-saldos-consolidados-y-consignación) *(3 SP - Must Have)*
-- [US-05: Retiros Inteligentes con Reglas Financieras (Interés y Sobregiro)](#us-05-retiros-inteligentes-con-reglas-financieras-interés-y-sobregiro) *(8 SP - Must Have)*
-- [US-08: Simulación y Compras a Cuotas con Tarjeta de Crédito](#us-08-simulación-y-compras-a-cuotas-con-tarjeta-de-crédito) *(5 SP - Must Have)*
+Cada historia de usuario documentada en este archivo representa una unidad de valor real entregada al usuario o a la administración del banco. Cumplen con los principios **INVEST**:
+- **Independent (Independiente):** Se puede planificar y desarrollar con mínima dependencia de otras tareas.
+- **Negotiable (Negociable):** El alcance fino y los detalles se acordaron en clase con el docente.
+- **Valuable (Valiosa):** Aporta un beneficio directo para el cliente bancario o la administración.
+- **Estimable (Estimable):** Posee un tamaño medible en Story Points según su complejidad técnica.
+- **Small (Pequeña):** Diseñada para completarse dentro del Sprint.
+- **Testable (Testeable):** Cuenta con criterios de aceptación objetivos y verificables mediante pruebas.
+
+---
+
+## 2. Índice de Historias de Usuario
+
+* [US-01: Registro de Nuevos Clientes](#us-01-registro-de-nuevos-clientes) (5 SP - Must Have)
+* [US-02: Inicio de Sesión Seguro y Control de Intentos](#us-02-inicio-de-sesión-seguro-y-control-de-intentos) (3 SP - Must Have)
+* [US-03: Mantenimiento y Administración de Usuarios en Java](#us-03-mantenimiento-y-administración-de-usuarios-crud-back-end) (5 SP - Must Have)
+* [US-04: Consulta de Saldos Consolidados y Consignación](#us-04-consulta-de-saldos-consolidados-y-consignación) (3 SP - Must Have)
+* [US-05: Retiros con Reglas Financieras (Interés y Sobregiro)](#us-05-retiros-inteligentes-con-reglas-financieras-interés-y-sobregiro) (8 SP - Must Have)
+* [US-08: Simulación y Compras a Cuotas con Tarjeta de Crédito](#us-08-simulación-y-compras-a-cuotas-con-tarjeta-de-crédito) (5 SP - Must Have)
 
 ---
 
