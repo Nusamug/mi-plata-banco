@@ -5,7 +5,7 @@ node_modules/
 *.iml
 *.log
 
-# Archivos de compilacion de Java (para cuando el backend agregue codigo)
+# Archivos de compilacion de Java
 *.class
 bin/
 out/
@@ -16,3 +16,9 @@ target/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Archivos internos personales y notas privadas del estudiante
+docs/AGENTS_SETUP.md
+docs/PLAN_MAESTRO_ENTREGA.md
+docs/metodologias_agiles/
+docs/**/assets/

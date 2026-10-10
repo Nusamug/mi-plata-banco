@@ -49,11 +49,10 @@ El proyecto mantiene una estructura modular, clara y ordenada:
 mi-plata-banco/
 ├── README.md                      # Portada institucional y guía del proyecto
 ├── .gitignore                     # Exclusiones de Git (archivos temporales, compilados y dependencias)
-├── docs/                          # Documentación ágil y técnica
+├── docs/                          # Documentación ágil de la entrega
 │   ├── product-backlog.md         # Product Backlog priorizado y estimado
 │   ├── user-stories.md            # Historias de usuario detalladas con criterios de aceptación
 │   ├── ia-bitacora.md             # Registro de uso crítico de IA (evaluación institucional)
-│   ├── PLAN_MAESTRO_ENTREGA.md    # Estrategia de entrega integradora (Front, Back y Scrum)
 │   └── sprints/
 │       └── sprint-01/
 │           ├── sprint-backlog.md  # Plan y tareas técnicas del Sprint 1
