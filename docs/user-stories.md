@@ -44,12 +44,12 @@ Cada historia de usuario documentada en este archivo representa una unidad de va
 | **Estimación** | **5 Story Points** |
 | **Sprint** | Sprint 1 (Completada) |
 
-#### 🗣️ Declaración de la Historia
+#### Declaración de la Historia
 > **Como** usuario nuevo de la banca digital,  
 > **quiero** registrarme en el sistema completando un formulario con mis datos personales (nombre completo, documento de identidad, celular, nombre de usuario y contraseña),  
 > **para** abrir mis productos financieros y acceder al cajero automático de manera autónoma.
 
-#### ✅ Criterios de Aceptación (Escenarios Given-When-Then)
+#### Criterios de Aceptación (Given-When-Then)
 
 * **Escenario 1: Registro exitoso con apertura automática de cuentas**
   * **Dado que** me encuentro en el formulario de registro de la página web,
@@ -78,12 +78,12 @@ Cada historia de usuario documentada en este archivo representa una unidad de va
 | **Estimación** | **3 Story Points** |
 | **Sprint** | Sprint 1 (Completada) |
 
-#### 🗣️ Declaración de la Historia
+#### Declaración de la Historia
 > **Como** cliente registrado en Mi Plata,  
 > **quiero** iniciar sesión con mi usuario y contraseña, y que el sistema bloquee el acceso tras 3 intentos fallidos consecutivos,  
 > **para** proteger mi dinero contra intentos de acceso no autorizados o ataques de fuerza bruta.
 
-#### ✅ Criterios de Aceptación (Escenarios Given-When-Then)
+#### Criterios de Aceptación (Given-When-Then)
 
 * **Escenario 1: Autenticación correcta**
   * **Dado que** ingreso credenciales registradas válidas (ej. `carlos.restrepo` / `1234`),
@@ -112,12 +112,12 @@ Cada historia de usuario documentada en este archivo representa una unidad de va
 | **Estimación** | **5 Story Points** |
 | **Sprint** | Sprint 1 (Completada) |
 
-#### 🗣️ Declaración de la Historia
+#### Declaración de la Historia
 > **Como** administrador del sistema bancario,  
 > **quiero** ejecutar operaciones de consulta por ID, actualización, eliminación y conteo total de usuarios a través de la consola Java,  
 > **para** mantener la integridad y consistencia del registro de clientes en la base de datos en memoria.
 
-#### ✅ Criterios de Aceptación (Escenarios Given-When-Then)
+#### Criterios de Aceptación (Given-When-Then)
 
 * **Escenario 1: Consulta de usuario por ID (`selectUserById`)**
   * **Dado que** existen usuarios cargados en el `ArrayList<User>`,
@@ -151,12 +151,12 @@ Cada historia de usuario documentada en este archivo representa una unidad de va
 | **Estimación** | **3 Story Points** |
 | **Sprint** | Sprint 1 (Completada) |
 
-#### 🗣️ Declaración de la Historia
+#### Declaración de la Historia
 > **Como** cliente autenticado en el cajero,  
 > **quiero** visualizar el saldo disponible de todas mis cuentas y consignar dinero en efectivo a mi cuenta de ahorros o corriente,  
 > **para** contar con liquidez y verificar el estado financiero de mis productos en tiempo real.
 
-#### ✅ Criterios de Aceptación (Escenarios Given-When-Then)
+#### Criterios de Aceptación (Given-When-Then)
 
 * **Escenario 1: Visualización clara de saldos al entrar al panel**
   * **Dado que** inicio sesión satisfactoriamente,
@@ -185,12 +185,12 @@ Cada historia de usuario documentada en este archivo representa una unidad de va
 | **Estimación** | **8 Story Points** |
 | **Sprint** | Sprint 1 (Completada) |
 
-#### 🗣️ Declaración de la Historia
+#### Declaración de la Historia
 > **Como** cliente con productos financieros diferenciados,  
 > **quiero** retirar dinero desde mi Cuenta de Ahorros recibiendo un 1.5% de interés/rendimiento sobre el monto retirado, o retirar desde mi Cuenta Corriente utilizando hasta un 20% de sobregiro autorizado en caso de falta de liquidez,  
 > **para** aprovechar las ventajas comerciales y el respaldo financiero de mi banco.
 
-#### ✅ Criterios de Aceptación (Escenarios Given-When-Then)
+#### Criterios de Aceptación (Given-When-Then)
 
 * **Escenario 1: Retiro de Cuenta de Ahorros con bonificación del 1.5%**
   * **Dado que** tengo un saldo de $1.000.000 en mi Cuenta de Ahorros,
@@ -219,12 +219,12 @@ Cada historia de usuario documentada en este archivo representa una unidad de va
 | **Estimación** | **5 Story Points** |
 | **Sprint** | Sprint 1 (Completada) |
 
-#### 🗣️ Declaración de la Historia
+#### Declaración de la Historia
 > **Como** usuario tarjetahabiente de Mi Plata,  
 > **quiero** simular o realizar compras a cuotas seleccionando el plazo en meses (1 a 36),  
 > **para** conocer con total transparencia la tasa de interés aplicada, el valor de la cuota mensual fija y el costo financiero total antes de endeudarme.
 
-#### ✅ Criterios de Aceptación (Escenarios Given-When-Then)
+#### Criterios de Aceptación (Given-When-Then)
 
 * **Escenario 1: Compra a 1 o 2 cuotas con interés 0%**
   * **Dado que** simulo o ejecuto una compra de $500.000 a 2 cuotas,

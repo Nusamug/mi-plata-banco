@@ -17,8 +17,10 @@ target/
 Thumbs.db
 desktop.ini
 
-# Archivos internos personales y notas privadas del estudiante
+# Archivos internos personales y notas privadas de materias
 docs/AGENTS_SETUP.md
 docs/PLAN_MAESTRO_ENTREGA.md
 docs/metodologias_agiles/
+docs/backend/
+docs/frontend/
 docs/**/assets/
