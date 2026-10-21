@@ -1,7 +1,7 @@
 // Servicio de almacenamiento en LocalStorage con estudio crediticio y transferencias por Llave Bre-B
 class StorageService {
-    static CLAVE_CLIENTES = 'mi_plata_clientes_v1';
-    static CLAVE_SESION = 'mi_plata_sesion_activa_v1';
+    static CLAVE_CLIENTES = 'mi_plata_clientes_v2';
+    static CLAVE_SESION = 'mi_plata_sesion_activa_v2';
 
     // Generadores con numeración bancaria realista
     static generarNumeroAhorros() {
@@ -27,8 +27,12 @@ class StorageService {
 
     // Inicializa clientes demo para facilitar sustentación
     static inicializar() {
-        const guardados = localStorage.getItem(StorageService.CLAVE_CLIENTES);
-        if (!guardados) {
+        if (typeof localStorage !== 'undefined') {
+            localStorage.removeItem('mi_plata_clientes_v1');
+            sessionStorage.removeItem('mi_plata_sesion_activa_v1');
+        }
+        const guardados = typeof localStorage !== 'undefined' ? localStorage.getItem(StorageService.CLAVE_CLIENTES) : null;
+        if (!guardados || guardados.includes('AH-')) {
             const clienteDemo = new Cliente(
                 '1020304050',
                 'Carlos Alberto Morales',

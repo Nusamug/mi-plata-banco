@@ -124,13 +124,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Restablecer demo para pruebas continuas del evaluador
     if (btnResetDemo) {
         btnResetDemo.addEventListener('click', () => {
-            const cliente = StorageService.buscarPorUsername('carlos99');
-            if (cliente) {
-                cliente.desbloquear();
-                StorageService.actualizarCliente(cliente);
-                desbloquearFormularioLogin();
-                mostrarAlertaLogin('success', '✓ Usuario demo carlos99 desbloqueado. 3 intentos restablecidos.');
-            }
+            localStorage.removeItem(StorageService.CLAVE_CLIENTES);
+            sessionStorage.removeItem(StorageService.CLAVE_SESION);
+            StorageService.inicializar();
+            desbloquearFormularioLogin();
+            mostrarAlertaLogin('success', '✓ Usuario demo carlos99 desbloqueado y cuentas restablecidas con numeración oficial.');
         });
     }
 
