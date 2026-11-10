@@ -1,104 +1,61 @@
-# Sprint Backlog – Sprint 1: "Viviendo nuestro primer Sprint"
+# Sprint Backlog – Sprint 1: "Ecosistema Bancario Mi Plata"
 
 **Proyecto:** Mi Plata (Banca Digital y Cajero Automático)  
 **Institución:** CESDE  
 **Programa:** Técnico Laboral como Asistente en Desarrollo de Software  
-**Submódulo:** Metodologías Ágiles para la Programación  
-**Docente:** Ing. Jorge Eliécer Hernández S.  
+**Momento Evaluativo:** Momento 2  
+**Docentes:** Jorge Albeiro Muriel Vélez / Ing. Jorge Eliécer Hernández S.  
 **Estudiante / Equipo:** Miguel David Rojas González  
-**Duración del Sprint:** 2 semanas  
-**Estado:** Completado (Entregable Momento 2)  
+**Estado:** Completado al 100% (47 / 47 Story Points)  
 
 ---
 
 ## 1. Objetivo del Sprint (Sprint Goal)
 
-> *"Establecer la infraestructura de versionado y documentación ágil en GitHub, implementando la vertical de gestión de usuarios en Java y la plataforma web responsive con login seguro (bloqueo a 3 intentos) y cajero financiero interactivo."*
+> *"Construir y entregar el ecosistema bancario completo 'Mi Plata' integrando la aplicación web responsive con POO, manipulación avanzada del DOM, estructuras de datos en arreglos, comprobante térmico, transferencias por Llave Bre-B, estudios crediticios en línea y la vertical administrativa en consola Java."*
 
 ---
 
-## 2. Historias de Usuario Comprometidas
+## 2. Historias de Usuario Comprometidas y Entregadas
 
-Para este primer Sprint se seleccionaron las historias prioritarias (**Must Have**) que sientan las bases del sistema bancario:
+| ID | Historia de Usuario | Prioridad | Story Points | Estado |
+| :---: | :--- | :---: | :---: | :---: |
+| **US-01** | Registro realista de nuevos clientes con Cuenta de Ahorros y bono inicial | Must Have | 5 pts | Completada |
+| **US-02** | Inicio de sesión seguro con bloqueo automático al 3er intento fallido | Must Have | 3 pts | Completada |
+| **US-03** | Mantenimiento y CRUD de usuarios en Java y modal de perfil web | Must Have | 5 pts | Completada |
+| **US-04** | Portafolio consolidado, KPIs con `.reduce()` y consignación con chips | Must Have | 3 pts | Completada |
+| **US-05** | Retiros polimórficos (1.5% rendimiento Ahorros y 20% sobregiro Corriente) | Must Have | 8 pts | Completada |
+| **US-06** | Transferencias inmediatas entre cuentas y mediante Llave Bre-B | Should Have | 5 pts | Completada |
+| **US-07** | Historial, buscador en vivo (`.filter()`), auditoría (`.pop()`, `.shift()`) y recibo | Must Have | 5 pts | Completada |
+| **US-08** | Simulación y compras a cuotas con Tarjeta de Crédito (amortización francesa) | Must Have | 5 pts | Completada |
+| **US-09** | Pagos y abonos a Tarjeta de Crédito con liberación de cupo disponible | Should Have | 3 pts | Completada |
+| **US-10** | Estudio financiero y crediticio en línea para Cuenta Corriente y Tarjeta Visa | Should Have | 5 pts | Completada |
 
-| ID | Historia de Usuario | Prioridad | Story Points | Responsable | Estado |
-| :---: | :--- | :---: | :---: | :---: | :---: |
-| **US-01** | Registro de nuevos clientes con datos completos | Must Have | 5 pts | Frontend Dev | Completada |
-| **US-02** | Inicio de sesión con bloqueo preventivo tras 3 fallos | Must Have | 3 pts | Frontend Dev | Completada |
-| **US-03** | Mantenimiento y CRUD de usuarios en Java (Vertical User) | Must Have | 5 pts | Backend Dev | Completada |
-| **US-04** | Consulta de saldos consolidados y depósitos | Must Have | 3 pts | Frontend Dev | Completada |
-| **US-05** | Retiros con reglas de negocio (1.5% ahorro / 20% sobregiro) | Must Have | 8 pts | Frontend Dev | Completada |
-| **US-08** | Financiamiento con Tarjeta de Crédito (amortización de cuotas) | Must Have | 5 pts | Frontend Dev | Completada |
-
-* **Capacidad Estimada:** 30 Story Points.  
-* **Story Points Comprometidos:** 29 Story Points.  
-* **Story Points Completados:** 29 Story Points (100% de cumplimiento).  
+* **Story Points Comprometidos:** 47 Story Points.  
+* **Story Points Completados:** 47 Story Points (**100% de cumplimiento**).  
 
 ---
 
-## 3. Desglose de Tareas Técnicas (Técnicas de Slicing)
-
-Aplicamos la división vertical en tareas técnicas concretas que atraviesan todas las disciplinas del equipo:
+## 3. Desglose de Tareas Técnicas (Slicing Vertical)
 
 ### 3.1 Gestión Ágil y Repositorio en GitHub
-- [x] **TS-01:** Inicializar repositorio en GitHub y configurar `.gitignore` para Java, Node y temporales del SO.
-- [x] **TS-02:** Diseñar la estructura de carpetas requerida (`docs/`, `src/frontend/`, `src/backend-java/`).
-- [x] **TS-03:** Redactar el `README.md` principal con la visión del producto, roles, badges e instrucciones.
-- [x] **TS-04:** Documentar el `product-backlog.md` con épicas, features, MoSCoW y estimaciones en puntos.
-- [x] **TS-05:** Elaborar `user-stories.md` con criterios de aceptación Given-When-Then y checklist.
-- [x] **TS-06:** Registrar la bitácora reflexiva de uso de IA (`docs/ia-bitacora.md`) para sustentación de 2 min.
+- [x] **TS-01:** Configuración de repositorio GitFlow (`main`, `develop`, `feat/`) y `.gitignore`.
+- [x] **TS-02:** Documentación de `README.md` con mapeo del Plan de Estudio del Momento 2.
+- [x] **TS-03:** Elaboración de `product-backlog.md` y `user-stories.md` (`US-01` a `US-10`) con formato INVEST y Given-When-Then.
+- [x] **TS-04:** Registro de la bitácora reflexiva de uso de IA (`docs/ia-bitacora.md`).
 
-### 3.2 Interfaz de Usuario Web Responsive (Frontend)
-- [x] **TF-01:** Maquetar la Landing Page (`index.html`) con estructura semántica en HTML5.
-- [x] **TF-02:** Implementar diseño responsive en CSS3 sin dependencias pesadas, adaptable a Desktop (1920px), Tablet (786px) y Celular (460px).
-- [x] **TF-03:** Maquetar vistas de Registro y Login (`login.html`) con formulario interactivo y mensajes de error.
-- [x] **TF-04:** Maquetar el panel principal del Cajero (`cajero.html`) con tarjetas de cuentas y acciones rápidas.
+### 3.2 Interfaz de Usuario Web Responsive y Manipulación del DOM (Temas 9, 10 y 11)
+- [x] **TF-01:** Maquetación de `index.html`, `login.html` y `cajero.html` en HTML5 semántico.
+- [x] **TF-02:** Diseño responsive CSS3 para Desktop (1920px), Tablet (786px), Móvil (460px) e impresión térmica (`@media print`).
+- [x] **TF-03:** Implementación de chips rápidos de efectivo, previsualizador matemático de retiro y modal de comprobante térmico.
+- [x] **TF-04:** Retroalimentación sonora nativa mediante Web Audio API.
 
-### 3.3 Lógica Financiera y POO en JavaScript (Frontend)
-- [x] **TF-05:** Crear jerarquía de clases POO en JS: clase base `Cuenta` heredada por `CuentaAhorros`, `CuentaCorriente` y `TarjetaCredito`.
-- [x] **TF-06:** Implementar lógica de seguridad: contador de intentos fallidos, aviso interactivo y bloqueo al 3er fallo.
-- [x] **TF-07:** Implementar regla de negocio de ahorros: bono del 1.5% de rendimiento por retiro.
-- [x] **TF-08:** Implementar regla de negocio de corriente: autorización de sobregiro de hasta el 20% del saldo base.
-- [x] **TF-09:** Implementar cálculo bancario de amortización para tarjeta de crédito (0% para $\le 2$ cuotas, 1.9% para 3-6 cuotas, 2.3% para $\ge 7$ cuotas).
-- [x] **TF-10:** Crear servicio de persistencia local (`StorageService.js`) con datos iniciales de prueba (Carlos Restrepo).
+### 3.3 POO y Estructuras de Datos en JavaScript (Temas 7 y 8)
+- [x] **TF-05:** Jerarquía de clases con herencia y polimorfismo: `Cuenta` $\rightarrow$ `CuentaAhorros`, `CuentaCorriente`, `TarjetaCredito`.
+- [x] **TF-06:** Control de seguridad en `Cliente.js` con bloqueo automático al 3er intento fallido.
+- [x] **TF-07:** Métodos de arreglos en `Cuenta.js` y `cajero.js`: `.push()`, `.pop()`, `.shift()`, `.filter()` y `.reduce()`.
+- [x] **TF-08:** Persistencia en `StorageService.js` con numeración colombiana oficial, estudio crediticio y transferencias Bre-B.
 
-### 3.4 Backend Java, Colecciones y GitFlow (Backend)
-- [x] **TB-01:** Crear clase base `Person.java` con encapsulamiento, getters y setters.
-- [x] **TB-02:** Crear clases hijas `User.java` y `Admin.java` aplicando herencia.
-- [x] **TB-03:** Implementar `UserService.java` con almacenamiento en `ArrayList<User>` y métodos obligatorios:
-  - `selectUserById(int id)`
-  - `updateUser(int id, String phone, String city)`
-  - `deleteUser(int id)`
-  - `countUsers()`
-- [x] **TB-04:** Diseñar menú interactivo por consola en `Main.java` (`menuUser`) para pruebas en vivo con el docente.
-- [x] **TB-05:** Implementar suite de pruebas automatizadas `TestRunner.java`.
-
-### 3.5 Aseguramiento de Calidad y Pruebas
-- [x] **TQ-01:** Desarrollar suite de 26 pruebas automáticas de Frontend en Node.js (`test_runner.js`).
-- [x] **TQ-02:** Manejar flujo de ramas estricto: commits en ramas de funcionalidad (`feat/`), integración en `develop` y pase a `main`.
-
----
-
-## 4. Tablero de Seguimiento (Scrum Board)
-
-```text
-+------------------------+------------------------+------------------------+
-|       TO DO (0)        |    IN PROGRESS (0)     |        DONE (25)       |
-+------------------------+------------------------+------------------------+
-|                        |                        | [x] TS-01 a TS-06 (Docs)|
-|                        |                        | [x] TF-01 a TF-10 (Web) |
-|                        |                        | [x] TB-01 a TB-05 (Java)|
-|                        |                        | [x] TQ-01 a TQ-02 (QA)  |
-+------------------------+------------------------+------------------------+
-```
-
----
-
-## 5. Criterios de "Hecho" (Definition of Done - DoD)
-
-Una historia de usuario se considera **DONE** en el Sprint 1 únicamente cuando:
-1. El código compila y ejecuta sin errores en consola y navegador.
-2. Cumple el 100% de los criterios de aceptación en formato Given-When-Then.
-3. Se encuentra versionada bajo Conventional Commits en la rama de integración.
-4. Las pruebas unitarias automatizadas (Node.js o Java) pasan al 100%.
-5. Los documentos Markdown están actualizados y verificados en GitHub.
+### 3.4 Back-end Java y Aseguramiento de Calidad (QA)
+- [x] **TB-01:** Clases `Person.java`, `User.java`, `Admin.java` y servicio CRUD `UserService.java` sobre `ArrayList<User>`.
+- [x] **TQ-01:** Suite de **36 pruebas automatizadas en Node.js** (`src/frontend/test_runner.js`) y **5 pruebas en Java** (`TestRunner.java`).

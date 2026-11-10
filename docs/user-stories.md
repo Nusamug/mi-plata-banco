@@ -3,8 +3,8 @@
 **Proyecto:** Mi Plata (Banca Digital y Cajero Automático)  
 **Institución:** CESDE  
 **Programa:** Técnico Laboral como Asistente en Desarrollo de Software  
-**Submódulo:** Metodologías Ágiles para la Programación  
-**Docente:** Ing. Jorge Eliécer Hernández S.  
+**Momento Evaluativo:** Momento 2  
+**Docentes:** Jorge Albeiro Muriel Vélez / Ing. Jorge Eliécer Hernández S.  
 **Estudiante:** Miguel David Rojas González  
 **Estándar:** INVEST · Formato Oficial (`Como... quiero... para...`)  
 **Criterios de Aceptación:** Given-When-Then + Checklist de verificación  
@@ -13,199 +13,203 @@
 
 ## 1. Guía de Principios INVEST Aplicados
 
-Cada historia de usuario documentada en este archivo representa una unidad de valor real entregada al usuario o a la administración del banco. Cumplen con los principios **INVEST**:
-- **Independent (Independiente):** Se puede planificar y desarrollar con mínima dependencia de otras tareas.
-- **Negotiable (Negociable):** El alcance fino y los detalles se acordaron en clase con el docente.
-- **Valuable (Valiosa):** Aporta un beneficio directo para el cliente bancario o la administración.
-- **Estimable (Estimable):** Posee un tamaño medible en Story Points según su complejidad técnica.
-- **Small (Pequeña):** Diseñada para completarse dentro del Sprint.
-- **Testable (Testeable):** Cuenta con criterios de aceptación objetivos y verificables mediante pruebas.
+Cada historia de usuario documentada cumple rigurosamente con los principios **INVEST**:
+- **Independent (Independiente):** Desarrollable y verificable de manera modular.
+- **Negotiable (Negociable):** Refinada según las reglas de negocio bancarias y el plan de estudio del Momento 2.
+- **Valuable (Valiosa):** Entrega valor directo al cuentahabiente o al administrador del banco.
+- **Estimable (Estimable):** Dimensionada en Story Points mediante la serie Fibonacci.
+- **Small (Pequeña):** Acotada para completarse e integrarse dentro del ciclo de desarrollo.
+- **Testable (Testeable):** Respaldada por criterios Given-When-Then y **36 pruebas unitarias automatizadas**.
 
 ---
 
 ## 2. Índice de Historias de Usuario
 
-* [US-01: Registro de Nuevos Clientes](#us-01-registro-de-nuevos-clientes) (5 SP - Must Have)
-* [US-02: Inicio de Sesión Seguro y Control de Intentos](#us-02-inicio-de-sesión-seguro-y-control-de-intentos) (3 SP - Must Have)
-* [US-03: Mantenimiento y Administración de Usuarios en Java](#us-03-mantenimiento-y-administración-de-usuarios-crud-back-end) (5 SP - Must Have)
-* [US-04: Consulta de Saldos Consolidados y Consignación](#us-04-consulta-de-saldos-consolidados-y-consignación) (3 SP - Must Have)
-* [US-05: Retiros con Reglas Financieras (Interés y Sobregiro)](#us-05-retiros-inteligentes-con-reglas-financieras-interés-y-sobregiro) (8 SP - Must Have)
-* [US-08: Simulación y Compras a Cuotas con Tarjeta de Crédito](#us-08-simulación-y-compras-a-cuotas-con-tarjeta-de-crédito) (5 SP - Must Have)
+1. [US-01: Registro Realista de Nuevos Clientes](#us-01-registro-realista-de-nuevos-clientes) (5 SP - Must Have)
+2. [US-02: Inicio de Sesión Seguro y Bloqueo tras 3 Intentos](#us-02-inicio-de-sesión-seguro-y-bloqueo-tras-3-intentos) (3 SP - Must Have)
+3. [US-03: Mantenimiento y Administración CRUD de Usuarios](#us-03-mantenimiento-y-administración-crud-de-usuarios) (5 SP - Must Have)
+4. [US-04: Consulta de Portafolio, KPIs Financieros y Consignación](#us-04-consulta-de-portafolio-kpis-financieros-y-consignación) (3 SP - Must Have)
+5. [US-05: Retiros Inteligentes con Reglas Financieras (1.5% y Sobregiro 20%)](#us-05-retiros-inteligentes-con-reglas-financieras-15-y-sobregiro-20) (8 SP - Must Have)
+6. [US-06: Transferencias Inmediatas y por Llave Bre-B](#us-06-transferencias-inmediatas-y-por-llave-bre-b) (5 SP - Should Have)
+7. [US-07: Historial, Buscador en Vivo y Auditoría de Arreglos](#us-07-historial-buscador-en-vivo-y-auditoría-de-arreglos) (5 SP - Must Have)
+8. [US-08: Simulación y Compras a Cuotas con Tarjeta de Crédito](#us-08-simulación-y-compras-a-cuotas-con-tarjeta-de-crédito) (5 SP - Must Have)
+9. [US-09: Pagos y Abonos a Tarjeta de Crédito con Liberación de Cupo](#us-09-pagos-y-abonos-a-tarjeta-de-crédito-con-liberación-de-cupo) (3 SP - Should Have)
+10. [US-10: Estudio Financiero y Crediticio en Línea para Nuevos Productos](#us-10-estudio-financiero-y-crediticio-en-línea-para-nuevos-productos) (5 SP - Should Have)
 
 ---
 
-### US-01: Registro de Nuevos Clientes
+### US-01: Registro Realista de Nuevos Clientes
 
 | Atributo | Detalle |
 | :--- | :--- |
 | **Identificador** | `US-01` |
-| **Épica / Feature** | Épica 1: Autenticación & Clientes / Feature 1.1: Registro |
-| **Prioridad** | **Must Have (Alta)** |
-| **Estimación** | **5 Story Points** |
-| **Sprint** | Sprint 1 (Completada) |
+| **Épica / Feature** | Épica 1: Autenticación & Clientes / Feature 1.1: Onboarding Realista |
+| **Prioridad / Estimación** | **Must Have** · **5 Story Points** · **Estado: Completada** |
 
 #### Declaración de la Historia
-> **Como** usuario nuevo de la banca digital,  
-> **quiero** registrarme en el sistema completando un formulario con mis datos personales (nombre completo, documento de identidad, celular, nombre de usuario y contraseña),  
-> **para** abrir mis productos financieros y acceder al cajero automático de manera autónoma.
+> **Como** ciudadano interesado en abrir una cuenta bancaria,  
+> **quiero** registrarme con mis datos personales (documento, nombre completo, celular como Llave Bre-B, usuario y contraseña),  
+> **para** obtener inmediatamente mi Cuenta de Ahorros con numeración oficial colombiana (`401-XXXXXXX-X`) y un bono de bienvenida de $100.000 COP.
 
 #### Criterios de Aceptación (Given-When-Then)
-
-* **Escenario 1: Registro exitoso con apertura automática de cuentas**
-  * **Dado que** me encuentro en el formulario de registro de la página web,
-  * **Cuando** ingreso un documento válido, nombre completo, celular de 10 dígitos, un nombre de usuario que no exista previamente y una contraseña segura,
-  * **Entonces** el sistema guarda mi usuario en el almacenamiento local, crea automáticamente una Cuenta de Ahorros con saldo inicial, una Cuenta Corriente y una Tarjeta de Crédito, y me redirige a la pantalla de inicio de sesión con un mensaje de bienvenida.
-
-* **Escenario 2: Intento de registro con nombre de usuario duplicado**
-  * **Dado que** ya existe un cliente registrado con el usuario `carlos.restrepo`,
-  * **Cuando** una persona intenta registrarse usando nuevamente el usuario `carlos.restrepo`,
-  * **Entonces** el sistema no permite el guardado y muestra un mensaje de alerta en pantalla indicando que el usuario ya se encuentra en uso.
-
-* **Escenario 3: Validación de campos obligatorios incompletos**
-  * **Dado que** dejo campos vacíos o con formato inválido (ej. celular con letras),
-  * **Cuando** hago clic en el botón *"Registrarme"*,
-  * **Entonces** el formulario resalta los campos incorrectos y no procesa la solicitud.
+* **Escenario 1: Registro exitoso con apertura exclusiva de Cuenta de Ahorros**
+  * **Dado que** me encuentro en la pestaña *"Registrarme"* de `login.html`,
+  * **Cuando** ingreso un documento, celular y nombre de usuario únicos junto con una contraseña de al menos 6 caracteres,
+  * **Entonces** el sistema crea mi perfil, me asigna una Cuenta de Ahorros formato `401-XXXXXXX-X` con saldo inicial de $100.000 COP, inicia mi sesión automáticamente y me redirige al cajero.
+* **Escenario 2: Rechazo por duplicidad de usuario, documento o celular**
+  * **Dado que** el usuario `carlos99` o el documento `1020304050` ya están registrados,
+  * **Cuando** intento crear otra cuenta con alguno de esos datos,
+  * **Entonces** el sistema impide el registro y muestra una alerta indicando qué dato ya se encuentra en uso.
 
 ---
 
-### US-02: Inicio de Sesión Seguro y Control de Intentos
+### US-02: Inicio de Sesión Seguro y Bloqueo tras 3 Intentos
 
 | Atributo | Detalle |
 | :--- | :--- |
 | **Identificador** | `US-02` |
-| **Épica / Feature** | Épica 1: Autenticación & Clientes / Feature 1.2: Acceso Seguro |
-| **Prioridad** | **Must Have (Alta)** |
-| **Estimación** | **3 Story Points** |
-| **Sprint** | Sprint 1 (Completada) |
+| **Épica / Feature** | Épica 1: Autenticación & Clientes / Feature 1.2: Seguridad de Acceso |
+| **Prioridad / Estimación** | **Must Have** · **3 Story Points** · **Estado: Completada** |
 
 #### Declaración de la Historia
 > **Como** cliente registrado en Mi Plata,  
-> **quiero** iniciar sesión con mi usuario y contraseña, y que el sistema bloquee el acceso tras 3 intentos fallidos consecutivos,  
-> **para** proteger mi dinero contra intentos de acceso no autorizados o ataques de fuerza bruta.
+> **quiero** visualizar cuántos intentos de inicio de sesión me quedan y que mi cuenta se bloquee automáticamente al tercer fallo consecutivo,  
+> **para** proteger mis ahorros frente a intentos de intrusión o fuerza bruta.
 
 #### Criterios de Aceptación (Given-When-Then)
-
-* **Escenario 1: Autenticación correcta**
-  * **Dado que** ingreso credenciales registradas válidas (ej. `carlos.restrepo` / `1234`),
-  * **Cuando** presiono *"Ingresar"*,
-  * **Entonces** el sistema reinicia el contador de intentos fallidos a 3 y me redirige inmediatamente a la vista del Cajero Automático.
-
-* **Escenario 2: Error de contraseña con aviso de intentos restantes**
-  * **Dado que** escribo mi usuario correcto pero la contraseña incorrecta,
-  * **Cuando** presiono *"Ingresar"*,
-  * **Entonces** el sistema muestra una advertencia en color amarillo/rojo indicando cuántos intentos me quedan (ej. *"Contraseña incorrecta. Te quedan 2 intentos"*).
-
-* **Escenario 3: Bloqueo de seguridad al tercer intento fallido**
-  * **Dado que** he fallado 3 veces seguidas la contraseña,
-  * **Cuando** ocurre el tercer fallo,
-  * **Entonces** el sistema cambia el estado del usuario a `bloqueado`, deshabilita el formulario y muestra una notificación clara: *"Acceso bloqueado por seguridad tras 3 intentos fallidos. Comuníquese con el banco"*.
+* **Escenario 1: Acceso exitoso reinicia contador**
+  * **Dado que** ingreso credenciales válidas (ej. `carlos99` / `Pass123!`),
+  * **Cuando** envío el formulario de login,
+  * **Entonces** el contador de intentos fallidos se restablece a 0 (`3 de 3` disponibles) y accedo al panel del cajero.
+* **Escenario 2: Decremento progresivo de intentos con alerta visual**
+  * **Dado que** ingreso una clave errónea para un usuario existente,
+  * **Cuando** fallo el primer o segundo intento,
+  * **Entonces** el indicador visual cambia a estado de advertencia (`2 de 3` o `1 de 3`) e informa cuántos intentos restan antes del bloqueo.
+* **Escenario 3: Bloqueo automático al tercer intento fallido**
+  * **Dado que** acumulo 3 intentos fallidos consecutivos,
+  * **Cuando** se procesa el tercer error,
+  * **Entonces** el atributo `estaBloqueado` pasa a `true`, se deshabilitan las cajas de texto y el botón de ingreso, y no se permite el acceso ni siquiera ingresando posteriormente la clave correcta.
 
 ---
 
-### US-03: Mantenimiento y Administración de Usuarios (CRUD Back-end)
+### US-03: Mantenimiento y Administración CRUD de Usuarios
 
 | Atributo | Detalle |
 | :--- | :--- |
 | **Identificador** | `US-03` |
 | **Épica / Feature** | Épica 1: Autenticación & Clientes / Feature 1.3: Vertical User |
-| **Prioridad** | **Must Have (Alta)** |
-| **Estimación** | **5 Story Points** |
-| **Sprint** | Sprint 1 (Completada) |
+| **Prioridad / Estimación** | **Must Have** · **5 Story Points** · **Estado: Completada** |
 
 #### Declaración de la Historia
-> **Como** administrador del sistema bancario,  
-> **quiero** ejecutar operaciones de consulta por ID, actualización, eliminación y conteo total de usuarios a través de la consola Java,  
-> **para** mantener la integridad y consistencia del registro de clientes en la base de datos en memoria.
+> **Como** administrador del banco (en consola Java) y como cliente titular (en el perfil web),  
+> **quiero** consultar, actualizar mis datos de contacto/contraseña, eliminar mi cuenta y auditar el número de registros,  
+> **para** mantener actualizada la información personal y de seguridad.
 
 #### Criterios de Aceptación (Given-When-Then)
-
-* **Escenario 1: Consulta de usuario por ID (`selectUserById`)**
-  * **Dado que** existen usuarios cargados en el `ArrayList<User>`,
-  * **Cuando** el administrador busca el identificador `101`,
-  * **Entonces** el sistema retorna los datos completos de Carlos Restrepo (nombre, documento, ciudad, celular y saldo asociado).
-
-* **Escenario 2: Actualización de datos de contacto (`updateUser`)**
-  * **Dado que** un cliente solicita cambio de número telefónico o ciudad de residencia,
-  * **Cuando** el administrador invoca `updateUser()` pasando el ID y los nuevos valores,
-  * **Entonces** los campos son modificados en el objeto en memoria y se retorna confirmación de éxito.
-
-* **Escenario 3: Eliminación controlada (`deleteUser`)**
-  * **Dado que** un usuario solicita cancelar su cuenta bancaria,
-  * **Cuando** se ejecuta `deleteUser(id)`,
-  * **Entonces** el usuario es removido de la colección y una búsqueda posterior de su ID devuelve `null` o mensaje de usuario no encontrado.
-
-* **Escenario 4: Auditoría de cantidad de usuarios (`countUsers`)**
-  * **Dado que** se agregan o eliminan usuarios en la sesión,
-  * **Cuando** se llama al método `countUsers()`,
-  * **Entonces** devuelve el número exacto y actualizado de registros activos en la lista.
+* **Escenario 1: Operaciones CRUD en Back-end Java (`UserService`)**
+  * **Dado que** ejecuto el módulo administrativo en Java,
+  * **Cuando** invoco `selectUserById`, `updateUser`, `deleteUser` y `countUsers` sobre el `ArrayList<User>`,
+  * **Entonces** cada operación modifica o consulta la colección en memoria respetando el encapsulamiento y la herencia desde `Person`.
+* **Escenario 2: Actualización de perfil y llave celular en el Cajero Web**
+  * **Dado que** abro el modal *"👤 Mi Perfil"* en `cajero.html`,
+  * **Cuando** modifico mi nombre, celular (Llave Bre-B) o contraseña actualizando los campos requeridos,
+  * **Entonces** `StorageService.actualizarCliente()` persiste los cambios en `localStorage` y actualiza la cabecera del cajero en tiempo real.
 
 ---
 
-### US-04: Consulta de Saldos Consolidados y Consignación
+### US-04: Consulta de Portafolio, KPIs Financieros y Consignación
 
 | Atributo | Detalle |
 | :--- | :--- |
 | **Identificador** | `US-04` |
 | **Épica / Feature** | Épica 2: Cajero & Transacciones / Feature 2.1: Gestión de Fondos |
-| **Prioridad** | **Must Have (Alta)** |
-| **Estimación** | **3 Story Points** |
-| **Sprint** | Sprint 1 (Completada) |
+| **Prioridad / Estimación** | **Must Have** · **3 Story Points** · **Estado: Completada** |
 
 #### Declaración de la Historia
-> **Como** cliente autenticado en el cajero,  
-> **quiero** visualizar el saldo disponible de todas mis cuentas y consignar dinero en efectivo a mi cuenta de ahorros o corriente,  
-> **para** contar con liquidez y verificar el estado financiero de mis productos en tiempo real.
+> **Como** cliente autenticado en el cajero automático,  
+> **quiero** consultar el resumen ejecutivo de mi patrimonio (KPIs) y realizar consignaciones en efectivo mediante montos rápidos o personalizados,  
+> **para** incrementar mi liquidez y recibir un comprobante térmico de cada depósito.
 
 #### Criterios de Aceptación (Given-When-Then)
-
-* **Escenario 1: Visualización clara de saldos al entrar al panel**
-  * **Dado que** inicio sesión satisfactoriamente,
-  * **Cuando** carga la pantalla principal del cajero,
-  * **Entonces** observo tarjetas visuales diferenciadas con el saldo de mi Cuenta de Ahorros, mi Cuenta Corriente y el disponible de mi Tarjeta de Crédito en formato moneda colombiana ($ COP).
-
-* **Escenario 2: Consignación con monto válido**
-  * **Dado que** selecciono la opción *"Consignar"* y elijo mi Cuenta de Ahorros,
-  * **Cuando** ingreso un valor positivo (ej. $100.000) y confirmo la operación,
-  * **Entonces** el saldo de la cuenta se incrementa inmediatamente por dicho valor y se genera un comprobante de transacción exitosa.
-
-* **Escenario 3: Rechazo de valores inválidos o negativos**
-  * **Dado que** intento consignar un monto igual a $0 o un número negativo,
-  * **Cuando** envío la transacción,
-  * **Entonces** el sistema rechaza la operación y me indica que el valor a depositar debe ser mayor a cero.
+* **Escenario 1: Cálculo de KPIs patrimoniales con `.filter()` y `.reduce()`**
+  * **Dado que** ingreso al panel principal del cajero,
+  * **Cuando** se cargan mis productos financieros,
+  * **Entonces** la barra superior calcula dinámicamente mi Patrimonio Total, Rendimientos Ganados, Deuda en Tarjetas y Total de Movimientos.
+* **Escenario 2: Consignación exitosa con emisión de comprobante térmico**
+  * **Dado que** selecciono mi Cuenta de Ahorros o Corriente y elijo un chip rápido (ej. `+$100.000`),
+  * **Cuando** confirmo la consignación,
+  * **Entonces** el saldo aumenta inmediatamente, se agrega la transacción con `.push()` y se despliega en pantalla el **Comprobante Digital Térmico** listo para imprimir.
 
 ---
 
-### US-05: Retiros Inteligentes con Reglas Financieras (Interés y Sobregiro)
+### US-05: Retiros Inteligentes con Reglas Financieras (1.5% y Sobregiro 20%)
 
 | Atributo | Detalle |
 | :--- | :--- |
 | **Identificador** | `US-05` |
-| **Épica / Feature** | Épica 2: Cajero & Transacciones / Feature 2.2: Retiros |
-| **Prioridad** | **Must Have (Alta)** |
-| **Estimación** | **8 Story Points** |
-| **Sprint** | Sprint 1 (Completada) |
+| **Épica / Feature** | Épica 2: Cajero & Transacciones / Feature 2.2: Retiros Polimórficos |
+| **Prioridad / Estimación** | **Must Have** · **8 Story Points** · **Estado: Completada** |
 
 #### Declaración de la Historia
-> **Como** cliente con productos financieros diferenciados,  
-> **quiero** retirar dinero desde mi Cuenta de Ahorros recibiendo un 1.5% de interés/rendimiento sobre el monto retirado, o retirar desde mi Cuenta Corriente utilizando hasta un 20% de sobregiro autorizado en caso de falta de liquidez,  
-> **para** aprovechar las ventajas comerciales y el respaldo financiero de mi banco.
+> **Como** cliente con productos bancarios diferenciados,  
+> **quiero** retirar efectivo de mi Cuenta de Ahorros recibiendo un **1.5% de rendimiento** sobre el monto retirado, o retirar de mi Cuenta Corriente utilizando hasta un **20% de sobregiro autorizado**,  
+> **para** beneficiarme de los incentivos al ahorro y del respaldo de liquidez comercial.
 
 #### Criterios de Aceptación (Given-When-Then)
+* **Escenario 1: Retiro en Cuenta de Ahorros con abono del 1.5%**
+  * **Dado que** mi Cuenta de Ahorros tiene un saldo de $1.000.000 COP,
+  * **Cuando** retiro $200.000 COP,
+  * **Entonces** el sistema calcula un rendimiento de $3.000 COP (1.5% de $200.000), actualiza mi saldo final a **$803.000 COP** y registra el beneficio en el comprobante.
+* **Escenario 2: Retiro en Cuenta Corriente haciendo uso del 20% de sobregiro**
+  * **Dado que** mi Cuenta Corriente tiene un saldo de $1.000.000 COP (tope de retiro con 20% de sobregiro: $1.200.000 COP),
+  * **Cuando** retiro $1.150.000 COP,
+  * **Entonces** la operación es aprobada, mi saldo queda en **-$150.000 COP** (persistiéndose correctamente en `localStorage`) y se notifica el monto de sobregiro utilizado.
 
-* **Escenario 1: Retiro de Cuenta de Ahorros con bonificación del 1.5%**
-  * **Dado que** tengo un saldo de $1.000.000 en mi Cuenta de Ahorros,
-  * **Cuando** retiro $200.000 en efectivo,
-  * **Entonces** el sistema me descuenta los $200.000, pero me abona un 1.5% de rendimiento ($3.000), dejando mi saldo final en $803.000 e informando el beneficio en el comprobante.
+---
 
-* **Escenario 2: Retiro de Cuenta Corriente con uso de sobregiro del 20%**
-  * **Dado que** tengo un saldo de $1.000.000 en mi Cuenta Corriente (cupo de sobregiro máximo: $200.000 adicionales, total disponible: $1.200.000),
-  * **Cuando** solicito un retiro por $1.150.000,
-  * **Entonces** la transacción es aprobada, el saldo de la cuenta queda en -$150.000 y el sistema emite una alerta visual notificando el uso de sobregiro bancario.
+### US-06: Transferencias Inmediatas y por Llave Bre-B
 
-* **Escenario 3: Retiro denegado por exceder límite de fondos o sobregiro**
-  * **Dado que** intento retirar $1.300.000 de la Cuenta Corriente,
-  * **Cuando** confirmo la operación,
-  * **Entonces** el sistema declina el retiro informando que supera el 20% de sobregiro autorizado.
+| Atributo | Detalle |
+| :--- | :--- |
+| **Identificador** | `US-06` |
+| **Épica / Feature** | Épica 2: Cajero & Transacciones / Feature 2.3: Pagos Inmediatos Bre-B |
+| **Prioridad / Estimación** | **Should Have** · **5 Story Points** · **Estado: Completada** |
+
+#### Declaración de la Historia
+> **Como** cliente bancario,  
+> **quiero** transferir dinero al instante hacia otros clientes utilizando su **Llave Bre-B** (número de celular o documento de identidad) o hacia otra de mis cuentas propias,  
+> **para** enviar dinero sin costo y sin depender de números de cuenta extensos.
+
+#### Criterios de Aceptación (Given-When-Then)
+* **Escenario 1: Transferencia exitosa por Llave Celular Bre-B**
+  * **Dado que** elijo el canal *"⚡ Llave Bre-B (Número de Celular)"* e ingreso `3209876543` (perteneciente a María Fernanda Ospina),
+  * **Cuando** transfiero $50.000 COP desde mi cuenta,
+  * **Entonces** se debita $50.000 COP de mi cuenta, se acredita inmediatamente $50.000 COP en la cuenta de María Fernanda, se registran ambos movimientos y se emite el comprobante con el nombre de la destinataria.
+
+---
+
+### US-07: Historial, Buscador en Vivo y Auditoría de Arreglos
+
+| Atributo | Detalle |
+| :--- | :--- |
+| **Identificador** | `US-07` |
+| **Épica / Feature** | Épica 2: Cajero & Transacciones / Feature 2.4: Estructuras de Datos & DOM |
+| **Prioridad / Estimación** | **Must Have** · **5 Story Points** · **Estado: Completada** |
+
+#### Declaración de la Historia
+> **Como** usuario del cajero y evaluador técnico,  
+> **quiero** filtrar mis movimientos en tiempo real con `.filter()`, reimprimir cualquier comprobante histórico y auditar la estructura de datos desapilando el último movimiento (`.pop()`) o depurando el más antiguo (`.shift()`),  
+> **para** llevar control estricto de mis operaciones y evidenciar el dominio de los métodos de arreglos en JavaScript.
+
+#### Criterios de Aceptación (Given-When-Then)
+* **Escenario 1: Búsqueda instantánea con `.filter()`**
+  * **Dado que** escribo una palabra clave o monto en el buscador del historial,
+  * **Cuando** se dispara el evento `input`,
+  * **Entonces** la tabla del DOM se actualiza mostrando únicamente las filas que coinciden con el criterio.
+* **Escenario 2: Deshacer última transacción con `.pop()` y sincronización de saldo**
+  * **Dado que** presiono el botón *"⎌ Deshacer Último .pop()"*,
+  * **Cuando** existen movimientos en la cuenta seleccionada,
+  * **Entonces** se elimina el último elemento del arreglo `_movimientos` mediante `.pop()` y se restaura el saldo contable al estado inmediato anterior.
 
 ---
 
@@ -214,30 +218,65 @@ Cada historia de usuario documentada en este archivo representa una unidad de va
 | Atributo | Detalle |
 | :--- | :--- |
 | **Identificador** | `US-08` |
-| **Épica / Feature** | Épica 3: Tarjeta de Crédito / Feature 3.1: Financiamiento |
-| **Prioridad** | **Must Have (Alta)** |
-| **Estimación** | **5 Story Points** |
-| **Sprint** | Sprint 1 (Completada) |
+| **Épica / Feature** | Épica 3: Tarjeta de Crédito / Feature 3.1: Amortización Francesa |
+| **Prioridad / Estimación** | **Must Have** · **5 Story Points** · **Estado: Completada** |
 
 #### Declaración de la Historia
-> **Como** usuario tarjetahabiente de Mi Plata,  
-> **quiero** simular o realizar compras a cuotas seleccionando el plazo en meses (1 a 36),  
-> **para** conocer con total transparencia la tasa de interés aplicada, el valor de la cuota mensual fija y el costo financiero total antes de endeudarme.
+> **Como** tarjetahabiente de Mi Plata,  
+> **quiero** simular y autorizar compras diferidas entre 1 y 36 cuotas conociendo la tasa mensual aplicada y la cuota fija calculada con la fórmula de amortización francesa,  
+> **para** financiar mis compras con total claridad sobre los intereses.
 
 #### Criterios de Aceptación (Given-When-Then)
+* **Escenario 1: Compra a 1 o 2 cuotas con 0% de interés**
+  * **Dado que** realizo una compra de $1.000.000 COP a 2 cuotas,
+  * **Cuando** el sistema aplica la regla de tasas ($\le 2$ cuotas $\rightarrow 0\%$),
+  * **Entonces** la cuota mensual es exactamente **$500.000 COP** con $0 de interés.
+* **Escenario 2: Compra de 3 a 6 cuotas (1.9% mes) o $\ge 7$ cuotas (2.3% mes)**
+  * **Dado que** realizo una compra de $1.200.000 COP a 6 cuotas ($i = 0.019$),
+  * **Cuando** se evalúa la fórmula $A = \frac{P \times i}{1 - (1+i)^{-n}}$,
+  * **Entonces** la cuota fija resultante es **$213.567 COP**, se descuenta el capital del cupo disponible y aumenta la deuda actual de la tarjeta.
 
-* **Escenario 1: Compra a 1 o 2 cuotas con interés 0%**
-  * **Dado que** simulo o ejecuto una compra de $500.000 a 2 cuotas,
-  * **Cuando** solicito el cálculo,
-  * **Entonces** la tasa mensual es 0.0% y el valor de cada cuota es exactamente $250.000 sin sobrecostos.
+---
 
-* **Escenario 2: Compra a mediano plazo (3 a 6 cuotas) con tasa del 1.9%**
-  * **Dado que** financio una compra de $1.000.000 a 6 cuotas,
-  * **Cuando** el sistema calcula la amortización con la fórmula bancaria estándar:
-    $$Cuota = Monto \times \frac{i \times (1+i)^n}{(1+i)^n - 1}$$
-  * **Entonces** con $i = 0.019$ y $n = 6$, la cuota mensual calculada es de aproximadamente $177.899 y se muestra la tabla con el total de intereses a pagar.
+### US-09: Pagos y Abonos a Tarjeta de Crédito con Liberación de Cupo
 
-* **Escenario 3: Compra a largo plazo (7 o más cuotas) con tasa del 2.3%**
-  * **Dado que** financio una compra a 12 cuotas,
-  * **Cuando** se procesa la transacción,
-  * **Entonces** se aplica la tasa de interés de 2.3% mensual y se descuenta el cupo disponible de la tarjeta en el panel de control.
+| Atributo | Detalle |
+| :--- | :--- |
+| **Identificador** | `US-09` |
+| **Épica / Feature** | Épica 3: Tarjeta de Crédito / Feature 3.2: Recaudo y Cupo |
+| **Prioridad / Estimación** | **Should Have** · **3 Story Points** · **Estado: Completada** |
+
+#### Declaración de la Historia
+> **Como** titular de una Tarjeta de Crédito con deuda vigente,  
+> **quiero** pagar la cuota del mes, hacer un abono parcial o pagar la deuda total (en efectivo o debitando de mi Cuenta de Ahorros/Corriente),  
+> **para** disminuir mi endeudamiento y liberar mi cupo disponible al instante.
+
+#### Criterios de Aceptación (Given-When-Then)
+* **Escenario 1: Pago de tarjeta debitando desde Cuenta de Ahorros**
+  * **Dado que** tengo una deuda de $600.000 COP en mi tarjeta y selecciono *"Pagar Cuota del Mes"* ($300.000 COP) debitando de mi Cuenta de Ahorros,
+  * **Cuando** confirmo el pago,
+  * **Entonces** se descuentan $300.000 COP de mi Cuenta de Ahorros, la deuda de la tarjeta baja a $300.000 COP, mi cupo disponible aumenta en $300.000 COP y se emite el comprobante térmico.
+
+---
+
+### US-10: Estudio Financiero y Crediticio en Línea para Nuevos Productos
+
+| Atributo | Detalle |
+| :--- | :--- |
+| **Identificador** | `US-10` |
+| **Épica / Feature** | Épica 3: Tarjeta de Crédito / Feature 3.3: Evaluación de Riesgo |
+| **Prioridad / Estimación** | **Should Have** · **5 Story Points** · **Estado: Completada** |
+
+#### Declaración de la Historia
+> **Como** cliente que inicia únicamente con Cuenta de Ahorros (ej. `mafe_ospina` o un usuario recién registrado),  
+> **quiero** solicitar en línea el estudio financiero para abrir mi Cuenta Corriente o emitir mi Tarjeta de Crédito Visa según mis ingresos mensuales,  
+> **para** acceder a productos de crédito y sobregiro acordes a mi capacidad económica real.
+
+#### Criterios de Aceptación (Given-When-Then)
+* **Escenario 1: Estudio de Cuenta Corriente (Mínimo $2.000.000 COP)**
+  * **Dado que** solicito una Cuenta Corriente en el modal de estudio financiero,
+  * **Cuando** certifico ingresos $\ge \$2.000.000\text{ COP}$,
+  * **Entonces** el banco aprueba y crea mi Cuenta Corriente (`201-XXXXXXX-X`) con 20% de sobregiro autorizado; si ingreso un monto menor, rechaza la solicitud explicando el requisito.
+* **Escenario 2: Estudio de Tarjeta de Crédito Escalonado (Visa Clásica vs Visa Gold)**
+  * **Dado que** inicio el estudio crediticio para Tarjeta de Crédito,
+  * **Cuando** reporto ingresos entre $1.500.000 y $3.499.999 COP se me aprueba una **Visa Clásica ($2.500.000 cupo)**, y si reporto $\ge \$3.500.000\text{ COP}$ se me aprueba una **Visa Gold ($6.000.000 cupo)** con numeración de 16 dígitos (`4509 XXXX XXXX XXXX`).
