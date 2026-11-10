@@ -405,8 +405,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!tieneCorriente) {
             const cardPromoCorriente = document.createElement('div');
             cardPromoCorriente.className = 'bank-card';
-            cardPromoCorriente.style.background = '#f1f5f9';
-            cardPromoCorriente.style.border = '2px dashed var(--navy-600)';
+            cardPromoCorriente.style.background = '#f6f6f9';
+            cardPromoCorriente.style.border = '2px dashed var(--cesde-charcoal)';
             cardPromoCorriente.style.color = 'var(--navy-900)';
             cardPromoCorriente.innerHTML = `
                 <div class="card-top">
@@ -434,8 +434,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!tieneCredito) {
             const cardPromoCredito = document.createElement('div');
             cardPromoCredito.className = 'bank-card';
-            cardPromoCredito.style.background = '#fffbeb';
-            cardPromoCredito.style.border = '2px dashed var(--gold-500)';
+            cardPromoCredito.style.background = '#fdf2f8';
+            cardPromoCredito.style.border = '2px dashed var(--cesde-magenta)';
             cardPromoCredito.style.color = 'var(--navy-900)';
             cardPromoCredito.innerHTML = `
                 <div class="card-top">

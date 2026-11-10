@@ -1,23 +1,32 @@
-/* Estilos generales y responsive */
+/* Estilos generales y responsive - Identidad Visual Institucional CESDE (Negro, Blanco & Magenta) */
 :root {
-    /* Paleta Institucional "Mi Plata" */
-    --navy-900: #07132b;
-    --navy-800: #0a1f44;
-    --navy-700: #102a5c;
-    --navy-600: #1a3d82;
-    --navy-500: #2554ab;
-    --navy-100: #eaf0fa;
-    --navy-50:  #f4f7fc;
+    /* Paleta Institucional CESDE: Negro Obsidiana, Blanco Puro y Magenta Insignia */
+    --cesde-black:        #09090d;
+    --cesde-charcoal:     #14141d;
+    --cesde-graphite:     #222230;
+    --cesde-magenta:      #e4007c;
+    --cesde-magenta-dark: #b80063;
+    --cesde-magenta-soft: #ff4da6;
+    --cesde-magenta-tint: #fdf2f8;
 
-    /* Acentos de Marca */
+    /* Mapeo de variables estructurales al tema Negro & Magenta */
+    --navy-900: #09090d;
+    --navy-800: #14141d;
+    --navy-700: #222230;
+    --navy-600: #e4007c;
+    --navy-500: #ff1a94;
+    --navy-100: #fce7f3;
+    --navy-50:  #f6f6f9;
+
+    /* Acentos Financieros y de Marca */
     --emerald-500: #10b981;
     --emerald-600: #059669;
     --emerald-100: #d1fae5;
     --emerald-50:  #ecfdf5;
 
-    --gold-500: #f59e0b;
-    --gold-600: #d97706;
-    --gold-100: #fef3c7;
+    --gold-500: #e4007c;
+    --gold-600: #b80063;
+    --gold-100: #fce7f3;
 
     --crimson-500: #ef4444;
     --crimson-600: #dc2626;
@@ -26,11 +35,11 @@
     /* Neutros y Superficies */
     --surface-white: #ffffff;
     --surface-card:  #ffffff;
-    --text-primary:  #0f172a;
-    --text-secondary:#475569;
-    --text-muted:    #94a3b8;
-    --border-light:  #e2e8f0;
-    --border-focus:  #2554ab;
+    --text-primary:  #09090d;
+    --text-secondary:#4a4a5a;
+    --text-muted:    #8e8ea0;
+    --border-light:  #e4e4ec;
+    --border-focus:  #e4007c;
 
     /* Tipografía y Espaciados */
     --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -39,11 +48,11 @@
     --radius-lg: 18px;
     --radius-full: 9999px;
 
-    /* Sombras */
-    --shadow-sm: 0 1px 3px rgba(10, 31, 68, 0.08);
-    --shadow-md: 0 4px 12px rgba(10, 31, 68, 0.10);
-    --shadow-lg: 0 10px 25px rgba(10, 31, 68, 0.15);
-    --shadow-glow: 0 0 15px rgba(37, 84, 171, 0.25);
+    /* Sombras con matiz negro/magenta */
+    --shadow-sm: 0 2px 5px rgba(9, 9, 13, 0.06);
+    --shadow-md: 0 6px 16px rgba(9, 9, 13, 0.10);
+    --shadow-lg: 0 14px 30px rgba(9, 9, 13, 0.16);
+    --shadow-glow: 0 0 18px rgba(228, 0, 124, 0.30);
 
     /* Transiciones */
     --transition-fast: 0.18s ease-in-out;
@@ -75,26 +84,27 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-    color: var(--navy-600);
+    color: var(--cesde-magenta);
     text-decoration: none;
     transition: color var(--transition-fast);
 }
 
 a:hover {
-    color: var(--navy-800);
+    color: var(--cesde-magenta-dark);
 }
 
 /* ==========================================================================
-   HEADER Y NAVBAR
+   HEADER Y NAVBAR (NEGRO OBSIDIANA + LÍNEA INSIGNIA MAGENTA CESDE)
    ========================================================================== */
 .site-header {
-    background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 100%);
+    background: linear-gradient(135deg, var(--cesde-black) 0%, var(--cesde-charcoal) 100%);
     color: var(--surface-white);
     padding: 1rem 1.5rem;
     position: sticky;
     top: 0;
     z-index: 100;
     box-shadow: var(--shadow-md);
+    border-bottom: 3px solid var(--cesde-magenta);
 }
 
 .header-container {
@@ -117,17 +127,34 @@ a:hover {
     letter-spacing: -0.5px;
 }
 
+.brand-logo:hover {
+    color: var(--surface-white);
+}
+
 .brand-logo .logo-icon {
     width: 38px;
     height: 38px;
-    background: linear-gradient(135deg, var(--gold-500), var(--gold-600));
-    color: var(--navy-900);
+    background: linear-gradient(135deg, var(--cesde-magenta), var(--cesde-magenta-dark));
+    color: var(--surface-white);
     border-radius: var(--radius-md);
     display: grid;
     place-items: center;
     font-weight: 900;
-    font-size: 1.2rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    font-size: 1.15rem;
+    box-shadow: 0 3px 10px rgba(228, 0, 124, 0.45);
+}
+
+.cesde-pill {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    background: rgba(228, 0, 124, 0.22);
+    color: #ff66b5;
+    border: 1px solid rgba(228, 0, 124, 0.55);
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--radius-full);
+    margin-left: 0.25rem;
 }
 
 .site-nav {
@@ -137,7 +164,7 @@ a:hover {
 }
 
 .nav-link {
-    color: var(--navy-100);
+    color: #e4e4ec;
     font-weight: 500;
     padding: 0.5rem 0.85rem;
     border-radius: var(--radius-sm);
@@ -146,7 +173,7 @@ a:hover {
 
 .nav-link:hover {
     color: var(--surface-white);
-    background-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(228, 0, 124, 0.2);
 }
 
 /* ==========================================================================
@@ -169,35 +196,42 @@ a:hover {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--navy-600), var(--navy-700));
+    background: linear-gradient(135deg, var(--cesde-charcoal), var(--cesde-black));
     color: var(--surface-white);
-    box-shadow: 0 3px 8px rgba(26, 61, 130, 0.35);
+    border: 1px solid rgba(228, 0, 124, 0.4);
+    box-shadow: 0 3px 10px rgba(9, 9, 13, 0.25);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, var(--navy-500), var(--navy-600));
+    background: linear-gradient(135deg, var(--cesde-magenta), var(--cesde-magenta-dark));
+    border-color: var(--cesde-magenta);
+    color: var(--surface-white);
     transform: translateY(-1px);
-    box-shadow: 0 5px 14px rgba(26, 61, 130, 0.45);
+    box-shadow: 0 6px 16px rgba(228, 0, 124, 0.38);
 }
 
 .btn-accent {
-    background: linear-gradient(135deg, var(--gold-500), var(--gold-600));
-    color: var(--navy-900);
-    box-shadow: 0 3px 8px rgba(245, 158, 11, 0.35);
+    background: linear-gradient(135deg, var(--cesde-magenta), var(--cesde-magenta-dark));
+    color: var(--surface-white);
+    box-shadow: 0 4px 12px rgba(228, 0, 124, 0.35);
 }
 
 .btn-accent:hover {
-    background: linear-gradient(135deg, #fbbf24, var(--gold-500));
+    background: linear-gradient(135deg, #ff1a94, var(--cesde-magenta));
+    color: var(--surface-white);
     transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(228, 0, 124, 0.5);
 }
 
 .btn-success {
     background: linear-gradient(135deg, var(--emerald-500), var(--emerald-600));
     color: var(--surface-white);
+    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.28);
 }
 
 .btn-success:hover {
     background: linear-gradient(135deg, #34d399, var(--emerald-500));
+    transform: translateY(-1px);
 }
 
 .btn-danger {
@@ -207,12 +241,12 @@ a:hover {
 
 .btn-outline {
     background: transparent;
-    color: var(--navy-600);
-    border: 1.5px solid var(--navy-600);
+    color: var(--cesde-magenta);
+    border: 1.5px solid var(--cesde-magenta);
 }
 
 .btn-outline:hover {
-    background: var(--navy-600);
+    background: var(--cesde-magenta);
     color: var(--surface-white);
 }
 
@@ -238,7 +272,7 @@ a:hover {
 .form-label {
     font-size: 0.88rem;
     font-weight: 600;
-    color: var(--navy-800);
+    color: var(--cesde-charcoal);
 }
 
 .form-control {
@@ -255,12 +289,12 @@ a:hover {
 
 .form-control:focus {
     outline: none;
-    border-color: var(--border-focus);
-    box-shadow: 0 0 0 3px rgba(37, 84, 171, 0.18);
+    border-color: var(--cesde-magenta);
+    box-shadow: 0 0 0 3px rgba(228, 0, 124, 0.16);
 }
 
 .form-control:disabled {
-    background-color: #f1f5f9;
+    background-color: #f1f1f6;
     color: var(--text-muted);
     cursor: not-allowed;
 }
@@ -286,9 +320,9 @@ a:hover {
 }
 
 .alert-info {
-    background-color: var(--navy-100);
-    color: var(--navy-700);
-    border-left: 4px solid var(--navy-600);
+    background-color: var(--cesde-magenta-tint);
+    color: var(--cesde-magenta-dark);
+    border-left: 4px solid var(--cesde-magenta);
 }
 
 .alert-success {
@@ -298,9 +332,9 @@ a:hover {
 }
 
 .alert-warning {
-    background-color: var(--gold-100);
-    color: var(--gold-600);
-    border-left: 4px solid var(--gold-500);
+    background-color: #fef3c7;
+    color: #b45309;
+    border-left: 4px solid #f59e0b;
 }
 
 .alert-danger {
@@ -314,7 +348,7 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #f8fafc;
+    background: #fafafa;
     border: 1.5px solid var(--border-light);
     padding: 0.6rem 0.9rem;
     border-radius: var(--radius-md);
@@ -335,8 +369,8 @@ a:hover {
 }
 
 .attempts-badge.warning {
-    background-color: var(--gold-100);
-    color: var(--gold-600);
+    background-color: #fef3c7;
+    color: #b45309;
 }
 
 .attempts-badge.danger {
@@ -348,9 +382,12 @@ a:hover {
    LANDING PAGE (index.html)
    ========================================================================== */
 .hero-section {
-    background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 60%, var(--navy-700) 100%);
+    background:
+        radial-gradient(circle at 82% 18%, rgba(228, 0, 124, 0.32) 0%, transparent 45%),
+        radial-gradient(circle at 15% 85%, rgba(228, 0, 124, 0.18) 0%, transparent 40%),
+        linear-gradient(135deg, var(--cesde-black) 0%, var(--cesde-charcoal) 60%, #260819 100%);
     color: var(--surface-white);
-    padding: 4rem 1.5rem 5rem;
+    padding: 4.5rem 1.5rem 5.5rem;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -366,14 +403,14 @@ a:hover {
 }
 
 .hero-tag {
-    background: rgba(245, 158, 11, 0.18);
-    color: var(--gold-500);
-    border: 1px solid rgba(245, 158, 11, 0.4);
-    padding: 0.35rem 1rem;
+    background: rgba(228, 0, 124, 0.2);
+    color: #ff66b5;
+    border: 1px solid rgba(228, 0, 124, 0.55);
+    padding: 0.35rem 1.1rem;
     border-radius: var(--radius-full);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 700;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
     text-transform: uppercase;
 }
 
@@ -386,7 +423,7 @@ a:hover {
 
 .hero-subtitle {
     font-size: 1.15rem;
-    color: var(--navy-100);
+    color: #d8d8e6;
     max-width: 700px;
 }
 
@@ -434,39 +471,45 @@ a:hover {
     padding: 2rem;
     box-shadow: var(--shadow-md);
     border: 1px solid var(--border-light);
+    border-top: 4px solid var(--cesde-black);
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
 }
 
 .product-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-lg);
+    border-top-color: var(--cesde-magenta);
 }
 
 .product-badge {
     align-self: flex-start;
-    padding: 0.3rem 0.8rem;
+    padding: 0.3rem 0.85rem;
     border-radius: var(--radius-full);
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.4px;
 }
 
 .badge-ahorros {
-    background-color: var(--emerald-100);
-    color: var(--emerald-600);
+    background-color: var(--cesde-magenta-tint);
+    color: var(--cesde-magenta-dark);
+    border: 1px solid rgba(228, 0, 124, 0.25);
 }
 
 .badge-corriente {
-    background-color: var(--navy-100);
-    color: var(--navy-700);
+    background-color: #f1f1f5;
+    color: var(--cesde-black);
+    border: 1px solid #d4d4dc;
 }
 
 .badge-credito {
-    background-color: var(--gold-100);
-    color: var(--gold-600);
+    background-color: var(--cesde-black);
+    color: #ff66b5;
+    border: 1px solid var(--cesde-magenta);
 }
 
 .product-feature-list {
@@ -480,8 +523,8 @@ a:hover {
 
 .product-feature-list li::before {
     content: "✓ ";
-    color: var(--emerald-500);
-    font-weight: 800;
+    color: var(--cesde-magenta);
+    font-weight: 900;
 }
 
 /* Simulador Rápido de Tarjeta de Crédito */
@@ -490,7 +533,7 @@ a:hover {
     border-radius: var(--radius-lg);
     padding: 2.2rem;
     box-shadow: var(--shadow-md);
-    border: 1.5px solid var(--gold-500);
+    border: 1.5px solid rgba(228, 0, 124, 0.35);
     margin-top: 2rem;
 }
 
@@ -502,6 +545,7 @@ a:hover {
     background: var(--navy-50);
     padding: 1.2rem;
     border-radius: var(--radius-md);
+    border: 1px solid var(--border-light);
 }
 
 .sim-result-item {
@@ -543,16 +587,19 @@ a:hover {
 }
 
 .auth-header {
-    background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+    background:
+        radial-gradient(circle at 90% 10%, rgba(228, 0, 124, 0.35), transparent 55%),
+        linear-gradient(135deg, var(--cesde-black), var(--cesde-charcoal));
     color: var(--surface-white);
     padding: 1.8rem;
     text-align: center;
+    border-bottom: 3px solid var(--cesde-magenta);
 }
 
 .auth-tabs {
     display: flex;
     border-bottom: 1.5px solid var(--border-light);
-    background: #f8fafc;
+    background: #f6f6f9;
 }
 
 .auth-tab-btn {
@@ -560,18 +607,18 @@ a:hover {
     padding: 1rem;
     border: none;
     background: none;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.95rem;
     color: var(--text-secondary);
     cursor: pointer;
-    border-bottom: 2px solid transparent;
+    border-bottom: 3px solid transparent;
     transition: all var(--transition-fast);
 }
 
 .auth-tab-btn.active {
-    color: var(--navy-700);
+    color: var(--cesde-magenta);
     background: var(--surface-white);
-    border-bottom-color: var(--navy-600);
+    border-bottom-color: var(--cesde-magenta);
 }
 
 .auth-body {
@@ -611,6 +658,7 @@ a:hover {
     gap: 1rem;
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border-light);
+    border-left: 5px solid var(--cesde-magenta);
 }
 
 .user-info-text h2 {
@@ -622,7 +670,7 @@ a:hover {
     font-size: 0.88rem;
 }
 
-/* Tarjetas de Cuentas */
+/* Tarjetas de Cuentas con Identidad Negro, Grafito y Magenta CESDE */
 .accounts-overview-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -637,30 +685,39 @@ a:hover {
     overflow: hidden;
     box-shadow: var(--shadow-md);
     cursor: pointer;
-    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
     border: 2px solid transparent;
 }
 
 .bank-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
     box-shadow: var(--shadow-lg);
 }
 
 .bank-card.active-account {
-    border-color: var(--gold-500);
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.4);
+    border-color: var(--cesde-magenta-soft);
+    box-shadow: 0 0 0 3px rgba(228, 0, 124, 0.40), var(--shadow-lg);
 }
 
+/* Cuenta de Ahorros: Negro Obsidiana con destello Magenta */
 .bank-card.card-ahorros {
-    background: linear-gradient(135deg, #065f46 0%, #047857 50%, #059669 100%);
+    background:
+        radial-gradient(circle at 90% 15%, rgba(228, 0, 124, 0.42) 0%, transparent 50%),
+        linear-gradient(135deg, #09090d 0%, #161622 55%, #3d0926 100%);
 }
 
+/* Cuenta Corriente: Grafito Ejecutivo / Platino Oscuro */
 .bank-card.card-corriente {
-    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+    background:
+        radial-gradient(circle at 90% 15%, rgba(255, 255, 255, 0.12) 0%, transparent 50%),
+        linear-gradient(135deg, #181820 0%, #272733 55%, #3b3b4d 100%);
 }
 
+/* Tarjeta de Crédito Visa: Magenta Insignia CESDE a Púrpura Profundo */
 .bank-card.card-credito {
-    background: linear-gradient(135deg, #78350f 0%, #92400e 50%, #b45309 100%);
+    background:
+        radial-gradient(circle at 85% 20%, rgba(255, 120, 190, 0.30) 0%, transparent 45%),
+        linear-gradient(135deg, #d80073 0%, #960050 55%, #240417 100%);
 }
 
 .card-top {
@@ -671,20 +728,23 @@ a:hover {
 }
 
 .card-type-tag {
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     font-weight: 700;
     text-transform: uppercase;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0.2rem 0.6rem;
+    letter-spacing: 0.5px;
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 0.22rem 0.7rem;
     border-radius: var(--radius-full);
 }
 
 .card-chip {
     width: 38px;
     height: 28px;
-    background: linear-gradient(135deg, #fbbf24, #d97706);
+    background: linear-gradient(135deg, #f3f4f6, #9ca3af);
     border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.5);
 }
 
 .card-number {
@@ -744,20 +804,28 @@ a:hover {
     justify-content: center;
     gap: 0.6rem;
     padding: 1.2rem 0.8rem;
-    background: #f8fafc;
+    background: #fafafa;
     border: 1.5px solid var(--border-light);
     border-radius: var(--radius-md);
     cursor: pointer;
     font-weight: 600;
     font-size: 0.88rem;
-    color: var(--navy-800);
+    color: var(--cesde-charcoal);
     transition: all var(--transition-fast);
 }
 
-.op-btn:hover, .op-btn.active {
-    background: var(--navy-100);
-    border-color: var(--navy-600);
-    color: var(--navy-900);
+.op-btn:hover {
+    background: var(--cesde-magenta-tint);
+    border-color: var(--cesde-magenta);
+    color: var(--cesde-magenta-dark);
+    transform: translateY(-2px);
+}
+
+.op-btn.active {
+    background: var(--cesde-black);
+    border-color: var(--cesde-magenta);
+    color: var(--surface-white);
+    box-shadow: 0 4px 12px rgba(228, 0, 124, 0.25);
     transform: translateY(-2px);
 }
 
@@ -786,11 +854,19 @@ a:hover {
 }
 
 .transactions-table th {
-    background-color: #f1f5f9;
-    color: var(--navy-900);
+    background-color: var(--cesde-black);
+    color: var(--surface-white);
     font-weight: 700;
     padding: 0.75rem 0.9rem;
-    border-bottom: 2px solid var(--border-light);
+    border-bottom: 2px solid var(--cesde-magenta);
+}
+
+.transactions-table th:first-child {
+    border-top-left-radius: var(--radius-sm);
+}
+
+.transactions-table th:last-child {
+    border-top-right-radius: var(--radius-sm);
 }
 
 .transactions-table td {
@@ -800,7 +876,7 @@ a:hover {
 }
 
 .transactions-table tr:hover {
-    background-color: #f8fafc;
+    background-color: var(--cesde-magenta-tint);
 }
 
 .tx-amount {
@@ -822,8 +898,8 @@ a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(7, 19, 43, 0.65);
-    backdrop-filter: blur(3px);
+    background-color: rgba(9, 9, 13, 0.72);
+    backdrop-filter: blur(4px);
     display: none;
     place-items: center;
     z-index: 200;
@@ -842,15 +918,17 @@ a:hover {
     max-width: 520px;
     box-shadow: var(--shadow-lg);
     overflow: hidden;
+    border: 1px solid rgba(228, 0, 124, 0.25);
 }
 
 .modal-header {
-    background: var(--navy-900);
+    background: linear-gradient(135deg, var(--cesde-black), var(--cesde-charcoal));
     color: var(--surface-white);
     padding: 1.25rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 3px solid var(--cesde-magenta);
 }
 
 .modal-body {
@@ -861,7 +939,7 @@ a:hover {
 
 .modal-footer {
     padding: 1rem 1.5rem;
-    background: #f8fafc;
+    background: #fafafa;
     border-top: 1px solid var(--border-light);
     display: flex;
     justify-content: flex-end;
@@ -876,6 +954,10 @@ a:hover {
     cursor: pointer;
 }
 
+.close-modal-btn:hover {
+    color: var(--cesde-magenta-soft);
+}
+
 /* KPI Summary Grid (Estructuras de Datos: reduce & filter) */
 .kpi-grid {
     display: grid;
@@ -887,6 +969,7 @@ a:hover {
 .kpi-card {
     background: var(--surface-card);
     border: 1px solid var(--border-light);
+    border-top: 3px solid var(--cesde-magenta);
     border-radius: var(--radius-md);
     padding: 1rem 1.15rem;
     display: flex;
@@ -902,8 +985,9 @@ a:hover {
 }
 
 .kpi-icon {
-    font-size: 1.8rem;
-    background: var(--navy-50);
+    font-size: 1.65rem;
+    background: var(--cesde-magenta-tint);
+    border: 1px solid rgba(228, 0, 124, 0.2);
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -921,7 +1005,7 @@ a:hover {
 .kpi-lbl {
     font-size: 0.74rem;
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-secondary);
     letter-spacing: 0.5px;
 }
@@ -929,7 +1013,7 @@ a:hover {
 .kpi-val {
     font-size: 1.25rem;
     font-weight: 800;
-    color: var(--navy-900);
+    color: var(--cesde-black);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -968,9 +1052,9 @@ a:hover {
 }
 
 .chip-btn {
-    background: var(--navy-50);
-    border: 1px solid var(--navy-100);
-    color: var(--navy-800);
+    background: var(--cesde-magenta-tint);
+    border: 1px solid rgba(228, 0, 124, 0.28);
+    color: var(--cesde-black);
     padding: 0.35rem 0.75rem;
     font-size: 0.8rem;
     font-weight: 600;
@@ -980,10 +1064,11 @@ a:hover {
 }
 
 .chip-btn:hover {
-    background: var(--navy-700);
+    background: var(--cesde-magenta);
     color: var(--surface-white);
-    border-color: var(--navy-700);
+    border-color: var(--cesde-magenta);
     transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(228, 0, 124, 0.28);
 }
 
 .chip-btn:active {
@@ -999,7 +1084,7 @@ a:hover {
     margin-bottom: 0.85rem;
     flex-wrap: wrap;
     padding: 0.65rem 0.85rem;
-    background: #f8fafc;
+    background: #fafafa;
     border: 1px solid var(--border-light);
     border-radius: var(--radius-sm);
 }
@@ -1041,21 +1126,21 @@ a:hover {
 
 .btn-outline-warning {
     background: transparent;
-    border: 1px solid var(--gold-500);
-    color: #92400e;
+    border: 1px solid var(--cesde-magenta);
+    color: var(--cesde-magenta-dark);
 }
 .btn-outline-warning:hover {
-    background: var(--gold-500);
+    background: var(--cesde-magenta);
     color: #fff;
 }
 
 .btn-outline-secondary {
     background: transparent;
-    border: 1px solid var(--text-muted);
-    color: var(--text-secondary);
+    border: 1px solid var(--cesde-charcoal);
+    color: var(--cesde-charcoal);
 }
 .btn-outline-secondary:hover {
-    background: var(--text-secondary);
+    background: var(--cesde-charcoal);
     color: #fff;
 }
 
@@ -1064,14 +1149,15 @@ a:hover {
     max-width: 430px;
     background: #ffffff;
     border-radius: var(--radius-lg);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.35), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
 }
 
 .receipt-paper {
     background: #ffffff;
-    color: #0f172a;
+    color: #09090d;
     font-family: 'Courier New', Courier, monospace;
     padding: 1.75rem 1.5rem;
+    border-top: 5px solid var(--cesde-magenta);
     border-bottom: 2px dashed #cbd5e1;
     position: relative;
 }
@@ -1084,7 +1170,7 @@ a:hover {
     font-size: 1.15rem;
     font-weight: 900;
     letter-spacing: 1px;
-    color: #0f172a;
+    color: var(--cesde-black);
 }
 
 .receipt-nit, .receipt-terminal {
@@ -1106,7 +1192,7 @@ a:hover {
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: #0f172a;
+    color: var(--cesde-magenta-dark);
 }
 
 .receipt-body {
@@ -1127,7 +1213,7 @@ a:hover {
 .receipt-total {
     font-size: 0.95rem;
     font-weight: 800;
-    color: #047857;
+    color: var(--cesde-magenta-dark);
     margin: 0.5rem 0;
 }
 
@@ -1143,7 +1229,7 @@ a:hover {
     letter-spacing: 4px;
     margin-top: 0.5rem;
     user-select: none;
-    color: #0f172a;
+    color: #09090d;
 }
 
 /* Impresión térmica / exportación */
@@ -1176,11 +1262,12 @@ a:hover {
 
 /* Footer Corporativo */
 .site-footer {
-    background: var(--navy-900);
+    background: var(--cesde-black);
     color: var(--text-muted);
     padding: 2.5rem 1.5rem 1.5rem;
     margin-top: auto;
     font-size: 0.88rem;
+    border-top: 3px solid var(--cesde-magenta);
 }
 
 .footer-container {
