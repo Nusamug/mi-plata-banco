@@ -1,4 +1,4 @@
-// Manejo de la interfaz del cajero, productos y transferencias por Llave Bre-B
+// Manejo de la interfaz del cajero, productos, transferencias por Llave Bre-B y auditoría de estructuras de datos
 document.addEventListener('DOMContentLoaded', () => {
     StorageService.inicializar();
     let clienteActivo = StorageService.obtenerSesionActiva();
@@ -27,6 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const txtCuentaActivaLabel = document.getElementById('txt-cuenta-activa-label');
     const tbodyMovimientos = document.getElementById('tbody-movimientos');
     const filtroTipoMov = document.getElementById('filtro-tipo-movimiento');
+    const filtroBusquedaTexto = document.getElementById('filtro-busqueda-texto');
+
+    // Botones de auditoría de arreglos (Tema 7)
+    const btnPopMovimiento = document.getElementById('btn-pop-movimiento');
+    const btnShiftMovimiento = document.getElementById('btn-shift-movimiento');
 
     // Botones de operaciones
     const botonesOp = document.querySelectorAll('.op-btn');
@@ -72,6 +77,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const boxPreaprobado = document.getElementById('credito-preaprobado-box');
     const txtPreaprobado = document.getElementById('credito-preaprobado-texto');
 
+    // Modal de comprobante digital
+    const modalComprobante = document.getElementById('modal-comprobante');
+    const btnCerrarComprobante = document.getElementById('btn-cerrar-comprobante');
+    const btnImprimirComprobante = document.getElementById('btn-imprimir-comprobante');
+    const recTitulo = document.getElementById('rec-titulo');
+    const recFechaHora = document.getElementById('rec-fecha-hora');
+    const recAprobacion = document.getElementById('rec-aprobacion');
+    const recTitular = document.getElementById('rec-titular');
+    const recProducto = document.getElementById('rec-producto');
+    const recTipo = document.getElementById('rec-tipo');
+    const recDetalle = document.getElementById('rec-detalle');
+    const recMonto = document.getElementById('rec-monto');
+    const recSaldoNuevo = document.getElementById('rec-saldo-nuevo');
+
     // Modal de perfil
     const btnAbrirPerfil = document.getElementById('btn-abrir-perfil');
     const btnCerrarModalPerfil = document.getElementById('btn-cerrar-modal-perfil');
@@ -86,6 +105,122 @@ document.addEventListener('DOMContentLoaded', () => {
     const perfilPassConfirm = document.getElementById('perfil-pass-confirm');
     const perfilFeedback = document.getElementById('perfil-feedback');
     const btnEliminarCuenta = document.getElementById('btn-eliminar-cuenta');
+
+    // Efectos sonoros nativos con Web Audio API (cero dependencias externas)
+    function reproducirSonido(tipo = 'click') {
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const audioCtx = new AudioContext();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (tipo === 'click') {
+                osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.07);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.07);
+            } else if (tipo === 'exito') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.12); // E5
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            } else if (tipo === 'alerta') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.2);
+            }
+        } catch (e) {
+            // Manejo silencioso si el navegador bloquea audio antes de interacción
+        }
+    }
+
+    // Comprobante digital térmico
+    function mostrarComprobante(tipoOperacion, monto, detalle, cuenta, saldoNuevo) {
+        if (!modalComprobante) return;
+        const formateador = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+        const ahora = new Date();
+        const fechaStr = ahora.toLocaleDateString('es-CO') + ' ' + ahora.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const codAprobacion = Math.floor(100000 + Math.random() * 900000).toString();
+
+        if (recTitulo) recTitulo.textContent = `COMPROBANTE DE ${tipoOperacion.toUpperCase()}`;
+        if (recFechaHora) recFechaHora.textContent = fechaStr;
+        if (recAprobacion) recAprobacion.textContent = codAprobacion;
+        if (recTitular) recTitular.textContent = clienteActivo.nombreCompleto.toUpperCase();
+        if (recProducto) recProducto.textContent = `${cuenta.tipo} - ${cuenta.numeroCuenta}`;
+        if (recTipo) recTipo.textContent = tipoOperacion.toUpperCase();
+        if (recDetalle) recDetalle.textContent = detalle || 'Transacción en Cajero Digital';
+        if (recMonto) recMonto.textContent = formateador.format(monto);
+        if (recSaldoNuevo) recSaldoNuevo.textContent = formateador.format(saldoNuevo);
+
+        modalComprobante.classList.add('active');
+        reproducirSonido('exito');
+    }
+
+    if (btnCerrarComprobante) {
+        btnCerrarComprobante.addEventListener('click', () => {
+            modalComprobante.classList.remove('active');
+        });
+    }
+
+    if (btnImprimirComprobante) {
+        btnImprimirComprobante.addEventListener('click', () => {
+            window.print();
+        });
+    }
+
+    // Métricas KPI de resumen financiero (Uso de reduce y filter - Tema 7)
+    function actualizarMetricasKPI() {
+        const kpiPatrimonio = document.getElementById('kpi-patrimonio');
+        const kpiRendimientos = document.getElementById('kpi-rendimientos');
+        const kpiDeuda = document.getElementById('kpi-deuda');
+        const kpiTotalMov = document.getElementById('kpi-total-movimientos');
+        const kpiSubCuenta = document.getElementById('kpi-sub-cuenta');
+
+        if (!kpiPatrimonio) return;
+
+        const formateador = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+
+        // Total patrimonio en cuentas ordinarias (reduce + filter)
+        const totalPatrimonio = clienteActivo.cuentas
+            .filter(c => c.tipo !== 'CREDITO')
+            .reduce((sum, c) => sum + c.saldo, 0);
+
+        // Rendimientos acumulados generados en cuentas de ahorros
+        const rendimientosTotales = clienteActivo.cuentas
+            .filter(c => c.tipo === 'AHORROS')
+            .reduce((acc, c) => {
+                const rendCuenta = c.movimientos
+                    .filter(tx => tx.tipo === 'RETIRO')
+                    .reduce((sub, tx) => sub + Math.round(tx.monto * CuentaAhorros.TASA_RENDIMIENTO), 0);
+                return acc + rendCuenta;
+            }, 0);
+
+        // Deuda total acumulada en tarjetas de crédito
+        const totalDeuda = clienteActivo.cuentas
+            .filter(c => c.tipo === 'CREDITO')
+            .reduce((sum, c) => sum + (c.deudaActual || 0), 0);
+
+        // Movimientos registrados en la cuenta activa seleccionada
+        const numMovs = (cuentaSeleccionada && cuentaSeleccionada.movimientos) ? cuentaSeleccionada.movimientos.length : 0;
+
+        kpiPatrimonio.textContent = formateador.format(totalPatrimonio);
+        kpiRendimientos.textContent = '+' + formateador.format(rendimientosTotales);
+        kpiDeuda.textContent = formateador.format(totalDeuda);
+        kpiTotalMov.textContent = numMovs;
+        if (kpiSubCuenta && cuentaSeleccionada) {
+            kpiSubCuenta.textContent = `${cuentaSeleccionada.tipo}: ${cuentaSeleccionada.numeroCuenta}`;
+        }
+    }
 
     function recargarDatosCliente() {
         clienteActivo = StorageService.buscarPorDocumento(clienteActivo.documento);
@@ -107,6 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderizarTarjetasCuentas();
         actualizarLabelCuentaActiva();
         renderizarHistorialMovimientos();
+        actualizarMetricasKPI();
     }
 
     function mostrarAlertaCajero(tipo, mensaje) {
@@ -168,10 +304,12 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
 
             cardEl.addEventListener('click', () => {
+                reproducirSonido('click');
                 cuentaSeleccionada = cuenta;
                 renderizarTarjetasCuentas();
                 actualizarLabelCuentaActiva();
                 renderizarHistorialMovimientos();
+                actualizarMetricasKPI();
 
                 if (cuenta.tipo === 'CREDITO') {
                     activarOperacion('credito');
@@ -205,6 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contenedorCuentas.appendChild(cardPromoCorriente);
 
             cardPromoCorriente.querySelector('#btn-abrir-solicitud-corriente').addEventListener('click', () => {
+                reproducirSonido('click');
                 modalCorriente.classList.add('active');
             });
         }
@@ -233,6 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contenedorCuentas.appendChild(cardPromoCredito);
 
             cardPromoCredito.querySelector('#btn-abrir-solicitud-credito').addEventListener('click', () => {
+                reproducirSonido('click');
                 modalCredito.classList.add('active');
             });
         }
@@ -277,15 +417,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     botonesOp.forEach(btn => {
         btn.addEventListener('click', () => {
+            reproducirSonido('click');
             activarOperacion(btn.dataset.op);
         });
     });
 
     if (btnIrEstudioTC) {
         btnIrEstudioTC.addEventListener('click', () => {
+            reproducirSonido('click');
             modalCredito.classList.add('active');
         });
     }
+
+    // Chips de montos rápidos (Consignar y Retirar)
+    document.querySelectorAll('.chip-consignar').forEach(chip => {
+        chip.addEventListener('click', () => {
+            reproducirSonido('click');
+            const inputMonto = document.getElementById('consignar-monto');
+            if (inputMonto) {
+                inputMonto.value = chip.dataset.monto;
+                inputMonto.focus();
+            }
+        });
+    });
+
+    document.querySelectorAll('.chip-retiro').forEach(chip => {
+        chip.addEventListener('click', () => {
+            reproducirSonido('click');
+            const inputMonto = document.getElementById('retirar-monto');
+            if (inputMonto) {
+                inputMonto.value = chip.dataset.monto;
+                inputMonto.focus();
+            }
+        });
+    });
 
     // 1. Consignar
     formConsignar.addEventListener('submit', (e) => {
@@ -295,17 +460,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (cuentaSeleccionada.tipo === 'CREDITO') {
             mostrarAlertaCajero('warning', 'Para ingresar fondos a la Tarjeta de Crédito, utiliza la opción "Pagar Deuda".');
+            reproducirSonido('alerta');
             return;
         }
 
         const res = cuentaSeleccionada.consignar(monto, concepto);
         if (!res.exito) {
             mostrarAlertaCajero('danger', res.mensaje);
+            reproducirSonido('alerta');
             return;
         }
 
         StorageService.actualizarCliente(clienteActivo);
         mostrarAlertaCajero('success', res.mensaje);
+        mostrarComprobante('Consignación en Efectivo', monto, concepto, cuentaSeleccionada, cuentaSeleccionada.saldo);
         formConsignar.reset();
         recargarDatosCliente();
     });
@@ -318,11 +486,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!res.exito) {
             mostrarAlertaCajero('danger', res.mensaje);
+            reproducirSonido('alerta');
             return;
         }
 
         StorageService.actualizarCliente(clienteActivo);
         mostrarAlertaCajero('success', res.mensaje);
+        mostrarComprobante('Retiro en Efectivo', monto, 'Retiro de efectivo en terminal ATM', cuentaSeleccionada, cuentaSeleccionada.saldo);
         formRetirar.reset();
         recargarDatosCliente();
     });
@@ -354,6 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (cuentaSeleccionada.tipo === 'CREDITO') {
             mostrarAlertaCajero('warning', 'No se pueden realizar transferencias directas desde una Tarjeta de Crédito.');
+            reproducirSonido('alerta');
             return;
         }
 
@@ -361,10 +532,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!res.exito) {
             mostrarAlertaCajero('danger', res.mensaje);
+            reproducirSonido('alerta');
             return;
         }
 
         mostrarAlertaCajero('success', res.mensaje);
+        mostrarComprobante('Transferencia Bre-B', monto, `Destino: ${destino} (${motivo})`, cuentaSeleccionada, cuentaSeleccionada.saldo);
         formTransferir.reset();
         recargarDatosCliente();
     });
@@ -408,6 +581,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cuentaTC = clienteActivo.obtenerCuentaPorTipo('CREDITO');
         if (!cuentaTC) {
             mostrarAlertaCajero('danger', 'Aún no posees una Tarjeta de Crédito activa.');
+            reproducirSonido('alerta');
             return;
         }
 
@@ -421,11 +595,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = cuentaTC.realizarCompra(monto, cuotas, comercio);
             if (!res.exito) {
                 mostrarAlertaCajero('danger', res.mensaje);
+                reproducirSonido('alerta');
                 return;
             }
 
             StorageService.actualizarCliente(clienteActivo);
             mostrarAlertaCajero('success', res.mensaje);
+            mostrarComprobante(`Compra Tarjeta (${cuotas} cuotas)`, monto, `Comercio: ${comercio}`, cuentaTC, cuentaTC.cupoDisponible);
             inputTcMontoCompra.value = '';
             actualizarPreviewSimuladorTC();
             recargarDatosCliente();
@@ -435,17 +611,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!res.exito) {
                 mostrarAlertaCajero('danger', res.mensaje);
+                reproducirSonido('alerta');
                 return;
             }
 
             StorageService.actualizarCliente(clienteActivo);
             mostrarAlertaCajero('success', res.mensaje);
+            mostrarComprobante('Abono a Tarjeta de Crédito', montoPago, 'Pago a deuda de tarjeta de crédito', cuentaTC, cuentaTC.cupoDisponible);
             inputTcMontoPago.value = '';
             recargarDatosCliente();
         }
     });
 
-    // 5. Historial de Movimientos
+    // 5. Historial de Movimientos con Filtro de Texto (filter) y Estructuras
     function renderizarHistorialMovimientos() {
         tbodyMovimientos.innerHTML = '';
 
@@ -455,13 +633,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const filtro = filtroTipoMov.value;
+        const textoBusqueda = filtroBusquedaTexto ? filtroBusquedaTexto.value.trim().toLowerCase() : '';
+
+        // Filtrado dinámico de arreglos con .filter()
         const movimientos = cuentaSeleccionada.movimientos.filter(m => {
-            if (filtro === 'TODOS') return true;
-            return m.tipo === filtro;
+            const cumpleTipo = filtro === 'TODOS' || m.tipo === filtro;
+            if (!cumpleTipo) return false;
+            if (!textoBusqueda) return true;
+
+            const matchDetalle = m.detalle && m.detalle.toLowerCase().includes(textoBusqueda);
+            const matchFecha = m.fecha && m.fecha.includes(textoBusqueda);
+            const matchMonto = m.monto && m.monto.toString().includes(textoBusqueda);
+            return matchDetalle || matchFecha || matchMonto;
         });
 
         if (movimientos.length === 0) {
-            tbodyMovimientos.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No se encontraron movimientos para esta cuenta con el filtro aplicado.</td></tr>';
+            tbodyMovimientos.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No se encontraron movimientos para esta cuenta con los criterios aplicados.</td></tr>';
             return;
         }
 
@@ -497,6 +684,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     filtroTipoMov.addEventListener('change', renderizarHistorialMovimientos);
 
+    if (filtroBusquedaTexto) {
+        filtroBusquedaTexto.addEventListener('input', renderizarHistorialMovimientos);
+    }
+
+    // Auditoría interactiva de Arreglos (Tema 7): pop y shift
+    if (btnPopMovimiento) {
+        btnPopMovimiento.addEventListener('click', () => {
+            if (!cuentaSeleccionada || !cuentaSeleccionada.movimientos || cuentaSeleccionada.movimientos.length === 0) {
+                mostrarAlertaCajero('warning', 'No hay movimientos en el arreglo para desapilar (.pop).');
+                reproducirSonido('alerta');
+                return;
+            }
+            const removido = cuentaSeleccionada.eliminarUltimoMovimiento();
+            if (removido) {
+                reproducirSonido('click');
+                StorageService.actualizarCliente(clienteActivo);
+                recargarDatosCliente();
+                mostrarAlertaCajero('info', `⎌ Movimiento reciente desapilado con .pop(): ${removido.tipo} (${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(removido.monto)}). Restan ${cuentaSeleccionada.movimientos.length} en el arreglo.`);
+            }
+        });
+    }
+
+    if (btnShiftMovimiento) {
+        btnShiftMovimiento.addEventListener('click', () => {
+            if (!cuentaSeleccionada || !cuentaSeleccionada.movimientos || cuentaSeleccionada.movimientos.length === 0) {
+                mostrarAlertaCajero('warning', 'No hay movimientos en el arreglo para depurar (.shift).');
+                reproducirSonido('alerta');
+                return;
+            }
+            const removido = cuentaSeleccionada.eliminarPrimerMovimiento();
+            if (removido) {
+                reproducirSonido('click');
+                StorageService.actualizarCliente(clienteActivo);
+                recargarDatosCliente();
+                mostrarAlertaCajero('info', `🧹 Movimiento inicial depurado con .shift(): ${removido.tipo} (${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(removido.monto)}). Restan ${cuentaSeleccionada.movimientos.length} en el arreglo.`);
+            }
+        });
+    }
+
     // 6. Solicitud de Cuenta Corriente
     btnCerrarModalCorriente.addEventListener('click', () => modalCorriente.classList.remove('active'));
 
@@ -511,12 +737,14 @@ document.addEventListener('DOMContentLoaded', () => {
             corrienteFeedback.className = 'alert alert-danger';
             corrienteFeedback.textContent = res.mensaje;
             corrienteFeedback.style.display = 'flex';
+            reproducirSonido('alerta');
             return;
         }
 
         corrienteFeedback.className = 'alert alert-success';
         corrienteFeedback.textContent = res.mensaje;
         corrienteFeedback.style.display = 'flex';
+        reproducirSonido('exito');
 
         setTimeout(() => {
             modalCorriente.classList.remove('active');
@@ -557,12 +785,14 @@ document.addEventListener('DOMContentLoaded', () => {
             creditoFeedback.className = 'alert alert-danger';
             creditoFeedback.textContent = res.mensaje;
             creditoFeedback.style.display = 'flex';
+            reproducirSonido('alerta');
             return;
         }
 
         creditoFeedback.className = 'alert alert-success';
         creditoFeedback.textContent = res.mensaje;
         creditoFeedback.style.display = 'flex';
+        reproducirSonido('exito');
 
         setTimeout(() => {
             modalCredito.classList.remove('active');
@@ -576,6 +806,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 8. Perfil y seguridad
     btnAbrirPerfil.addEventListener('click', () => {
+        reproducirSonido('click');
         perfilDoc.value = clienteActivo.documento;
         perfilUsername.value = clienteActivo.username;
         perfilNombre.value = clienteActivo.nombreCompleto;
@@ -605,6 +836,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!nuevoNombre || !nuevoCelular) {
             mostrarFeedbackPerfil('warning', 'El nombre y celular son obligatorios.');
+            reproducirSonido('alerta');
             return;
         }
 
@@ -612,14 +844,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (passNueva || passConfirm || passActual) {
             if (passActual !== clienteActivo.password) {
                 mostrarFeedbackPerfil('danger', 'La contraseña actual ingresada es incorrecta.');
+                reproducirSonido('alerta');
                 return;
             }
             if (passNueva.length < 6) {
                 mostrarFeedbackPerfil('warning', 'La nueva contraseña debe tener mínimo 6 caracteres.');
+                reproducirSonido('alerta');
                 return;
             }
             if (passNueva !== passConfirm) {
                 mostrarFeedbackPerfil('danger', 'Las nuevas contraseñas no coinciden.');
+                reproducirSonido('alerta');
                 return;
             }
             nuevaPassword = passNueva;
@@ -633,6 +868,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         StorageService.actualizarCliente(clienteActivo);
         mostrarFeedbackPerfil('success', 'Datos actualizados exitosamente.');
+        reproducirSonido('exito');
 
         setTimeout(() => {
             modalPerfil.classList.remove('active');

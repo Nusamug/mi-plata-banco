@@ -876,6 +876,304 @@ a:hover {
     cursor: pointer;
 }
 
+/* KPI Summary Grid (Estructuras de Datos: reduce & filter) */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.kpi-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.kpi-icon {
+    font-size: 1.8rem;
+    background: var(--navy-50);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+}
+
+.kpi-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.kpi-lbl {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+}
+
+.kpi-val {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--navy-900);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.kpi-val.positive {
+    color: var(--emerald-600);
+}
+
+.kpi-val.negative {
+    color: var(--crimson-600);
+}
+
+.kpi-sub {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+}
+
+/* Chips de montos rápidos */
+.quick-chips-wrapper {
+    margin-bottom: 1rem;
+}
+
+.quick-chips-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.4rem;
+}
+
+.quick-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.chip-btn {
+    background: var(--navy-50);
+    border: 1px solid var(--navy-100);
+    color: var(--navy-800);
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.chip-btn:hover {
+    background: var(--navy-700);
+    color: var(--surface-white);
+    border-color: var(--navy-700);
+    transform: translateY(-1px);
+}
+
+.chip-btn:active {
+    transform: scale(0.96);
+}
+
+/* Barra de Auditoría de Arreglos (Tema 7) */
+.array-tools-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.85rem;
+    flex-wrap: wrap;
+    padding: 0.65rem 0.85rem;
+    background: #f8fafc;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-box input {
+    padding-left: 2rem;
+    font-size: 0.82rem;
+    height: 34px;
+}
+
+.search-box .search-icon {
+    position: absolute;
+    left: 0.65rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.array-actions {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.array-actions .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+.btn-outline-warning {
+    background: transparent;
+    border: 1px solid var(--gold-500);
+    color: #92400e;
+}
+.btn-outline-warning:hover {
+    background: var(--gold-500);
+    color: #fff;
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    border: 1px solid var(--text-muted);
+    color: var(--text-secondary);
+}
+.btn-outline-secondary:hover {
+    background: var(--text-secondary);
+    color: #fff;
+}
+
+/* Comprobante Digital / Voucher Térmico de Cajero */
+.receipt-modal-card {
+    max-width: 430px;
+    background: #ffffff;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.receipt-paper {
+    background: #ffffff;
+    color: #0f172a;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 1.75rem 1.5rem;
+    border-bottom: 2px dashed #cbd5e1;
+    position: relative;
+}
+
+.receipt-header {
+    text-align: center;
+}
+
+.receipt-bank-name {
+    font-size: 1.15rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #0f172a;
+}
+
+.receipt-nit, .receipt-terminal {
+    font-size: 0.72rem;
+    color: #475569;
+}
+
+.receipt-divider {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    letter-spacing: -1px;
+    margin: 0.4rem 0;
+    text-align: center;
+    user-select: none;
+}
+
+.receipt-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #0f172a;
+}
+
+.receipt-body {
+    margin-top: 0.5rem;
+    font-size: 0.78rem;
+}
+
+.receipt-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.35rem;
+}
+
+.receipt-line span:first-child {
+    color: #475569;
+}
+
+.receipt-total {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #047857;
+    margin: 0.5rem 0;
+}
+
+.receipt-footer-notes {
+    text-align: center;
+    margin-top: 0.75rem;
+    font-size: 0.7rem;
+    color: #64748b;
+}
+
+.receipt-barcode {
+    font-size: 1.35rem;
+    letter-spacing: 4px;
+    margin-top: 0.5rem;
+    user-select: none;
+    color: #0f172a;
+}
+
+/* Impresión térmica / exportación */
+@media print {
+    body * {
+        visibility: hidden !important;
+    }
+    #modal-comprobante,
+    #modal-comprobante * {
+        visibility: visible !important;
+    }
+    #modal-comprobante {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: #fff;
+        display: block !important;
+        padding: 0;
+    }
+    .receipt-modal-card {
+        box-shadow: none !important;
+        border: none !important;
+        max-width: 100% !important;
+    }
+    .modal-footer {
+        display: none !important;
+    }
+}
+
 /* Footer Corporativo */
 .site-footer {
     background: var(--navy-900);
@@ -937,7 +1235,7 @@ a:hover {
         width: 100%;
     }
 
-    .products-grid, .accounts-overview-grid {
+    .products-grid, .accounts-overview-grid, .kpi-grid {
         grid-template-columns: 1fr;
     }
 
@@ -982,7 +1280,7 @@ a:hover {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .accounts-overview-grid {
+    .accounts-overview-grid, .kpi-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 

@@ -102,6 +102,25 @@ assert(intento3.bloqueado === true && cliente.estaBloqueado === true, 'Tercer fa
 const intento4 = cliente.validarPassword('ClaveSegura1');
 assert(intento4.exito === false && intento4.bloqueado === true, 'No permite acceso aun con clave correcta estando bloqueada');
 
+console.log('\n=== TEST 6: MÉTODOS DE ARREGLOS EN CUENTA (POP, SHIFT, REDUCE, FILTER) ===');
+const cPrueba = new CuentaAhorros('401-0000001-1', '999', 500000);
+cPrueba.consignar(100000, 'Consignacion 1'); // +100000
+cPrueba.consignar(50000, 'Consignacion 2');  // +50000
+cPrueba.calcularRetiro(30000);               // -30000
+assert(cPrueba.movimientos.length === 3, 'Tiene 3 movimientos iniciales agregados con push');
+
+const creditos = cPrueba.obtenerTotalCreditos();
+assert(creditos === 150000, 'Reduce y filter calcularon $150.000 de créditos');
+
+const debitos = cPrueba.obtenerTotalDebitos();
+assert(debitos === 30000, 'Reduce y filter calcularon $30.000 de débitos');
+
+const ultimo = cPrueba.eliminarUltimoMovimiento();
+assert(ultimo.tipo === 'RETIRO' && cPrueba.movimientos.length === 2, 'pop() removió el último movimiento (RETIRO)');
+
+const primero = cPrueba.eliminarPrimerMovimiento();
+assert(primero.detalle === 'Consignacion 1' && cPrueba.movimientos.length === 1, 'shift() removió el primer movimiento');
+
 console.log(`\n========================================`);
 console.log(`RESULTADOS: ${pruebasPasadas}/${totalPruebas} pruebas pasadas.`);
 console.log(`========================================\n`);

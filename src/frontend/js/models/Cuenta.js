@@ -72,6 +72,30 @@ class Cuenta {
         this._movimientos.push(transaccion);
     }
 
+    // Métodos de manipulación de estructuras de datos (Arreglos: pop, shift, reduce)
+    eliminarUltimoMovimiento() {
+        if (this._movimientos.length === 0) return null;
+        return this._movimientos.pop();
+    }
+
+    eliminarPrimerMovimiento() {
+        if (this._movimientos.length === 0) return null;
+        return this._movimientos.shift();
+    }
+
+    // Calcula el total acumulado de dinero movido usando reduce y filter
+    obtenerTotalDebitos() {
+        return this._movimientos
+            .filter(tx => tx.tipo === 'RETIRO' || tx.tipo === 'TRANSFERENCIA_ENVIADA' || tx.tipo === 'COMPRA_CREDITO')
+            .reduce((total, tx) => total + tx.monto, 0);
+    }
+
+    obtenerTotalCreditos() {
+        return this._movimientos
+            .filter(tx => tx.tipo === 'CONSIGNACION' || tx.tipo === 'TRANSFERENCIA_RECIBIDA' || tx.tipo === 'PAGO_TARJETA')
+            .reduce((total, tx) => total + tx.monto, 0);
+    }
+
     toJSON() {
         return {
             numeroCuenta: this._numeroCuenta,

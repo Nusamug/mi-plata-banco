@@ -42,6 +42,43 @@
         <!-- Alerta de Notificación Rápida del Cajero -->
         <div id="cajero-alerta" style="display: none;"></div>
 
+        <!-- Barra de Métricas y Resumen Financiero (Estructuras de Datos: reduce & filter) -->
+        <div class="kpi-grid" id="kpi-resumen-financiero">
+            <div class="kpi-card">
+                <div class="kpi-icon">💰</div>
+                <div class="kpi-info">
+                    <span class="kpi-lbl">Patrimonio Total</span>
+                    <strong class="kpi-val" id="kpi-patrimonio">$0</strong>
+                    <span class="kpi-sub">Suma activa (.reduce)</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">📈</div>
+                <div class="kpi-info">
+                    <span class="kpi-lbl">Rendimientos Ganados</span>
+                    <strong class="kpi-val positive" id="kpi-rendimientos">$0</strong>
+                    <span class="kpi-sub">+1.5% en retiros ahorros</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">💳</div>
+                <div class="kpi-info">
+                    <span class="kpi-lbl">Deuda en Tarjetas</span>
+                    <strong class="kpi-val negative" id="kpi-deuda">$0</strong>
+                    <span class="kpi-sub">Obligaciones vigentes</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">📑</div>
+                <div class="kpi-info">
+                    <span class="kpi-lbl">Movimientos Totales</span>
+                    <strong class="kpi-val" id="kpi-total-movimientos">0</strong>
+                    <span class="kpi-sub" id="kpi-sub-cuenta">Cuenta activa</span>
+                </div>
+            </div>
+        </div>
+
+
         <!-- Portafolio y Tarjetas de Productos Financieros -->
         <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
@@ -91,6 +128,17 @@
                             <input type="number" id="consignar-monto" class="form-control" placeholder="Ej: 200000" min="1000" step="1000" required>
                             <span class="form-helper">Debe ser un valor positivo mayor a $0.</span>
                         </div>
+
+                        <div class="quick-chips-wrapper">
+                            <span class="quick-chips-label">Depósito rápido sugerido:</span>
+                            <div class="quick-chips">
+                                <button type="button" class="chip-btn chip-consignar" data-monto="50000">+$50.000</button>
+                                <button type="button" class="chip-btn chip-consignar" data-monto="100000">+$100.000</button>
+                                <button type="button" class="chip-btn chip-consignar" data-monto="200000">+$200.000</button>
+                                <button type="button" class="chip-btn chip-consignar" data-monto="500000">+$500.000</button>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="form-label" for="consignar-concepto">Concepto (Opcional):</label>
                             <input type="text" id="consignar-concepto" class="form-control" placeholder="Ej: Depósito quincena" value="Depósito en cajero">
@@ -108,6 +156,18 @@
                             <span class="form-helper" id="helper-regla-retiro">
                                 Regla de cuenta: Rendimiento 1.5% en Ahorros o 20% sobregiro en Corriente.
                             </span>
+                        </div>
+                        
+                        <div class="quick-chips-wrapper">
+                            <span class="quick-chips-label">Retiro rápido en cajero:</span>
+                            <div class="quick-chips">
+                                <button type="button" class="chip-btn chip-retiro" data-monto="20000">$20.000</button>
+                                <button type="button" class="chip-btn chip-retiro" data-monto="50000">$50.000</button>
+                                <button type="button" class="chip-btn chip-retiro" data-monto="100000">$100.000</button>
+                                <button type="button" class="chip-btn chip-retiro" data-monto="200000">$200.000</button>
+                                <button type="button" class="chip-btn chip-retiro" data-monto="400000">$400.000</button>
+                                <button type="button" class="chip-btn chip-retiro" data-monto="600000">$600.000</button>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary" style="width: 100%;">
                             Efectuar Retiro en Efectivo
@@ -218,6 +278,22 @@
                             <option value="TRANSFERENCIA_RECIBIDA">Transferencias Recibidas</option>
                             <option value="COMPRA_CREDITO">Compras Tarjeta</option>
                         </select>
+                    </div>
+                </div>
+
+                
+                <div class="array-tools-bar">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="filtro-busqueda-texto" class="form-control" placeholder="Buscar por concepto o fecha...">
+                    </div>
+                    <div class="array-actions">
+                        <button type="button" id="btn-pop-movimiento" class="btn btn-outline-warning btn-sm" title="Remueve el último movimiento usando array.pop()">
+                            ⎌ Deshacer Último <code>.pop()</code>
+                        </button>
+                        <button type="button" id="btn-shift-movimiento" class="btn btn-outline-secondary btn-sm" title="Remueve el movimiento más antiguo usando array.shift()">
+                            🧹 Depurar Primero <code>.shift()</code>
+                        </button>
                     </div>
                 </div>
 
@@ -374,6 +450,49 @@
                         🗑️ Eliminar Mi Cuenta de Usuario
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Modal 4: Comprobante Digital Bancario / Voucher Térmico -->
+    <div class="modal-overlay" id="modal-comprobante">
+        <div class="modal-card receipt-modal-card">
+            <div class="receipt-paper" id="receipt-to-print">
+                <div class="receipt-header">
+                    <div class="receipt-bank-name">BANCO MI PLATA S.A.</div>
+                    <div class="receipt-nit">NIT 900.824.119-4 · RED ATM-COL</div>
+                    <div class="receipt-terminal">TERMINAL: ATM-0492 · MEDELLÍN, COL</div>
+                    <div class="receipt-divider">================================</div>
+                    <div class="receipt-title" id="rec-titulo">COMPROBANTE DE TRANSACCIÓN</div>
+                    <div class="receipt-divider">================================</div>
+                </div>
+                <div class="receipt-body">
+                    <div class="receipt-line"><span>FECHA / HORA:</span><span id="rec-fecha-hora">--/--/---- --:--</span></div>
+                    <div class="receipt-line"><span>NO. APROBACIÓN:</span><span id="rec-aprobacion">094821</span></div>
+                    <div class="receipt-line"><span>TITULAR:</span><span id="rec-titular">---</span></div>
+                    <div class="receipt-line"><span>PRODUCTO:</span><span id="rec-producto">---</span></div>
+                    <div class="receipt-line"><span>TIPO OPERACIÓN:</span><span id="rec-tipo">---</span></div>
+                    <div class="receipt-line"><span>DETALLE:</span><span id="rec-detalle">---</span></div>
+                    <div class="receipt-divider">--------------------------------</div>
+                    <div class="receipt-line receipt-total"><span>VALOR OPERACIÓN:</span><strong id="rec-monto">$0 COP</strong></div>
+                    <div class="receipt-line"><span>COSTO TRANSACCIÓN:</span><span>$0 COP (GRATIS)</span></div>
+                    <div class="receipt-line"><span>SALDO DISPONIBLE:</span><strong id="rec-saldo-nuevo">$0 COP</strong></div>
+                    <div class="receipt-divider">================================</div>
+                    <div class="receipt-footer-notes">
+                        <p>Conserve este recibo para cualquier reclamo.</p>
+                        <p>Línea Nacional Gratuita 01-8000-00-PLATA</p>
+                        <div class="receipt-barcode">||| | |||| || | ||||| || ||| ||||| |||</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; gap: 0.75rem; justify-content: center;">
+                <button type="button" class="btn btn-outline" id="btn-imprimir-comprobante">
+                    🖨️ Imprimir / Guardar PDF
+                </button>
+                <button type="button" class="btn btn-primary" id="btn-cerrar-comprobante">
+                    ✓ Continuar en Cajero
+                </button>
             </div>
         </div>
     </div>
