@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const txtNombreUsuario = document.getElementById('txt-nombre-usuario');
     const txtDocUsuario = document.getElementById('txt-doc-usuario');
     const txtCelUsuario = document.getElementById('txt-cel-usuario');
+    const btnReiniciarDemo = document.getElementById('btn-reiniciar-cajero-demo');
     const btnCerrarSesion = document.getElementById('btn-cerrar-sesion');
     const cajeroAlerta = document.getElementById('cajero-alerta');
     const contenedorCuentas = document.getElementById('contenedor-cuentas');
@@ -40,12 +41,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const formTransferir = document.getElementById('form-op-transferir');
     const formCredito = document.getElementById('form-op-credito');
     const helperReglaRetiro = document.getElementById('helper-regla-retiro');
+    const inputRetirarMonto = document.getElementById('retirar-monto');
+    const previewRetiroSim = document.getElementById('retiro-sim-preview');
 
     // Campos de transferencia Bre-B
     const selectTransferirCanal = document.getElementById('transferir-canal');
     const labelTransferirDestino = document.getElementById('label-transferir-destino');
     const inputTransferirDestino = document.getElementById('transferir-destino');
     const helperTransferirDestino = document.getElementById('helper-transferir-destino');
+    const btnChipMiOtraCuenta = document.getElementById('btn-chip-mi-otra-cuenta');
 
     // Tarjeta de crédito
     const tcAvisoNoCuenta = document.getElementById('tc-aviso-no-cuenta');
@@ -59,6 +63,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewTcSim = document.getElementById('tc-sim-preview');
     const inputTcComercio = document.getElementById('tc-comercio');
     const inputTcMontoPago = document.getElementById('tc-monto-pago');
+    const txtTcDeudaResumen = document.getElementById('txt-tc-deuda-resumen');
+    const txtTcCuotaResumen = document.getElementById('txt-tc-cuota-resumen');
+    const btnTcPagarCuota = document.getElementById('btn-tc-pagar-cuota');
+    const btnTcPagarTotal = document.getElementById('btn-tc-pagar-total');
+    const selectTcOrigenPago = document.getElementById('tc-origen-pago');
 
     // Modales de solicitud de productos
     const modalCorriente = document.getElementById('modal-solicitud-corriente');
@@ -106,6 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const perfilFeedback = document.getElementById('perfil-feedback');
     const btnEliminarCuenta = document.getElementById('btn-eliminar-cuenta');
 
+    const formateadorCOP = new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        maximumFractionDigits: 0
+    });
+
     // Efectos sonoros nativos con Web Audio API (cero dependencias externas)
     function reproducirSonido(tipo = 'click') {
         try {
@@ -145,22 +160,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Comprobante digital térmico
-    function mostrarComprobante(tipoOperacion, monto, detalle, cuenta, saldoNuevo) {
+    function mostrarComprobante(tipoOperacion, monto, detalle, cuenta, saldoNuevo, fechaHoraPersonalizada = null) {
         if (!modalComprobante) return;
-        const formateador = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
         const ahora = new Date();
-        const fechaStr = ahora.toLocaleDateString('es-CO') + ' ' + ahora.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const fechaStr = fechaHoraPersonalizada || (ahora.toLocaleDateString('es-CO') + ' ' + ahora.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
         const codAprobacion = Math.floor(100000 + Math.random() * 900000).toString();
+
+        const numMostrado = cuenta.tipo === 'CREDITO' ? cuenta.numeroFormateado : cuenta.numeroCuenta;
 
         if (recTitulo) recTitulo.textContent = `COMPROBANTE DE ${tipoOperacion.toUpperCase()}`;
         if (recFechaHora) recFechaHora.textContent = fechaStr;
         if (recAprobacion) recAprobacion.textContent = codAprobacion;
         if (recTitular) recTitular.textContent = clienteActivo.nombreCompleto.toUpperCase();
-        if (recProducto) recProducto.textContent = `${cuenta.tipo} - ${cuenta.numeroCuenta}`;
+        if (recProducto) recProducto.textContent = `${cuenta.tipo} · ${numMostrado}`;
         if (recTipo) recTipo.textContent = tipoOperacion.toUpperCase();
         if (recDetalle) recDetalle.textContent = detalle || 'Transacción en Cajero Digital';
-        if (recMonto) recMonto.textContent = formateador.format(monto);
-        if (recSaldoNuevo) recSaldoNuevo.textContent = formateador.format(saldoNuevo);
+        if (recMonto) recMonto.textContent = formateadorCOP.format(monto);
+        if (recSaldoNuevo) recSaldoNuevo.textContent = formateadorCOP.format(saldoNuevo);
 
         modalComprobante.classList.add('active');
         reproducirSonido('exito');
@@ -188,14 +204,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!kpiPatrimonio) return;
 
-        const formateador = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
-
-        // Total patrimonio en cuentas ordinarias (reduce + filter)
+        // 1. Total patrimonio en cuentas ordinarias (reduce + filter)
         const totalPatrimonio = clienteActivo.cuentas
             .filter(c => c.tipo !== 'CREDITO')
             .reduce((sum, c) => sum + c.saldo, 0);
 
-        // Rendimientos acumulados generados en cuentas de ahorros
+        // 2. Rendimientos acumulados generados en cuentas de ahorros (1.5% sobre retiros)
         const rendimientosTotales = clienteActivo.cuentas
             .filter(c => c.tipo === 'AHORROS')
             .reduce((acc, c) => {
@@ -205,21 +219,84 @@ document.addEventListener('DOMContentLoaded', () => {
                 return acc + rendCuenta;
             }, 0);
 
-        // Deuda total acumulada en tarjetas de crédito
+        // 3. Deuda total acumulada en tarjetas de crédito
         const totalDeuda = clienteActivo.cuentas
             .filter(c => c.tipo === 'CREDITO')
             .reduce((sum, c) => sum + (c.deudaActual || 0), 0);
 
-        // Movimientos registrados en la cuenta activa seleccionada
+        // 4. Movimientos registrados en la cuenta activa seleccionada
         const numMovs = (cuentaSeleccionada && cuentaSeleccionada.movimientos) ? cuentaSeleccionada.movimientos.length : 0;
 
-        kpiPatrimonio.textContent = formateador.format(totalPatrimonio);
-        kpiRendimientos.textContent = '+' + formateador.format(rendimientosTotales);
-        kpiDeuda.textContent = formateador.format(totalDeuda);
+        kpiPatrimonio.textContent = formateadorCOP.format(totalPatrimonio);
+        kpiRendimientos.textContent = '+' + formateadorCOP.format(rendimientosTotales);
+        kpiDeuda.textContent = formateadorCOP.format(totalDeuda);
         kpiTotalMov.textContent = numMovs;
         if (kpiSubCuenta && cuentaSeleccionada) {
             kpiSubCuenta.textContent = `${cuentaSeleccionada.tipo}: ${cuentaSeleccionada.numeroCuenta}`;
         }
+    }
+
+    // Actualiza el resumen de deuda en la pestaña de pago de Tarjeta de Crédito
+    function actualizarResumenPagoTC() {
+        const cuentaTC = clienteActivo.obtenerCuentaPorTipo('CREDITO');
+        if (!cuentaTC || !txtTcDeudaResumen || !txtTcCuotaResumen) return;
+
+        txtTcDeudaResumen.textContent = cuentaTC.deudaActualFormateada;
+        txtTcCuotaResumen.textContent = formateadorCOP.format(cuentaTC.cuotaMensualEstimada);
+    }
+
+    // Simulador matemático en vivo para Retiros (Ahorros 1.5%, Corriente 20% sobregiro, Crédito avance)
+    function actualizarPreviewRetiro() {
+        if (!previewRetiroSim || !cuentaSeleccionada) return;
+        const monto = parseFloat(inputRetirarMonto.value) || 0;
+
+        if (monto <= 0) {
+            previewRetiroSim.innerHTML = 'Selecciona o escribe un monto para previsualizar el cálculo bancario.';
+            return;
+        }
+
+        if (cuentaSeleccionada.tipo === 'AHORROS') {
+            const bono = Math.round(monto * CuentaAhorros.TASA_RENDIMIENTO);
+            const saldoFinal = cuentaSeleccionada.saldo + bono - monto;
+            if (monto > cuentaSeleccionada.saldo) {
+                previewRetiroSim.innerHTML = `<span style="color: var(--crimson-600); font-weight: 600;">⚠️ Excede tu saldo disponible (${cuentaSeleccionada.saldoFormateado}). En Ahorros no hay sobregiro.</span>`;
+            } else {
+                previewRetiroSim.innerHTML = `
+                    <div><strong>Regla Ahorros (1.5% rendimiento):</strong> Ganas <strong style="color: var(--emerald-600);">+${formateadorCOP.format(bono)}</strong> por este retiro.</div>
+                    <div>Saldo final proyectado: <strong>${formateadorCOP.format(saldoFinal)}</strong></div>
+                `;
+            }
+        } else if (cuentaSeleccionada.tipo === 'CORRIENTE') {
+            const maxDisponible = cuentaSeleccionada.limiteRetiroDisponible;
+            const saldoFinal = cuentaSeleccionada.saldo - monto;
+            if (monto > maxDisponible) {
+                previewRetiroSim.innerHTML = `<span style="color: var(--crimson-600); font-weight: 600;">⚠️ Excede el tope máximo con 20% de sobregiro (${formateadorCOP.format(maxDisponible)}).</span>`;
+            } else if (saldoFinal < 0) {
+                previewRetiroSim.innerHTML = `
+                    <div><strong>Regla Corriente (Uso de Sobregiro 20%):</strong> Utilizarás <strong style="color: var(--crimson-600);">${formateadorCOP.format(Math.abs(saldoFinal))}</strong> de cupo de sobregiro.</div>
+                    <div>Saldo final en sobregiro: <strong>${formateadorCOP.format(saldoFinal)}</strong></div>
+                `;
+            } else {
+                previewRetiroSim.innerHTML = `
+                    <div><strong>Retiro ordinario sin usar sobregiro.</strong></div>
+                    <div>Saldo final proyectado: <strong>${formateadorCOP.format(saldoFinal)}</strong></div>
+                `;
+            }
+        } else if (cuentaSeleccionada.tipo === 'CREDITO') {
+            if (monto > cuentaSeleccionada.cupoDisponible) {
+                previewRetiroSim.innerHTML = `<span style="color: var(--crimson-600); font-weight: 600;">⚠️ Supera el cupo disponible de tu tarjeta (${cuentaSeleccionada.cupoDisponibleFormateado}).</span>`;
+            } else {
+                const sim = cuentaSeleccionada.calcularCuotaMensual(monto, 12);
+                previewRetiroSim.innerHTML = `
+                    <div><strong>Avance en Efectivo a 12 cuotas (Tasa ${sim.tasaPorcentaje}):</strong></div>
+                    <div>Cuota fija mensual: <strong>${formateadorCOP.format(sim.cuotaMensual)}</strong> | Cupo restante: <strong>${formateadorCOP.format(cuentaSeleccionada.cupoDisponible - monto)}</strong></div>
+                `;
+            }
+        }
+    }
+
+    if (inputRetirarMonto) {
+        inputRetirarMonto.addEventListener('input', actualizarPreviewRetiro);
     }
 
     function recargarDatosCliente() {
@@ -243,6 +320,8 @@ document.addEventListener('DOMContentLoaded', () => {
         actualizarLabelCuentaActiva();
         renderizarHistorialMovimientos();
         actualizarMetricasKPI();
+        actualizarResumenPagoTC();
+        actualizarPreviewRetiro();
     }
 
     function mostrarAlertaCajero(tipo, mensaje) {
@@ -278,8 +357,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 claseColor = 'card-corriente';
                 labelTipo = 'Cuenta Corriente';
                 const limite = cuenta.limiteRetiroDisponible;
-                const formateadoLimite = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(limite);
-                infoExtra = `<span>Sobregiro: <strong>20% (${formateadoLimite})</strong></span><span>Uso frecuente</span>`;
+                const formateadoLimite = formateadorCOP.format(limite);
+                const estadoSobregiro = cuenta.saldo < 0 ? `<span style="color: #fca5a5; font-weight: 700;">En Sobregiro</span>` : `<span>Uso comercial</span>`;
+                infoExtra = `<span>Tope (+20%): <strong>${formateadoLimite}</strong></span>${estadoSobregiro}`;
             } else if (cuenta.tipo === 'CREDITO') {
                 claseColor = 'card-credito';
                 labelTipo = cuenta.franquicia || 'Tarjeta de Crédito';
@@ -310,6 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 actualizarLabelCuentaActiva();
                 renderizarHistorialMovimientos();
                 actualizarMetricasKPI();
+                actualizarPreviewRetiro();
 
                 if (cuenta.tipo === 'CREDITO') {
                     activarOperacion('credito');
@@ -384,14 +465,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        txtCuentaActivaLabel.textContent = `${cuentaSeleccionada.tipo} (${cuentaSeleccionada.numeroCuenta}) - Saldo: ${cuentaSeleccionada.saldoFormateado}`;
+        const etiquetaSaldo = cuentaSeleccionada.tipo === 'CREDITO'
+            ? `Cupo Disp: ${cuentaSeleccionada.cupoDisponibleFormateado}`
+            : `Saldo: ${cuentaSeleccionada.saldoFormateado}`;
+
+        txtCuentaActivaLabel.textContent = `${cuentaSeleccionada.tipo} (${cuentaSeleccionada.numeroCuenta}) · ${etiquetaSaldo}`;
 
         if (cuentaSeleccionada.tipo === 'AHORROS') {
-            helperReglaRetiro.textContent = 'Regla Ahorros: Aplica 1.5% de rendimiento financiero sobre el retiro. Saldo disponible: ' + cuentaSeleccionada.saldoFormateado;
+            helperReglaRetiro.textContent = 'Regla Ahorros: Aplica 1.5% de rendimiento financiero sobre el monto retirado. Disponible: ' + cuentaSeleccionada.saldoFormateado;
         } else if (cuentaSeleccionada.tipo === 'CORRIENTE') {
             const limite = cuentaSeleccionada.limiteRetiroDisponible;
-            const limFormateado = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(limite);
-            helperReglaRetiro.textContent = `Regla Corriente: Admite sobregiro del 20%. Puedes retirar hasta ${limFormateado}.`;
+            helperReglaRetiro.textContent = `Regla Corriente: Admite sobregiro del 20%. Puedes retirar hasta ${formateadorCOP.format(limite)}.`;
         } else if (cuentaSeleccionada.tipo === 'CREDITO') {
             helperReglaRetiro.textContent = `Regla Crédito: Los retiros aplican como avance en efectivo a 12 cuotas. Cupo: ${cuentaSeleccionada.cupoDisponibleFormateado}.`;
         }
@@ -412,6 +496,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const tieneTC = Boolean(clienteActivo.obtenerCuentaPorTipo('CREDITO'));
             tcAvisoNoCuenta.style.display = tieneTC ? 'none' : 'block';
             tcContenedorOperaciones.style.display = tieneTC ? 'block' : 'none';
+            actualizarResumenPagoTC();
         }
     }
 
@@ -429,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Chips de montos rápidos (Consignar y Retirar)
+    // Chips de montos rápidos (Consignar, Retirar, Transferir, TC y Estudios)
     document.querySelectorAll('.chip-consignar').forEach(chip => {
         chip.addEventListener('click', () => {
             reproducirSonido('click');
@@ -444,13 +529,81 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.chip-retiro').forEach(chip => {
         chip.addEventListener('click', () => {
             reproducirSonido('click');
-            const inputMonto = document.getElementById('retirar-monto');
+            if (inputRetirarMonto) {
+                inputRetirarMonto.value = chip.dataset.monto;
+                actualizarPreviewRetiro();
+                inputRetirarMonto.focus();
+            }
+        });
+    });
+
+    document.querySelectorAll('.chip-transferir-monto').forEach(chip => {
+        chip.addEventListener('click', () => {
+            reproducirSonido('click');
+            const inputMonto = document.getElementById('transferir-monto');
             if (inputMonto) {
                 inputMonto.value = chip.dataset.monto;
                 inputMonto.focus();
             }
         });
     });
+
+    document.querySelectorAll('.chip-tc-compra').forEach(chip => {
+        chip.addEventListener('click', () => {
+            reproducirSonido('click');
+            if (inputTcMontoCompra) {
+                inputTcMontoCompra.value = chip.dataset.monto;
+                actualizarPreviewSimuladorTC();
+                inputTcMontoCompra.focus();
+            }
+        });
+    });
+
+    document.querySelectorAll('.chip-ingreso-corriente').forEach(chip => {
+        chip.addEventListener('click', () => {
+            reproducirSonido('click');
+            if (inputCorrienteIngresos) {
+                inputCorrienteIngresos.value = chip.dataset.monto;
+            }
+        });
+    });
+
+    document.querySelectorAll('.chip-ingreso-tc').forEach(chip => {
+        chip.addEventListener('click', () => {
+            reproducirSonido('click');
+            if (inputCreditoIngresos) {
+                inputCreditoIngresos.value = chip.dataset.monto;
+                inputCreditoIngresos.dispatchEvent(new Event('input'));
+            }
+        });
+    });
+
+    // Directorio rápido de destinatarios Bre-B
+    document.querySelectorAll('.chip-contacto-breb').forEach(chip => {
+        chip.addEventListener('click', () => {
+            reproducirSonido('click');
+            selectTransferirCanal.value = chip.dataset.canal;
+            selectTransferirCanal.dispatchEvent(new Event('change'));
+            inputTransferirDestino.value = chip.dataset.destino;
+        });
+    });
+
+    if (btnChipMiOtraCuenta) {
+        btnChipMiOtraCuenta.addEventListener('click', () => {
+            reproducirSonido('click');
+            const otraCuenta = clienteActivo.cuentas.find(
+                c => c.tipo !== 'CREDITO' && (!cuentaSeleccionada || c.numeroCuenta !== cuentaSeleccionada.numeroCuenta)
+            );
+            if (!otraCuenta) {
+                mostrarAlertaCajero('warning', 'Solo tienes una cuenta de depósito activa. Solicita primero tu Cuenta Corriente para transferir entre tus propias cuentas.');
+                return;
+            }
+            selectTransferirCanal.value = 'CUENTA';
+            selectTransferirCanal.dispatchEvent(new Event('change'));
+            inputTransferirDestino.value = otraCuenta.numeroCuenta;
+            document.getElementById('transferir-concepto').value = `Traspaso propio hacia ${otraCuenta.tipo}`;
+        });
+    }
 
     // 1. Consignar
     formConsignar.addEventListener('submit', (e) => {
@@ -459,7 +612,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const concepto = document.getElementById('consignar-concepto').value.trim() || 'Depósito en cajero';
 
         if (cuentaSeleccionada.tipo === 'CREDITO') {
-            mostrarAlertaCajero('warning', 'Para ingresar fondos a la Tarjeta de Crédito, utiliza la opción "Pagar Deuda".');
+            mostrarAlertaCajero('warning', 'Para abonar dinero a la Tarjeta de Crédito, hemos cambiado a la pestaña "T. Crédito -> Pagar / Abonar a la Deuda".');
+            activarOperacion('credito');
+            selectTcAccion.value = 'pago';
+            selectTcAccion.dispatchEvent(new Event('change'));
             reproducirSonido('alerta');
             return;
         }
@@ -475,13 +631,14 @@ document.addEventListener('DOMContentLoaded', () => {
         mostrarAlertaCajero('success', res.mensaje);
         mostrarComprobante('Consignación en Efectivo', monto, concepto, cuentaSeleccionada, cuentaSeleccionada.saldo);
         formConsignar.reset();
+        document.getElementById('consignar-concepto').value = 'Depósito en cajero';
         recargarDatosCliente();
     });
 
     // 2. Retirar
     formRetirar.addEventListener('submit', (e) => {
         e.preventDefault();
-        const monto = parseFloat(document.getElementById('retirar-monto').value);
+        const monto = parseFloat(inputRetirarMonto.value);
         const res = cuentaSeleccionada.calcularRetiro(monto);
 
         if (!res.exito) {
@@ -492,7 +649,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         StorageService.actualizarCliente(clienteActivo);
         mostrarAlertaCajero('success', res.mensaje);
-        mostrarComprobante('Retiro en Efectivo', monto, 'Retiro de efectivo en terminal ATM', cuentaSeleccionada, cuentaSeleccionada.saldo);
+        const detalleRecibo = res.transaccion ? res.transaccion.detalle : 'Retiro de efectivo en terminal ATM';
+        const saldoPost = cuentaSeleccionada.tipo === 'CREDITO' ? cuentaSeleccionada.cupoDisponible : cuentaSeleccionada.saldo;
+        mostrarComprobante('Retiro en Efectivo', monto, detalleRecibo, cuentaSeleccionada, saldoPost);
         formRetirar.reset();
         recargarDatosCliente();
     });
@@ -523,7 +682,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const canal = selectTransferirCanal.value;
 
         if (cuentaSeleccionada.tipo === 'CREDITO') {
-            mostrarAlertaCajero('warning', 'No se pueden realizar transferencias directas desde una Tarjeta de Crédito.');
+            mostrarAlertaCajero('warning', 'Selecciona tu Cuenta de Ahorros o Corriente arriba para enviar transferencias.');
             reproducirSonido('alerta');
             return;
         }
@@ -536,18 +695,46 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        mostrarAlertaCajero('success', res.mensaje);
-        mostrarComprobante('Transferencia Bre-B', monto, `Destino: ${destino} (${motivo})`, cuentaSeleccionada, cuentaSeleccionada.saldo);
-        formTransferir.reset();
         recargarDatosCliente();
+        mostrarAlertaCajero('success', res.mensaje);
+        mostrarComprobante('Transferencia Bre-B', monto, `A: ${res.destinatarioNombre} (${res.canalTexto}) · ${motivo}`, cuentaSeleccionada, res.nuevoSaldo);
+        formTransferir.reset();
+        document.getElementById('transferir-concepto').value = 'Transferencia inmediata Bre-B';
     });
 
-    // 4. Tarjeta de crédito
+    // 4. Tarjeta de crédito (Compras y Pagos)
     selectTcAccion.addEventListener('change', () => {
         const esCompra = selectTcAccion.value === 'compra';
         bloqueTcCompra.style.display = esCompra ? 'block' : 'none';
         bloqueTcPago.style.display = esCompra ? 'none' : 'block';
+        actualizarResumenPagoTC();
     });
+
+    if (btnTcPagarCuota) {
+        btnTcPagarCuota.addEventListener('click', () => {
+            reproducirSonido('click');
+            const cuentaTC = clienteActivo.obtenerCuentaPorTipo('CREDITO');
+            if (!cuentaTC || cuentaTC.deudaActual <= 0) {
+                mostrarAlertaCajero('info', 'Tu tarjeta de crédito no tiene deuda pendiente en este momento.');
+                return;
+            }
+            inputTcMontoPago.value = cuentaTC.cuotaMensualEstimada;
+            inputTcMontoPago.focus();
+        });
+    }
+
+    if (btnTcPagarTotal) {
+        btnTcPagarTotal.addEventListener('click', () => {
+            reproducirSonido('click');
+            const cuentaTC = clienteActivo.obtenerCuentaPorTipo('CREDITO');
+            if (!cuentaTC || cuentaTC.deudaActual <= 0) {
+                mostrarAlertaCajero('info', 'Tu tarjeta de crédito no tiene deuda pendiente en este momento.');
+                return;
+            }
+            inputTcMontoPago.value = cuentaTC.deudaActual;
+            inputTcMontoPago.focus();
+        });
+    }
 
     function actualizarPreviewSimuladorTC() {
         const cuentaTC = clienteActivo.obtenerCuentaPorTipo('CREDITO');
@@ -559,17 +746,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (monto > 0) {
             try {
                 const sim = cuentaTC.calcularCuotaMensual(monto, cuotas);
-                const formateador = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
                 previewTcSim.innerHTML = `
-                    Cuota mensual: <strong>${formateador.format(sim.cuotaMensual)}</strong> | 
-                    Tasa: <strong>${sim.tasaPorcentaje}</strong> | 
-                    Total: <strong>${formateador.format(sim.totalPagar)}</strong>
+                    <div>Cuota fija mensual: <strong>${formateadorCOP.format(sim.cuotaMensual)}</strong> | Tasa: <strong>${sim.tasaPorcentaje}</strong></div>
+                    <div>Intereses totales: <strong>${formateadorCOP.format(sim.totalIntereses)}</strong> | Total diferido: <strong>${formateadorCOP.format(sim.totalPagar)}</strong></div>
                 `;
             } catch (e) {
                 previewTcSim.textContent = 'Monto no válido para cálculo.';
             }
         } else {
-            previewTcSim.innerHTML = 'Ingresa un valor para calcular la cuota mensual.';
+            previewTcSim.innerHTML = 'Ingresa o selecciona un valor para calcular la cuota mensual.';
         }
     }
 
@@ -601,14 +786,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
             StorageService.actualizarCliente(clienteActivo);
             mostrarAlertaCajero('success', res.mensaje);
-            mostrarComprobante(`Compra Tarjeta (${cuotas} cuotas)`, monto, `Comercio: ${comercio}`, cuentaTC, cuentaTC.cupoDisponible);
+            mostrarComprobante(`Compra Tarjeta (${cuotas} cuotas)`, monto, `Comercio: ${comercio} · Cuota: ${formateadorCOP.format(res.amortizacion.cuotaMensual)}/mes`, cuentaTC, cuentaTC.cupoDisponible);
             inputTcMontoCompra.value = '';
             actualizarPreviewSimuladorTC();
             recargarDatosCliente();
         } else {
             const montoPago = parseFloat(inputTcMontoPago.value);
-            const res = cuentaTC.pagarDeuda(montoPago);
+            const medioPago = selectTcOrigenPago ? selectTcOrigenPago.value : 'EFECTIVO';
 
+            if (isNaN(montoPago) || montoPago <= 0) {
+                mostrarAlertaCajero('warning', 'Ingresa un valor válido mayor a $0 para abonar a la tarjeta.');
+                reproducirSonido('alerta');
+                return;
+            }
+
+            if (cuentaTC.deudaActual <= 0) {
+                mostrarAlertaCajero('info', 'La tarjeta de crédito se encuentra en $0 de deuda.');
+                return;
+            }
+
+            const montoEfectivo = Math.min(montoPago, cuentaTC.deudaActual);
+            let detalleOrigen = 'Abono en efectivo por cajero';
+
+            // Si eligió debitar desde Ahorros o Corriente
+            if (medioPago === 'AHORROS' || medioPago === 'CORRIENTE') {
+                const cuentaDebito = clienteActivo.obtenerCuentaPorTipo(medioPago);
+                if (!cuentaDebito) {
+                    mostrarAlertaCajero('danger', `No tienes una cuenta ${medioPago} activa para debitar el pago.`);
+                    reproducirSonido('alerta');
+                    return;
+                }
+                const maxDisp = cuentaDebito.tipo === 'CORRIENTE' ? cuentaDebito.limiteRetiroDisponible : cuentaDebito.saldo;
+                if (montoEfectivo > maxDisp) {
+                    mostrarAlertaCajero('danger', `Fondos insuficientes en tu cuenta ${medioPago} (${cuentaDebito.numeroCuenta}) para cubrir ${formateadorCOP.format(montoEfectivo)}.`);
+                    reproducirSonido('alerta');
+                    return;
+                }
+                cuentaDebito._saldo -= montoEfectivo;
+                cuentaDebito.registrarMovimiento(
+                    new Transaccion('RETIRO', montoEfectivo, cuentaDebito._saldo, `Débito para pago de Tarjeta de Crédito (${cuentaTC.numeroFormateado})`)
+                );
+                detalleOrigen = `Débito desde cuenta ${medioPago} (${cuentaDebito.numeroCuenta})`;
+            }
+
+            const res = cuentaTC.pagarDeuda(montoEfectivo, detalleOrigen);
             if (!res.exito) {
                 mostrarAlertaCajero('danger', res.mensaje);
                 reproducirSonido('alerta');
@@ -617,18 +838,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             StorageService.actualizarCliente(clienteActivo);
             mostrarAlertaCajero('success', res.mensaje);
-            mostrarComprobante('Abono a Tarjeta de Crédito', montoPago, 'Pago a deuda de tarjeta de crédito', cuentaTC, cuentaTC.cupoDisponible);
+            mostrarComprobante('Abono a Tarjeta de Crédito', res.montoPagado, detalleOrigen, cuentaTC, cuentaTC.cupoDisponible);
             inputTcMontoPago.value = '';
             recargarDatosCliente();
         }
     });
 
-    // 5. Historial de Movimientos con Filtro de Texto (filter) y Estructuras
+    // 5. Historial de Movimientos con Filtro de Texto (.filter) y Reimpresión de Recibo
     function renderizarHistorialMovimientos() {
         tbodyMovimientos.innerHTML = '';
 
         if (!cuentaSeleccionada || !cuentaSeleccionada.movimientos) {
-            tbodyMovimientos.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Sin movimientos registrados.</td></tr>';
+            tbodyMovimientos.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Sin movimientos registrados.</td></tr>';
             return;
         }
 
@@ -644,15 +865,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const matchDetalle = m.detalle && m.detalle.toLowerCase().includes(textoBusqueda);
             const matchFecha = m.fecha && m.fecha.includes(textoBusqueda);
             const matchMonto = m.monto && m.monto.toString().includes(textoBusqueda);
-            return matchDetalle || matchFecha || matchMonto;
+            const matchTipo = m.tipo && m.tipo.toLowerCase().includes(textoBusqueda);
+            return matchDetalle || matchFecha || matchMonto || matchTipo;
         });
 
         if (movimientos.length === 0) {
-            tbodyMovimientos.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No se encontraron movimientos para esta cuenta con los criterios aplicados.</td></tr>';
+            tbodyMovimientos.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No se encontraron movimientos para esta cuenta con los criterios aplicados.</td></tr>';
             return;
         }
-
-        const formateador = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
 
         movimientos.forEach(tx => {
             const tr = document.createElement('tr');
@@ -666,18 +886,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div style="font-size: 0.75rem; color: var(--text-muted);">${tx.hora}</div>
                 </td>
                 <td>
-                    <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase;">
+                    <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">
                         ${tx.tipo.replace('_', ' ')}
                     </span>
                 </td>
                 <td>${tx.detalle || 'Transacción en cajero'}</td>
                 <td class="tx-amount ${claseMonto}">
-                    ${signo}${formateador.format(tx.monto)}
+                    ${signo}${formateadorCOP.format(tx.monto)}
                 </td>
                 <td style="font-weight: 600;">
-                    ${formateador.format(tx.saldoPosterior)}
+                    ${formateadorCOP.format(tx.saldoPosterior)}
+                </td>
+                <td style="text-align: center;">
+                    <button type="button" class="btn-ver-recibo chip-btn" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" title="Ver e imprimir comprobante térmico">
+                        🧾
+                    </button>
                 </td>
             `;
+
+            tr.querySelector('.btn-ver-recibo').addEventListener('click', () => {
+                mostrarComprobante(
+                    tx.tipo.replace('_', ' '),
+                    tx.monto,
+                    tx.detalle,
+                    cuentaSeleccionada,
+                    tx.saldoPosterior,
+                    `${tx.fecha} ${tx.hora}`
+                );
+            });
+
             tbodyMovimientos.appendChild(tr);
         });
     }
@@ -701,7 +938,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 reproducirSonido('click');
                 StorageService.actualizarCliente(clienteActivo);
                 recargarDatosCliente();
-                mostrarAlertaCajero('info', `⎌ Movimiento reciente desapilado con .pop(): ${removido.tipo} (${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(removido.monto)}). Restan ${cuentaSeleccionada.movimientos.length} en el arreglo.`);
+                mostrarAlertaCajero('info', `⎌ Último movimiento desapilado con .pop(): ${removido.tipo} (${formateadorCOP.format(removido.monto)}). Saldo sincronizado a ${cuentaSeleccionada.saldoFormateado}.`);
             }
         });
     }
@@ -718,7 +955,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 reproducirSonido('click');
                 StorageService.actualizarCliente(clienteActivo);
                 recargarDatosCliente();
-                mostrarAlertaCajero('info', `🧹 Movimiento inicial depurado con .shift(): ${removido.tipo} (${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(removido.monto)}). Restan ${cuentaSeleccionada.movimientos.length} en el arreglo.`);
+                mostrarAlertaCajero('info', `🧹 Primer movimiento histórico depurado con .shift(): ${removido.tipo} (${formateadorCOP.format(removido.monto)}). Restan ${cuentaSeleccionada.movimientos.length} en el arreglo.`);
             }
         });
     }
@@ -752,7 +989,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formSolicitarCorriente.reset();
             recargarDatosCliente();
             mostrarAlertaCajero('success', '✓ Cuenta Corriente habilitada con 20% de sobregiro.');
-        }, 1500);
+        }, 1400);
     });
 
     // 7. Estudio Crediticio para Tarjeta de Crédito
@@ -762,13 +999,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const ingresos = parseFloat(inputCreditoIngresos.value) || 0;
         if (ingresos >= 3500000) {
             boxPreaprobado.style.display = 'block';
-            txtPreaprobado.innerHTML = '<strong>Cupo Aprobado: $6.000.000 COP</strong> (Franquicia Visa Gold)';
+            txtPreaprobado.innerHTML = '<strong>Cupo Aprobado: $6.000.000 COP</strong> (Franquicia Visa Gold · 16 dígitos)';
         } else if (ingresos >= 1500000) {
             boxPreaprobado.style.display = 'block';
-            txtPreaprobado.innerHTML = '<strong>Cupo Aprobado: $2.500.000 COP</strong> (Franquicia Visa Clásica)';
+            txtPreaprobado.innerHTML = '<strong>Cupo Aprobado: $2.500.000 COP</strong> (Franquicia Visa Clásica · 16 dígitos)';
         } else if (ingresos > 0) {
             boxPreaprobado.style.display = 'block';
-            txtPreaprobado.innerHTML = '<span style="color: var(--crimson-600);">Capacidad insuficiente (Mínimo $1.500.000 COP).</span>';
+            txtPreaprobado.innerHTML = '<span style="color: var(--crimson-600);">Capacidad insuficiente (Mínimo requerido: $1.500.000 COP).</span>';
         } else {
             boxPreaprobado.style.display = 'none';
         }
@@ -801,7 +1038,7 @@ document.addEventListener('DOMContentLoaded', () => {
             boxPreaprobado.style.display = 'none';
             recargarDatosCliente();
             mostrarAlertaCajero('success', '✓ Tarjeta de Crédito emitida y lista para compras.');
-        }, 1500);
+        }, 1400);
     });
 
     // 8. Perfil y seguridad
@@ -885,6 +1122,16 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'index.html';
         }
     });
+
+    if (btnReiniciarDemo) {
+        btnReiniciarDemo.addEventListener('click', () => {
+            reproducirSonido('click');
+            StorageService.restablecerDatosDemo();
+            cuentaSeleccionada = null;
+            recargarDatosCliente();
+            mostrarAlertaCajero('success', '🔄 Datos de prueba restablecidos a sus valores iniciales.');
+        });
+    }
 
     btnCerrarSesion.addEventListener('click', () => {
         StorageService.cerrarSesion();

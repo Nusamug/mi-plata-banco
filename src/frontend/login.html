@@ -70,7 +70,12 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="login-password">Contraseña Bancaria:</label>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label class="form-label" for="login-password">Contraseña Bancaria:</label>
+                                <button type="button" id="btn-toggle-pass" style="background: none; border: none; color: var(--navy-600); font-size: 0.76rem; font-weight: 600; cursor: pointer; margin-bottom: 0.35rem;">
+                                    👁️ Mostrar clave
+                                </button>
+                            </div>
                             <input 
                                 type="password" 
                                 id="login-password" 
@@ -86,20 +91,38 @@
                         </button>
                     </form>
 
-                    <!-- Datos de prueba -->
-                    <div style="margin-top: 1.75rem; padding: 0.9rem; background: #f8fafc; border-radius: var(--radius-md); border: 1px dashed var(--border-light); font-size: 0.82rem;">
-                        <div style="font-weight: 700; color: var(--navy-800); margin-bottom: 0.35rem; display: flex; justify-content: space-between; align-items: center;">
-                            <span>Usuario de prueba:</span>
-                            <button type="button" id="btn-autorellenar" class="btn btn-outline" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;">Autorellenar</button>
+                    <!-- Perfiles de prueba para sustentación -->
+                    <div style="margin-top: 1.5rem; padding: 0.95rem; background: #f8fafc; border-radius: var(--radius-md); border: 1px dashed var(--border-light); font-size: 0.8rem;">
+                        <div style="font-weight: 700; color: var(--navy-800); margin-bottom: 0.5rem;">
+                            ⚡ Cuentas Demo para Sustentación:
                         </div>
-                        <div><strong>Usuario:</strong> <code>carlos99</code></div>
-                        <div><strong>Contraseña:</strong> <code>Pass123!</code></div>
-                        <div style="margin-top: 0.5rem; color: var(--text-secondary);">
-                            <em>La cuenta se bloquea automáticamente tras 3 intentos fallidos.</em>
+
+                        <!-- Perfil 1: Carlos -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0; border-bottom: 1px solid var(--border-light);">
+                            <div>
+                                <div><strong>1. Carlos Morales</strong> <span style="color: var(--emerald-600); font-weight: 600;">(3 Productos Activos)</span></div>
+                                <div style="color: var(--text-secondary);">User: <code>carlos99</code> | Pass: <code>Pass123!</code></div>
+                            </div>
+                            <button type="button" id="btn-autorellenar" class="btn btn-outline" style="font-size: 0.72rem; padding: 0.25rem 0.6rem;">
+                                Usar Carlos
+                            </button>
                         </div>
-                        <div style="text-align: right; margin-top: 0.5rem;">
-                            <button type="button" id="btn-reset-demo" style="background: none; border: none; color: var(--navy-600); cursor: pointer; text-decoration: underline; font-size: 0.75rem;">
-                                Desbloquear usuario de prueba
+
+                        <!-- Perfil 2: María Fernanda -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0;">
+                            <div>
+                                <div><strong>2. María F. Ospina</strong> <span style="color: var(--navy-600); font-weight: 600;">(Estudio Crédito / Bre-B)</span></div>
+                                <div style="color: var(--text-secondary);">User: <code>mafe_ospina</code> | Cel: <code>3209876543</code></div>
+                            </div>
+                            <button type="button" id="btn-autorellenar-mafe" class="btn btn-outline" style="font-size: 0.72rem; padding: 0.25rem 0.6rem;">
+                                Usar María
+                            </button>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.45rem; border-top: 1px dashed var(--border-light);">
+                            <span style="color: var(--text-muted); font-size: 0.74rem;">Bloqueo tras 3 fallos seguidos</span>
+                            <button type="button" id="btn-reset-demo" style="background: none; border: none; color: var(--navy-600); cursor: pointer; text-decoration: underline; font-size: 0.75rem; font-weight: 600;">
+                                🔄 Restablecer y desbloquear demos
                             </button>
                         </div>
                     </div>
@@ -113,7 +136,7 @@
 
                     <form id="form-register" novalidate>
                         <div class="form-group">
-                            <label class="form-label" for="reg-documento">Documento de Identidad (C.C. / Pasaporte):</label>
+                            <label class="form-label" for="reg-documento">Documento de Identidad (C.C. / NIT):</label>
                             <input type="text" id="reg-documento" class="form-control" placeholder="Ej: 1020304050" required>
                         </div>
 
@@ -123,7 +146,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="reg-celular">Número de Celular:</label>
+                            <label class="form-label" for="reg-celular">Número de Celular (Tu Llave Bre-B):</label>
                             <input type="tel" id="reg-celular" class="form-control" placeholder="Ej: 3001234567" required>
                         </div>
 
@@ -143,18 +166,18 @@
                         </div>
 
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                            <span style="font-size: 0.78rem; color: var(--text-secondary);">¿Deseas probar rápidamente?</span>
+                            <span style="font-size: 0.78rem; color: var(--text-secondary);">¿Deseas probar el registro rápidamente?</span>
                             <button type="button" id="btn-autorellenar-registro" class="btn btn-outline" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;">
-                                Llenar datos de prueba
+                                ⚡ Llenar datos aleatorios
                             </button>
                         </div>
 
-                        <div style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 1rem;">
-                            Al registrarte, se te asignará automáticamente una <strong>Cuenta de Ahorros con $100.000 COP</strong> de bono, una <strong>Cuenta Corriente</strong> y una <strong>Tarjeta de Crédito</strong> con $2.000.000 COP de cupo.
+                        <div style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 1rem; background: var(--navy-50); padding: 0.7rem; border-radius: var(--radius-sm); border-left: 3px solid var(--navy-600);">
+                            Al registrarte, se apertura de inmediato tu <strong>Cuenta de Ahorros (`401-...`) con $100.000 COP</strong> de bono inicial y tu <strong>Llave Bre-B</strong>. Dentro del cajero podrás realizar el estudio financiero en línea para activar tu <strong>Cuenta Corriente (20% sobregiro)</strong> y tu <strong>Tarjeta de Crédito Visa</strong>.
                         </div>
 
                         <button type="submit" id="btn-submit-register" class="btn btn-accent" style="width: 100%;">
-                            Crear mi Cuenta Bancaria
+                            Abrir mi Cuenta de Ahorros
                         </button>
                     </form>
                 </div>

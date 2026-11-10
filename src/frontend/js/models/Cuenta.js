@@ -6,7 +6,9 @@ class Cuenta {
         }
         this._numeroCuenta = String(numeroCuenta);
         this._titularId = String(titularId);
-        this._saldo = Math.max(0, Number(saldoInicial));
+        // En CuentaCorriente el saldo puede ser negativo por uso de sobregiro autorizado
+        const montoInicial = Number(saldoInicial);
+        this._saldo = isNaN(montoInicial) ? 0 : (tipo === 'CORRIENTE' ? montoInicial : Math.max(0, montoInicial));
         this._tipo = tipo;
         this._movimientos = [];
     }
@@ -63,7 +65,7 @@ class Cuenta {
         };
     }
 
-    // Método que implementa cada tipo de cuenta
+    // Método polimórfico que implementa cada subclase de cuenta
     calcularRetiro(monto) {
         throw new Error("El método calcularRetiro() debe ser implementado por la subclase.");
     }
@@ -72,10 +74,20 @@ class Cuenta {
         this._movimientos.push(transaccion);
     }
 
-    // Métodos de manipulación de estructuras de datos (Arreglos: pop, shift, reduce)
+    // Métodos de manipulación de estructuras de datos (Arreglos: pop, shift, reduce, filter)
     eliminarUltimoMovimiento() {
         if (this._movimientos.length === 0) return null;
-        return this._movimientos.pop();
+        const removido = this._movimientos.pop();
+
+        // Sincronizar el saldo contable con el movimiento anterior o revertir operación
+        if (this._movimientos.length > 0) {
+            const ultimoActual = this._movimientos[this._movimientos.length - 1];
+            this._saldo = Number(ultimoActual.saldoPosterior);
+        } else {
+            this._saldo = 0;
+        }
+
+        return removido;
     }
 
     eliminarPrimerMovimiento() {

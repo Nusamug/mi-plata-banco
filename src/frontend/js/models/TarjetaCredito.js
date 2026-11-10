@@ -5,7 +5,7 @@ class TarjetaCredito extends Cuenta {
         this._cupoTotal = Number(cupoTotal);
         this._deudaActual = Math.max(0, Number(deudaInicial));
         this._comprasActivas = [];
-        
+
         // Datos bancarios estándar de tarjeta plástica
         this._franquicia = opciones.franquicia || 'VISA';
         this._fechaVencimiento = opciones.fechaVencimiento || '10/31';
@@ -34,6 +34,20 @@ class TarjetaCredito extends Cuenta {
 
     get cvv() {
         return this._cvv;
+    }
+
+    get comprasActivas() {
+        return this._comprasActivas;
+    }
+
+    // Suma de las cuotas mensuales activas usando .reduce()
+    get cuotaMensualEstimada() {
+        if (this._deudaActual <= 0) return 0;
+        const sumaCuotas = this._comprasActivas.reduce((acc, c) => acc + (Number(c.cuotaMensual) || 0), 0);
+        if (sumaCuotas > 0) {
+            return Math.min(this._deudaActual, sumaCuotas);
+        }
+        return Math.min(this._deudaActual, Math.max(50000, Math.round(this._deudaActual * 0.15)));
     }
 
     // Formato de 16 dígitos en bloques de 4
@@ -145,7 +159,7 @@ class TarjetaCredito extends Cuenta {
     }
 
     // Paga parte o la totalidad de la deuda y libera cupo
-    pagarDeuda(monto) {
+    pagarDeuda(monto, detallePago = 'Abono a deuda de tarjeta de crédito') {
         const valor = Number(monto);
         if (isNaN(valor) || valor <= 0) {
             return { exito: false, mensaje: 'El monto de pago debe ser mayor a $0.' };
@@ -159,16 +173,42 @@ class TarjetaCredito extends Cuenta {
         this._deudaActual -= montoEfectivo;
         this._saldo = this.cupoDisponible;
 
-        const tx = new Transaccion('PAGO_TARJETA', montoEfectivo, this.cupoDisponible, 'Abono a deuda de tarjeta de crédito');
+        if (this._deudaActual === 0) {
+            this._comprasActivas = [];
+        }
+
+        const tx = new Transaccion('PAGO_TARJETA', montoEfectivo, this.cupoDisponible, detallePago);
         this._movimientos.push(tx);
 
         return {
             exito: true,
+            montoPagado: montoEfectivo,
             mensaje: `Pago exitoso por ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(montoEfectivo)}. Deuda actual: ${this.deudaActualFormateada}. Cupo disponible: ${this.cupoDisponibleFormateado}`,
             deudaActual: this._deudaActual,
             cupoDisponible: this.cupoDisponible,
             transaccion: tx
         };
+    }
+
+    // Sobrescritura de eliminarUltimoMovimiento para mantener sincronizado el cupo y la deuda
+    eliminarUltimoMovimiento() {
+        const removido = super.eliminarUltimoMovimiento();
+        if (!removido) return null;
+
+        if (this._movimientos.length > 0) {
+            const ultimo = this._movimientos[this._movimientos.length - 1];
+            const cupoRestaurado = Number(ultimo.saldoPosterior);
+            this._deudaActual = Math.max(0, this._cupoTotal - cupoRestaurado);
+            this._saldo = this.cupoDisponible;
+        } else {
+            this._deudaActual = 0;
+            this._saldo = this._cupoTotal;
+        }
+
+        if (removido.tipo === 'COMPRA_CREDITO' && this._comprasActivas.length > 0) {
+            this._comprasActivas.pop();
+        }
+        return removido;
     }
 
     toJSON() {

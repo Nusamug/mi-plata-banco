@@ -25,57 +25,79 @@ class StorageService {
         return `${parte1}${parte2}${parte3}${parte4}`;
     }
 
+    // Construye los clientes semilla por defecto
+    static crearClientesDemo() {
+        const clienteDemo = new Cliente(
+            '1020304050',
+            'Carlos Alberto Morales',
+            '3104567890',
+            'carlos99',
+            'Pass123!'
+        );
+
+        // Cuentas del cliente demo
+        const ahorros = new CuentaAhorros('401-8392104-2', clienteDemo.documento, 2500000);
+        ahorros.registrarMovimiento(new Transaccion('CONSIGNACION', 2500000, 2500000, 'Depósito de apertura'));
+        clienteDemo.agregarCuenta(ahorros);
+
+        const corriente = new CuentaCorriente('201-5120491-0', clienteDemo.documento, 1200000);
+        corriente.registrarMovimiento(new Transaccion('CONSIGNACION', 1200000, 1200000, 'Apertura cuenta corriente comercial'));
+        clienteDemo.agregarCuenta(corriente);
+
+        const tc = new TarjetaCredito('4509812034915521', clienteDemo.documento, 5000000, 0, {
+            franquicia: 'VISA GOLD',
+            fechaVencimiento: '10/31',
+            cvv: '742'
+        });
+        tc.registrarMovimiento(new Transaccion('APERTURA', 5000000, 5000000, 'Asignación de cupo de crédito Visa Gold'));
+        clienteDemo.agregarCuenta(tc);
+
+        // Segundo cliente para pruebas de transferencias por Llave Bre-B y estudio crediticio desde cero
+        const clienteTercero = new Cliente(
+            '987654321',
+            'María Fernanda Ospina',
+            '3209876543',
+            'mafe_ospina',
+            'Banco2026*'
+        );
+        const ahorrosTercero = new CuentaAhorros('401-9900112-5', clienteTercero.documento, 850000);
+        ahorrosTercero.registrarMovimiento(new Transaccion('CONSIGNACION', 850000, 850000, 'Depósito inicial de apertura'));
+        clienteTercero.agregarCuenta(ahorrosTercero);
+
+        return [clienteDemo, clienteTercero];
+    }
+
     // Inicializa clientes demo para facilitar sustentación
     static inicializar() {
-        if (typeof localStorage !== 'undefined') {
-            localStorage.removeItem('mi_plata_clientes_v1');
+        if (typeof localStorage === 'undefined') return;
+
+        localStorage.removeItem('mi_plata_clientes_v1');
+        if (typeof sessionStorage !== 'undefined') {
             sessionStorage.removeItem('mi_plata_sesion_activa_v1');
         }
-        const guardados = typeof localStorage !== 'undefined' ? localStorage.getItem(StorageService.CLAVE_CLIENTES) : null;
+
+        const guardados = localStorage.getItem(StorageService.CLAVE_CLIENTES);
         if (!guardados || guardados.includes('AH-')) {
-            const clienteDemo = new Cliente(
-                '1020304050',
-                'Carlos Alberto Morales',
-                '3104567890',
-                'carlos99',
-                'Pass123!'
-            );
-
-            // Cuentas del cliente demo
-            const ahorros = new CuentaAhorros('401-8392104-2', clienteDemo.documento, 2500000);
-            ahorros.registrarMovimiento(new Transaccion('CONSIGNACION', 2500000, 2500000, 'Depósito de apertura'));
-            clienteDemo.agregarCuenta(ahorros);
-
-            const corriente = new CuentaCorriente('201-5120491-0', clienteDemo.documento, 1200000);
-            corriente.registrarMovimiento(new Transaccion('CONSIGNACION', 1200000, 1200000, 'Apertura cuenta corriente comercial'));
-            clienteDemo.agregarCuenta(corriente);
-
-            const tc = new TarjetaCredito('4509812034915521', clienteDemo.documento, 5000000, 0, {
-                franquicia: 'VISA GOLD',
-                fechaVencimiento: '10/31',
-                cvv: '742'
-            });
-            tc.registrarMovimiento(new Transaccion('APERTURA', 5000000, 5000000, 'Asignación de cupo de crédito'));
-            clienteDemo.agregarCuenta(tc);
-
-            // Segundo cliente para pruebas de transferencias por Llave Bre-B
-            const clienteTercero = new Cliente(
-                '987654321',
-                'María Fernanda Ospina',
-                '3209876543',
-                'mafe_ospina',
-                'Banco2026*'
-            );
-            const ahorrosTercero = new CuentaAhorros('401-9900112-5', clienteTercero.documento, 850000);
-            ahorrosTercero.registrarMovimiento(new Transaccion('CONSIGNACION', 850000, 850000, 'Saldo inicial'));
-            clienteTercero.agregarCuenta(ahorrosTercero);
-
-            StorageService.guardarClientes([clienteDemo, clienteTercero]);
+            StorageService.guardarClientes(StorageService.crearClientesDemo());
         }
     }
 
-    // Convierte JSON plano a instancias completas de las clases
+    // Restablece los datos de prueba al estado original de fábrica
+    static restablecerDatosDemo() {
+        if (typeof localStorage === 'undefined') return;
+        const iniciales = StorageService.crearClientesDemo();
+        StorageService.guardarClientes(iniciales);
+
+        const sesionActual = StorageService.obtenerSesionActiva();
+        if (sesionActual) {
+            const coincidencia = iniciales.find(c => c.documento === sesionActual.documento) || iniciales[0];
+            StorageService.guardarSesionActiva(coincidencia);
+        }
+    }
+
+    // Convierte JSON plano a instancias completas de las clases POO
     static hidratarCliente(raw) {
+        if (!raw) return null;
         const cliente = new Cliente(
             raw.documento,
             raw.nombreCompleto,
@@ -90,23 +112,28 @@ class StorageService {
         if (Array.isArray(raw.cuentas)) {
             cliente.cuentas = raw.cuentas.map(c => {
                 let inst;
-                if (c._tipo === 'AHORROS' || c.tipo === 'AHORROS') {
-                    inst = new CuentaAhorros(c._numeroCuenta || c.numeroCuenta, c._titularId || c.titularId, c._saldo ?? c.saldo);
-                } else if (c._tipo === 'CORRIENTE' || c.tipo === 'CORRIENTE') {
-                    inst = new CuentaCorriente(c._numeroCuenta || c.numeroCuenta, c._titularId || c.titularId, c._saldo ?? c.saldo);
-                } else if (c._tipo === 'CREDITO' || c.tipo === 'CREDITO') {
+                const tipoCuenta = c._tipo || c.tipo;
+                const numCuenta = c._numeroCuenta || c.numeroCuenta;
+                const titular = c._titularId || c.titularId;
+                const saldoVal = c._saldo !== undefined ? c._saldo : c.saldo;
+
+                if (tipoCuenta === 'AHORROS') {
+                    inst = new CuentaAhorros(numCuenta, titular, saldoVal);
+                } else if (tipoCuenta === 'CORRIENTE') {
+                    inst = new CuentaCorriente(numCuenta, titular, saldoVal);
+                } else if (tipoCuenta === 'CREDITO') {
                     inst = new TarjetaCredito(
-                        c._numeroCuenta || c.numeroCuenta,
-                        c._titularId || c.titularId,
-                        c._cupoTotal || c.cupoTotal || 3000000,
-                        c._deudaActual || c.deudaActual || 0,
+                        numCuenta,
+                        titular,
+                        c._cupoTotal ?? c.cupoTotal ?? 3000000,
+                        c._deudaActual ?? c.deudaActual ?? 0,
                         {
                             franquicia: c._franquicia || c.franquicia || 'VISA',
                             fechaVencimiento: c._fechaVencimiento || c.fechaVencimiento || '10/31',
                             cvv: c._cvv || c.cvv || '123'
                         }
                     );
-                    inst._comprasActivas = c._comprasActivas || [];
+                    inst._comprasActivas = c._comprasActivas || c.comprasActivas || [];
                 } else {
                     return null;
                 }
@@ -130,6 +157,7 @@ class StorageService {
 
     static obtenerClientes() {
         StorageService.inicializar();
+        if (typeof localStorage === 'undefined') return StorageService.crearClientesDemo();
         try {
             const data = localStorage.getItem(StorageService.CLAVE_CLIENTES);
             if (!data) return [];
@@ -142,12 +170,14 @@ class StorageService {
     }
 
     static guardarClientes(clientes) {
+        if (typeof localStorage === 'undefined') return;
         localStorage.setItem(StorageService.CLAVE_CLIENTES, JSON.stringify(clientes));
     }
 
     static buscarPorUsername(username) {
         const clientes = StorageService.obtenerClientes();
-        return clientes.find(c => c.username.toLowerCase() === String(username).toLowerCase().trim()) || null;
+        const buscado = String(username).toLowerCase().trim();
+        return clientes.find(c => c.username.toLowerCase() === buscado) || null;
     }
 
     static buscarPorDocumento(documento) {
@@ -189,10 +219,12 @@ class StorageService {
     }
 
     static guardarSesionActiva(cliente) {
+        if (typeof sessionStorage === 'undefined') return;
         sessionStorage.setItem(StorageService.CLAVE_SESION, JSON.stringify(cliente));
     }
 
     static obtenerSesionActiva() {
+        if (typeof sessionStorage === 'undefined') return null;
         const data = sessionStorage.getItem(StorageService.CLAVE_SESION);
         if (!data) return null;
         try {
@@ -203,6 +235,7 @@ class StorageService {
     }
 
     static cerrarSesion() {
+        if (typeof sessionStorage === 'undefined') return;
         sessionStorage.removeItem(StorageService.CLAVE_SESION);
     }
 
@@ -354,13 +387,12 @@ class StorageService {
             const celLimpio = idLimpio.replace(/\D/g, '');
             titularDestino = clientes.find(c => String(c.celular).replace(/\D/g, '') === celLimpio);
             if (titularDestino) {
-                // Se transfiere a su cuenta de ahorros principal
-                cuentaDestino = titularDestino.obtenerCuentaPorTipo('AHORROS') || titularDestino.cuentas[0];
+                cuentaDestino = titularDestino.obtenerCuentaPorTipo('AHORROS') || titularDestino.cuentas.find(c => c.tipo !== 'CREDITO') || titularDestino.cuentas[0];
             }
         } else if (tipoDestino === 'LLAVE_DOCUMENTO') {
             titularDestino = clientes.find(c => c.documento === idLimpio);
             if (titularDestino) {
-                cuentaDestino = titularDestino.obtenerCuentaPorTipo('AHORROS') || titularDestino.cuentas[0];
+                cuentaDestino = titularDestino.obtenerCuentaPorTipo('AHORROS') || titularDestino.cuentas.find(c => c.tipo !== 'CREDITO') || titularDestino.cuentas[0];
             }
         } else {
             // Búsqueda por número de cuenta directo
@@ -376,17 +408,22 @@ class StorageService {
 
         if (!titularDestino || !cuentaDestino) {
             const detalleTipo = tipoDestino === 'LLAVE_CELULAR' ? 'celular' : (tipoDestino === 'LLAVE_DOCUMENTO' ? 'cédula' : 'número de cuenta');
-            return { exito: false, mensaje: `No se encontró ningún cuentahabiente asociado al ${detalleTipo} ingresado.` };
+            return { exito: false, mensaje: `No se encontró ningún cuentahabiente asociado al ${detalleTipo} ingresado (${idLimpio}).` };
         }
 
         if (cuentaOrigen.numeroCuenta === cuentaDestino.numeroCuenta) {
             return { exito: false, mensaje: 'No puedes transferir fondos a la misma cuenta de origen.' };
         }
 
-        if (cuentaOrigen.saldo < valor) {
+        // Validar disponible según tipo de cuenta (Ahorros vs Corriente con sobregiro 20%)
+        const disponibleMaximo = cuentaOrigen.tipo === 'CORRIENTE'
+            ? cuentaOrigen.limiteRetiroDisponible
+            : cuentaOrigen.saldo;
+
+        if (valor > disponibleMaximo) {
             return {
                 exito: false,
-                mensaje: `Saldo insuficiente en tu cuenta de origen. Saldo disponible: ${cuentaOrigen.saldoFormateado}.`
+                mensaje: `Fondos insuficientes en tu cuenta de origen. Disponible máximo: ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(disponibleMaximo)}.`
             };
         }
 
@@ -395,13 +432,13 @@ class StorageService {
         cuentaDestino._saldo += valor;
 
         const esBreB = tipoDestino.startsWith('LLAVE_');
-        const canalTexto = esBreB ? 'vía Llave Bre-B' : 'vía número de cuenta';
+        const canalTexto = esBreB ? `Llave Bre-B (${idLimpio})` : `Cuenta ${cuentaDestino.numeroCuenta}`;
 
         const txSalida = new Transaccion(
             'TRANSFERENCIA_ENVIADA',
             valor,
             cuentaOrigen._saldo,
-            `Transferencia enviada a ${titularDestino.nombreCompleto} (${canalTexto}): ${motivo}`
+            `Transferencia a ${titularDestino.nombreCompleto} (${canalTexto}): ${motivo}`
         );
         cuentaOrigen.registrarMovimiento(txSalida);
 
@@ -428,6 +465,9 @@ class StorageService {
             exito: true,
             mensaje: `Transferencia por ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(valor)} enviada exitosamente a ${titularDestino.nombreCompleto} (${canalTexto}).`,
             nuevoSaldo: cuentaOrigen.saldo,
+            destinatarioNombre: titularDestino.nombreCompleto,
+            cuentaDestinoNumero: cuentaDestino.numeroCuenta,
+            canalTexto,
             transaccion: txSalida
         };
     }

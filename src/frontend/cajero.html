@@ -11,15 +11,18 @@
     <!-- Header Cajero -->
     <header class="site-header">
         <div class="header-container">
-            <div class="brand-logo">
+            <a href="index.html" class="brand-logo" title="Ir al inicio">
                 <span class="logo-icon">MP</span>
                 <span>Mi Plata · Cajero Digital</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <button type="button" id="btn-abrir-perfil" class="btn btn-outline" style="color: #ffffff; border-color: rgba(255,255,255,0.4); padding: 0.5rem 1rem;">
+            </a>
+            <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+                <button type="button" id="btn-reiniciar-cajero-demo" class="btn btn-outline" style="color: #ffffff; border-color: rgba(255,255,255,0.35); padding: 0.45rem 0.85rem; font-size: 0.8rem;" title="Restablece los saldos iniciales de prueba">
+                    🔄 Reiniciar Demo
+                </button>
+                <button type="button" id="btn-abrir-perfil" class="btn btn-outline" style="color: #ffffff; border-color: rgba(255,255,255,0.4); padding: 0.45rem 0.9rem; font-size: 0.85rem;">
                     👤 Mi Perfil
                 </button>
-                <button type="button" id="btn-cerrar-sesion" class="btn btn-danger" style="padding: 0.5rem 1rem;">
+                <button type="button" id="btn-cerrar-sesion" class="btn btn-danger" style="padding: 0.45rem 0.9rem; font-size: 0.85rem;">
                     🚪 Salir
                 </button>
             </div>
@@ -31,7 +34,7 @@
         <div class="user-welcome-bar">
             <div class="user-info-text">
                 <h2>Bienvenido(a), <span id="txt-nombre-usuario">Cargando...</span></h2>
-                <p>Identificación: <strong id="txt-doc-usuario">---</strong> | Celular: <span id="txt-cel-usuario">---</span></p>
+                <p>Identificación: <strong id="txt-doc-usuario">---</strong> | Llave Bre-B (Celular): <strong id="txt-cel-usuario">---</strong></p>
             </div>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
                 <span style="font-size: 0.85rem; color: var(--text-secondary);">Estado de Seguridad:</span>
@@ -78,12 +81,11 @@
             </div>
         </div>
 
-
         <!-- Portafolio y Tarjetas de Productos Financieros -->
         <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
                 <h3 style="font-size: 1.15rem;">Tus Productos Financieros</h3>
-                <span style="font-size: 0.82rem; color: var(--text-secondary);">Haz clic sobre una cuenta para seleccionarla</span>
+                <span style="font-size: 0.82rem; color: var(--text-secondary);">Haz clic sobre una tarjeta para seleccionarla como cuenta activa</span>
             </div>
             <div class="accounts-overview-grid" id="contenedor-cuentas">
                 <!-- Se generan dinámicamente mediante cajero.js (cuentas activas + tarjetas de productos para solicitar) -->
@@ -96,7 +98,7 @@
             <div class="operations-panel">
                 <h3 style="font-size: 1.2rem; margin-bottom: 0.35rem;">Operaciones de Cajero</h3>
                 <p style="font-size: 0.85rem; color: var(--text-secondary);">
-                    Cuenta activa: <strong id="txt-cuenta-activa-label">---</strong>
+                    Cuenta seleccionada: <strong id="txt-cuenta-activa-label">---</strong>
                 </p>
 
                 <!-- Botonera de Opciones Rápidas -->
@@ -126,11 +128,11 @@
                         <div class="form-group">
                             <label class="form-label" for="consignar-monto">Monto a Consignar (COP):</label>
                             <input type="number" id="consignar-monto" class="form-control" placeholder="Ej: 200000" min="1000" step="1000" required>
-                            <span class="form-helper">Debe ser un valor positivo mayor a $0.</span>
+                            <span class="form-helper">Ingresa un valor positivo mayor a $0 COP.</span>
                         </div>
 
                         <div class="quick-chips-wrapper">
-                            <span class="quick-chips-label">Depósito rápido sugerido:</span>
+                            <span class="quick-chips-label">Depósito rápido en billetes:</span>
                             <div class="quick-chips">
                                 <button type="button" class="chip-btn chip-consignar" data-monto="50000">+$50.000</button>
                                 <button type="button" class="chip-btn chip-consignar" data-monto="100000">+$100.000</button>
@@ -140,7 +142,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="consignar-concepto">Concepto (Opcional):</label>
+                            <label class="form-label" for="consignar-concepto">Concepto / Referencia:</label>
                             <input type="text" id="consignar-concepto" class="form-control" placeholder="Ej: Depósito quincena" value="Depósito en cajero">
                         </div>
                         <button type="submit" class="btn btn-success" style="width: 100%;">
@@ -152,12 +154,12 @@
                     <form id="form-op-retirar" style="display: none;">
                         <div class="form-group">
                             <label class="form-label" for="retirar-monto">Monto a Retirar (COP):</label>
-                            <input type="number" id="retirar-monto" class="form-control" placeholder="Ej: 100000" min="1000" step="1000" required>
+                            <input type="number" id="retirar-monto" class="form-control" placeholder="Ej: 200000" min="1000" step="1000" required>
                             <span class="form-helper" id="helper-regla-retiro">
                                 Regla de cuenta: Rendimiento 1.5% en Ahorros o 20% sobregiro en Corriente.
                             </span>
                         </div>
-                        
+
                         <div class="quick-chips-wrapper">
                             <span class="quick-chips-label">Retiro rápido en cajero:</span>
                             <div class="quick-chips">
@@ -169,6 +171,12 @@
                                 <button type="button" class="chip-btn chip-retiro" data-monto="600000">$600.000</button>
                             </div>
                         </div>
+
+                        <!-- Previsualizador matemático en vivo de la regla de negocio -->
+                        <div id="retiro-sim-preview" style="font-size: 0.8rem; background: var(--navy-50); padding: 0.65rem 0.8rem; border-radius: var(--radius-sm); margin-bottom: 0.9rem; border-left: 3px solid var(--navy-600);">
+                            Selecciona o escribe un monto para previsualizar el cálculo bancario.
+                        </div>
+
                         <button type="submit" class="btn btn-primary" style="width: 100%;">
                             Efectuar Retiro en Efectivo
                         </button>
@@ -176,37 +184,65 @@
 
                     <!-- 3. Formulario Transferir con Llave Bre-B -->
                     <form id="form-op-transferir" style="display: none;">
+                        <div class="quick-chips-wrapper">
+                            <span class="quick-chips-label">Directorio Rápido de Destinatarios (1 Clic):</span>
+                            <div class="quick-chips">
+                                <button type="button" class="chip-btn chip-contacto-breb" data-canal="LLAVE_CELULAR" data-destino="3209876543" title="Transferir por Llave Celular a María Fernanda Ospina">
+                                    📱 María F. (3209876543)
+                                </button>
+                                <button type="button" class="chip-btn chip-contacto-breb" data-canal="LLAVE_DOCUMENTO" data-destino="987654321" title="Transferir por Llave Cédula a María Fernanda Ospina">
+                                    🪪 C.C. María (987654321)
+                                </button>
+                                <button type="button" class="chip-btn chip-contacto-breb" data-canal="CUENTA" data-destino="401-9900112-5" title="Transferir por Número de Cuenta a María Fernanda">
+                                    🏦 Cta. María (401-9900112-5)
+                                </button>
+                                <button type="button" class="chip-btn" id="btn-chip-mi-otra-cuenta" title="Transferir entre mis propias cuentas (Ahorros <-> Corriente)">
+                                    🔄 A mi otra cuenta
+                                </button>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="form-label" for="transferir-canal">Canal de Transferencia:</label>
                             <select id="transferir-canal" class="form-control">
                                 <option value="LLAVE_CELULAR">⚡ Llave Bre-B (Número de Celular)</option>
                                 <option value="LLAVE_DOCUMENTO">⚡ Llave Bre-B (Cédula / Documento)</option>
-                                <option value="CUENTA">Número de Cuenta Tradicional</option>
+                                <option value="CUENTA">🏦 Número de Cuenta Tradicional</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" id="label-transferir-destino" for="transferir-destino">Celular del Destinatario (Bre-B):</label>
                             <input type="text" id="transferir-destino" class="form-control" placeholder="Ej: 3209876543 (María Fernanda)" required>
-                            <span class="form-helper" id="helper-transferir-destino">Transfiere en segundos a cualquier usuario usando su llave.</span>
+                            <span class="form-helper" id="helper-transferir-destino">Transfiere sin costo en segundos usando la llave del destinatario.</span>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="transferir-monto">Monto a Transferir (COP):</label>
                             <input type="number" id="transferir-monto" class="form-control" placeholder="Ej: 50000" min="1000" step="1000" required>
                         </div>
+
+                        <div class="quick-chips-wrapper">
+                            <div class="quick-chips">
+                                <button type="button" class="chip-btn chip-transferir-monto" data-monto="25000">$25.000</button>
+                                <button type="button" class="chip-btn chip-transferir-monto" data-monto="50000">$50.000</button>
+                                <button type="button" class="chip-btn chip-transferir-monto" data-monto="100000">$100.000</button>
+                                <button type="button" class="chip-btn chip-transferir-monto" data-monto="250000">$250.000</button>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="form-label" for="transferir-concepto">Motivo de la Transferencia:</label>
-                            <input type="text" id="transferir-concepto" class="form-control" placeholder="Ej: Pago de almuerzo" value="Transferencia inmediata">
+                            <input type="text" id="transferir-concepto" class="form-control" placeholder="Ej: Pago de almuerzo" value="Transferencia inmediata Bre-B">
                         </div>
                         <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            Enviar Transferencia
+                            Enviar Transferencia Ahora
                         </button>
                     </form>
 
                     <!-- 4. Formulario Operaciones Tarjeta de Crédito (Compra y Pago) -->
                     <form id="form-op-credito" style="display: none;">
                         <div id="tc-aviso-no-cuenta" style="display: none; padding: 1rem; background: var(--gold-100); border-radius: var(--radius-md); border: 1px solid var(--gold-500); margin-bottom: 1rem; font-size: 0.88rem; color: var(--navy-900);">
-                            <strong>Aún no tienes Tarjeta de Crédito.</strong>
-                            <p style="margin-top: 0.25rem;">Completa un breve estudio de crédito con tus ingresos para solicitarla.</p>
+                            <strong>Aún no tienes Tarjeta de Crédito activa.</strong>
+                            <p style="margin-top: 0.25rem;">Realiza nuestro estudio crediticio inmediato certificando tus ingresos mensuales.</p>
                             <button type="button" id="btn-ir-estudio-tc" class="btn btn-accent" style="margin-top: 0.5rem; font-size: 0.82rem; padding: 0.4rem 0.8rem;">
                                 Iniciar Estudio de Crédito
                             </button>
@@ -216,21 +252,28 @@
                             <div class="form-group">
                                 <label class="form-label" for="tc-accion">Acción con la Tarjeta:</label>
                                 <select id="tc-accion" class="form-control">
-                                    <option value="compra">Realizar Compra / Avance a Cuotas</option>
-                                    <option value="pago">Pagar / Abonar a la Deuda</option>
+                                    <option value="compra">🛍️ Realizar Compra / Avance a Cuotas</option>
+                                    <option value="pago">💵 Pagar / Abonar a la Deuda</option>
                                 </select>
                             </div>
                             <div id="tc-bloque-compra">
                                 <div class="form-group">
                                     <label class="form-label" for="tc-comercio">Establecimiento / Comercio:</label>
-                                    <input type="text" id="tc-comercio" class="form-control" placeholder="Ej: Almacenes Éxito" value="Supermercado">
+                                    <input type="text" id="tc-comercio" class="form-control" placeholder="Ej: Almacenes Éxito" value="Tecnología & Hogar">
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label" for="tc-monto-compra">Monto de la Compra (COP):</label>
-                                    <input type="number" id="tc-monto-compra" class="form-control" placeholder="Ej: 450000" min="10000">
+                                    <input type="number" id="tc-monto-compra" class="form-control" placeholder="Ej: 600000" min="10000">
+                                </div>
+                                <div class="quick-chips-wrapper">
+                                    <div class="quick-chips">
+                                        <button type="button" class="chip-btn chip-tc-compra" data-monto="200000">$200.000</button>
+                                        <button type="button" class="chip-btn chip-tc-compra" data-monto="600000">$600.000</button>
+                                        <button type="button" class="chip-btn chip-tc-compra" data-monto="1200000">$1.200.000</button>
+                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label" for="tc-cuotas">Número de Cuotas:</label>
+                                    <label class="form-label" for="tc-cuotas">Número de Cuotas (Amortización Francesa):</label>
                                     <select id="tc-cuotas" class="form-control">
                                         <option value="1">1 cuota (0% interés)</option>
                                         <option value="2">2 cuotas (0% interés)</option>
@@ -238,23 +281,52 @@
                                         <option value="6" selected>6 cuotas (1.9% mensual)</option>
                                         <option value="12">12 cuotas (2.3% mensual)</option>
                                         <option value="24">24 cuotas (2.3% mensual)</option>
+                                        <option value="36">36 cuotas (2.3% mensual)</option>
                                     </select>
                                 </div>
-                                <div id="tc-sim-preview" style="font-size: 0.82rem; background: var(--navy-50); padding: 0.6rem; border-radius: var(--radius-sm); margin-bottom: 0.8rem;">
-                                    Cuota estimada: <strong>$0</strong>
+                                <div id="tc-sim-preview" style="font-size: 0.82rem; background: var(--navy-50); padding: 0.65rem; border-radius: var(--radius-sm); margin-bottom: 0.8rem; border-left: 3px solid var(--gold-500);">
+                                    Ingresa o selecciona un valor para calcular la cuota mensual.
                                 </div>
                                 <button type="submit" id="btn-tc-ejecutar" class="btn btn-accent" style="width: 100%;">
                                     Autorizar Compra a Cuotas
                                 </button>
                             </div>
                             <div id="tc-bloque-pago" style="display: none;">
+                                <div style="background: #f8fafc; padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-light); margin-bottom: 0.85rem; font-size: 0.8rem;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                        <span>Deuda Total Vigente:</span>
+                                        <strong id="txt-tc-deuda-resumen" style="color: var(--crimson-600);">$0</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span>Cuota Mensual Estimada:</span>
+                                        <strong id="txt-tc-cuota-resumen" style="color: var(--navy-800);">$0</strong>
+                                    </div>
+                                </div>
+
+                                <div class="quick-chips-wrapper">
+                                    <span class="quick-chips-label">Opciones rápidas de abono:</span>
+                                    <div class="quick-chips">
+                                        <button type="button" class="chip-btn" id="btn-tc-pagar-cuota">Pagar Cuota del Mes</button>
+                                        <button type="button" class="chip-btn" id="btn-tc-pagar-total">Pagar Deuda Total</button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="tc-origen-pago">Medio de Pago:</label>
+                                    <select id="tc-origen-pago" class="form-control">
+                                        <option value="EFECTIVO">💵 Efectivo en Cajero</option>
+                                        <option value="AHORROS">🏦 Debitar de mi Cuenta de Ahorros</option>
+                                        <option value="CORRIENTE">🏢 Debitar de mi Cuenta Corriente</option>
+                                    </select>
+                                </div>
+
                                 <div class="form-group">
                                     <label class="form-label" for="tc-monto-pago">Valor a Pagar (COP):</label>
                                     <input type="number" id="tc-monto-pago" class="form-control" placeholder="Ej: 100000" min="1000">
-                                    <span class="form-helper">Se descontará de la deuda y liberará cupo disponible.</span>
+                                    <span class="form-helper">Se descontará de la deuda y liberará tu cupo disponible al instante.</span>
                                 </div>
                                 <button type="submit" id="btn-tc-pagar" class="btn btn-success" style="width: 100%;">
-                                    Pagar Deuda de Tarjeta
+                                    Confirmar Pago de Tarjeta
                                 </button>
                             </div>
                         </div>
@@ -266,32 +338,34 @@
             <div class="transactions-panel">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
                     <div>
-                        <h3 style="font-size: 1.2rem;">Historial de Movimientos</h3>
-                        <p style="font-size: 0.82rem; color: var(--text-secondary);">Orden cronológico descendente</p>
+                        <h3 style="font-size: 1.2rem;">Historial y Auditoría de Movimientos</h3>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary);">Orden cronológico descendente · Clic en 🧾 para ver comprobante</p>
                     </div>
                     <div>
                         <select id="filtro-tipo-movimiento" class="form-control" style="font-size: 0.82rem; padding: 0.4rem 0.6rem;">
-                            <option value="TODOS">Todos los tipos</option>
+                            <option value="TODOS">Todos los movimientos</option>
                             <option value="CONSIGNACION">Consignaciones</option>
                             <option value="RETIRO">Retiros</option>
                             <option value="TRANSFERENCIA_ENVIADA">Transferencias Enviadas</option>
                             <option value="TRANSFERENCIA_RECIBIDA">Transferencias Recibidas</option>
                             <option value="COMPRA_CREDITO">Compras Tarjeta</option>
+                            <option value="PAGO_TARJETA">Abonos a Tarjeta</option>
+                            <option value="APERTURA">Aperturas de Cuenta</option>
                         </select>
                     </div>
                 </div>
 
-                
+                <!-- Barra de Auditoría de Arreglos (Tema 7: filter, pop, shift) -->
                 <div class="array-tools-bar">
                     <div class="search-box">
                         <span class="search-icon">🔍</span>
-                        <input type="text" id="filtro-busqueda-texto" class="form-control" placeholder="Buscar por concepto o fecha...">
+                        <input type="text" id="filtro-busqueda-texto" class="form-control" placeholder="Filtrar con .filter() por concepto, fecha o monto...">
                     </div>
                     <div class="array-actions">
-                        <button type="button" id="btn-pop-movimiento" class="btn btn-outline-warning btn-sm" title="Remueve el último movimiento usando array.pop()">
+                        <button type="button" id="btn-pop-movimiento" class="btn btn-outline-warning btn-sm" title="Remueve el último movimiento y revierte su saldo usando array.pop()">
                             ⎌ Deshacer Último <code>.pop()</code>
                         </button>
-                        <button type="button" id="btn-shift-movimiento" class="btn btn-outline-secondary btn-sm" title="Remueve el movimiento más antiguo usando array.shift()">
+                        <button type="button" id="btn-shift-movimiento" class="btn btn-outline-secondary btn-sm" title="Remueve el registro más antiguo del historial usando array.shift()">
                             🧹 Depurar Primero <code>.shift()</code>
                         </button>
                     </div>
@@ -306,6 +380,7 @@
                                 <th>Detalle</th>
                                 <th>Monto</th>
                                 <th>Saldo Resultante</th>
+                                <th style="text-align: center;">Recibo</th>
                             </tr>
                         </thead>
                         <tbody id="tbody-movimientos">
@@ -321,25 +396,31 @@
     <div class="modal-overlay" id="modal-solicitud-corriente">
         <div class="modal-card">
             <div class="modal-header">
-                <h3 style="color: #ffffff; font-size: 1.15rem;">Estudio para Cuenta Corriente</h3>
+                <h3 style="color: #ffffff; font-size: 1.15rem;">Estudio Financiero: Cuenta Corriente</h3>
                 <button type="button" class="close-modal-btn" id="btn-cerrar-modal-corriente">&times;</button>
             </div>
             <div class="modal-body">
                 <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
-                    La Cuenta Corriente incluye un margen de sobregiro autorizado del 20% para transacciones comerciales. Para su habilitación, se requiere certificar ingresos mensuales mínimos de $2.000.000 COP.
+                    La Cuenta Corriente incluye un margen de <strong>sobregiro autorizado del 20%</strong> para operaciones comerciales. Para su aprobación se requiere certificar ingresos mensuales mínimos de <strong>$2.000.000 COP</strong>.
                 </p>
                 <div id="corriente-feedback" style="display: none;"></div>
                 <form id="form-solicitar-corriente">
                     <div class="form-group">
                         <label class="form-label" for="corriente-ingresos">Ingresos Mensuales Certificados (COP):</label>
-                        <input type="number" id="corriente-ingresos" class="form-control" placeholder="Ej: 2500000" min="500000" step="50000" required>
-                        <span class="form-helper">Requisito mínimo para sobregiro: $2.000.000 COP.</span>
+                        <input type="number" id="corriente-ingresos" class="form-control" placeholder="Ej: 2800000" min="500000" step="50000" required>
+                        <span class="form-helper">Mínimo requerido para aprobación: $2.000.000 COP.</span>
+                    </div>
+                    <div class="quick-chips-wrapper">
+                        <div class="quick-chips">
+                            <button type="button" class="chip-btn chip-ingreso-corriente" data-monto="1200000">$1.200.000 (Rechazo)</button>
+                            <button type="button" class="chip-btn chip-ingreso-corriente" data-monto="2800000">$2.800.000 (Aprobado)</button>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="corriente-actividad">Actividad Económica:</label>
                         <select id="corriente-actividad" class="form-control" required>
                             <option value="Empleado">Empleado con contrato laboral</option>
-                            <option value="Independiente">Independiente con RUT</option>
+                            <option value="Independiente">Profesional Independiente con RUT</option>
                             <option value="Empresario">Empresario / Comerciante</option>
                         </select>
                     </div>
@@ -362,13 +443,20 @@
             </div>
             <div class="modal-body">
                 <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1rem;">
-                    Calcula tu capacidad de endeudamiento para emitir tu tarjeta con compras diferidas hasta 36 cuotas y tasa 0% en 1 o 2 cuotas.
+                    Evaluamos tu capacidad de endeudamiento en línea para emitir tu tarjeta Visa con compras diferidas hasta 36 cuotas y 0% de interés a 1 o 2 meses.
                 </p>
                 <div id="credito-feedback" style="display: none;"></div>
                 <form id="form-solicitar-credito">
                     <div class="form-group">
                         <label class="form-label" for="credito-ingresos">Ingresos Mensuales Comprobables (COP):</label>
                         <input type="number" id="credito-ingresos" class="form-control" placeholder="Ej: 3800000" min="500000" step="50000" required>
+                    </div>
+                    <div class="quick-chips-wrapper">
+                        <div class="quick-chips">
+                            <button type="button" class="chip-btn chip-ingreso-tc" data-monto="1000000">$1.0M (Insuficiente)</button>
+                            <button type="button" class="chip-btn chip-ingreso-tc" data-monto="2200000">$2.2M (Visa Clásica)</button>
+                            <button type="button" class="chip-btn chip-ingreso-tc" data-monto="4500000">$4.5M (Visa Gold)</button>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="credito-actividad">Tipo de Ocupación:</label>
@@ -379,7 +467,7 @@
                         </select>
                     </div>
                     <div id="credito-preaprobado-box" style="display: none; padding: 0.85rem; background: var(--emerald-50); border: 1.5px solid var(--emerald-500); border-radius: var(--radius-md); margin-bottom: 1rem; font-size: 0.88rem;">
-                        <span style="font-weight: 700; color: var(--emerald-600);">¡Preaprobado Bancario!</span>
+                        <span style="font-weight: 700; color: var(--emerald-600);">Resultado Preaprobado Bancario:</span>
                         <div id="credito-preaprobado-texto" style="margin-top: 0.25rem;"></div>
                     </div>
                     <div class="modal-footer" style="padding: 1rem 0 0 0; background: none; border-top: none;">
@@ -454,7 +542,6 @@
         </div>
     </div>
 
-    
     <!-- Modal 4: Comprobante Digital Bancario / Voucher Térmico -->
     <div class="modal-overlay" id="modal-comprobante">
         <div class="modal-card receipt-modal-card">

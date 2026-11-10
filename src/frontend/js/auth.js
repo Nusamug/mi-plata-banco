@@ -3,12 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Asegurar inicialización de la persistencia
     StorageService.inicializar();
 
-    // Redirigir al cajero si ya hay una sesión activa válida
-    const sesionExistente = StorageService.obtenerSesionActiva();
-    if (sesionExistente && !sesionExistente.estaBloqueado) {
-        // Si el usuario quiere cambiar de cuenta puede cerrar sesión desde el cajero
-    }
-
     // Elementos del DOM - Tabs
     const tabBtnLogin = document.getElementById('tab-btn-login');
     const tabBtnRegister = document.getElementById('tab-btn-register');
@@ -19,10 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const formLogin = document.getElementById('form-login');
     const inputUsername = document.getElementById('login-username');
     const inputPassword = document.getElementById('login-password');
+    const btnTogglePass = document.getElementById('btn-toggle-pass');
     const btnSubmitLogin = document.getElementById('btn-submit-login');
     const badgeIntentos = document.getElementById('badge-intentos');
     const loginFeedback = document.getElementById('login-feedback');
     const btnAutorellenar = document.getElementById('btn-autorellenar');
+    const btnAutorellenarMafe = document.getElementById('btn-autorellenar-mafe');
     const btnResetDemo = document.getElementById('btn-reset-demo');
 
     // Elementos del DOM - Registro
@@ -53,6 +49,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     tabBtnLogin.addEventListener('click', () => activarTab('login'));
     tabBtnRegister.addEventListener('click', () => activarTab('register'));
+
+    // Mostrar / Ocultar contraseña
+    if (btnTogglePass) {
+        btnTogglePass.addEventListener('click', () => {
+            const esPassword = inputPassword.type === 'password';
+            inputPassword.type = esPassword ? 'text' : 'password';
+            btnTogglePass.textContent = esPassword ? '🙈 Ocultar clave' : '👁️ Mostrar clave';
+        });
+    }
 
     // Detectar si en la URL viene ?tab=register
     const urlParams = new URLSearchParams(window.location.search);
@@ -87,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         actualizarBadgeIntentos(0, 3);
         mostrarAlertaLogin(
             'danger',
-            '⛔ ACCESO BLOQUEADO POR SEGURIDAD: Se ha superado el límite de 3 intentos fallidos permitidos. Comuníquese con la entidad bancaria para el desbloqueo de sus credenciales.'
+            '⛔ ACCESO BLOQUEADO POR SEGURIDAD: Se ha superado el límite de 3 intentos fallidos permitidos. Haz clic en "Restablecer y desbloquear demos" abajo o comunícate con la entidad bancaria.'
         );
     }
 
@@ -99,12 +104,42 @@ document.addEventListener('DOMContentLoaded', () => {
         loginFeedback.style.display = 'none';
     }
 
-    // Autorelleno de credenciales demo para Login
+    function sincronizarEstadoUsuario(usernameVal) {
+        if (!usernameVal) return;
+        const cliente = StorageService.buscarPorUsername(usernameVal);
+        if (cliente) {
+            if (cliente.estaBloqueado) {
+                bloquearFormularioLogin();
+            } else {
+                inputUsername.disabled = false;
+                inputPassword.disabled = false;
+                btnSubmitLogin.disabled = false;
+                actualizarBadgeIntentos(cliente.intentosRestantes, 3);
+            }
+        } else {
+            actualizarBadgeIntentos(3, 3);
+        }
+    }
+
+    // Autorelleno de credenciales demo 1 (Carlos Morales)
     if (btnAutorellenar) {
         btnAutorellenar.addEventListener('click', () => {
+            desbloquearFormularioLogin();
             inputUsername.value = 'carlos99';
             inputPassword.value = 'Pass123!';
-            inputUsername.focus();
+            sincronizarEstadoUsuario('carlos99');
+            inputPassword.focus();
+        });
+    }
+
+    // Autorelleno de credenciales demo 2 (María Fernanda Ospina)
+    if (btnAutorellenarMafe) {
+        btnAutorellenarMafe.addEventListener('click', () => {
+            desbloquearFormularioLogin();
+            inputUsername.value = 'mafe_ospina';
+            inputPassword.value = 'Banco2026*';
+            sincronizarEstadoUsuario('mafe_ospina');
+            inputPassword.focus();
         });
     }
 
@@ -114,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const num = Math.floor(1000 + Math.random() * 9000);
             regDocumento.value = '10' + num + '555';
             regNombre.value = 'Estudiante Prueba ' + num;
-            regCelular.value = '311' + num + '88';
+            regCelular.value = '311' + num + '889';
             regUsername.value = 'usuario_' + num;
             regPassword.value = 'Bancario123!';
             regConfirm.value = 'Bancario123!';
@@ -124,31 +159,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Restablecer demo para pruebas continuas del evaluador
     if (btnResetDemo) {
         btnResetDemo.addEventListener('click', () => {
-            localStorage.removeItem(StorageService.CLAVE_CLIENTES);
-            sessionStorage.removeItem(StorageService.CLAVE_SESION);
-            StorageService.inicializar();
+            StorageService.restablecerDatosDemo();
+            StorageService.cerrarSesion();
             desbloquearFormularioLogin();
-            mostrarAlertaLogin('success', '✓ Usuario demo carlos99 desbloqueado y cuentas restablecidas con numeración oficial.');
+            inputUsername.value = 'carlos99';
+            inputPassword.value = 'Pass123!';
+            mostrarAlertaLogin('success', '✓ Usuarios demo (carlos99 y mafe_ospina) desbloqueados y cuentas restablecidas.');
         });
     }
 
     // Validar estado inicial al tipear el nombre de usuario
     inputUsername.addEventListener('blur', () => {
-        const usernameVal = inputUsername.value.trim();
-        if (!usernameVal) return;
-
-        const cliente = StorageService.buscarPorUsername(usernameVal);
-        if (cliente) {
-            actualizarBadgeIntentos(cliente.intentosRestantes, 3);
-            if (cliente.estaBloqueado) {
-                bloquearFormularioLogin();
-            } else {
-                desbloquearFormularioLogin();
-                actualizarBadgeIntentos(cliente.intentosRestantes, 3);
-            }
-        } else {
-            actualizarBadgeIntentos(3, 3);
-        }
+        sincronizarEstadoUsuario(inputUsername.value.trim());
     });
 
     // Envío del Formulario de Login
@@ -194,12 +216,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Login Exitoso
         actualizarBadgeIntentos(3, 3);
-        mostrarAlertaLogin('success', '¡Autenticación exitosa! Ingresando al cajero...');
+        mostrarAlertaLogin('success', `¡Autenticación exitosa! Bienvenido(a), ${cliente.nombreCompleto}. Ingresando al cajero...`);
         StorageService.guardarSesionActiva(cliente);
 
         setTimeout(() => {
             window.location.href = 'cajero.html';
-        }, 800);
+        }, 650);
     });
 
     // Envío del Formulario de Registro
@@ -251,10 +273,10 @@ document.addEventListener('DOMContentLoaded', () => {
         mostrarAlertaReg('success', resultadoRegistro.mensaje);
         formRegister.reset();
 
-        // Tras 1.5s, iniciar sesión automáticamente y enviar al cajero
+        // Tras 1.2s, iniciar sesión automáticamente y enviar al cajero
         setTimeout(() => {
             StorageService.guardarSesionActiva(resultadoRegistro.cliente);
             window.location.href = 'cajero.html';
-        }, 1500);
+        }, 1200);
     });
 });
