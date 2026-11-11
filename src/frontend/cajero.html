@@ -52,7 +52,7 @@
                 <div class="kpi-info">
                     <span class="kpi-lbl">Patrimonio Total</span>
                     <strong class="kpi-val" id="kpi-patrimonio">$0</strong>
-                    <span class="kpi-sub">Suma activa (.reduce)</span>
+                    <span class="kpi-sub">Suma de saldos disponibles</span>
                 </div>
             </div>
             <div class="kpi-card">
@@ -338,8 +338,8 @@
             <div class="transactions-panel">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
                     <div>
-                        <h3 style="font-size: 1.2rem;">Historial y Auditoría de Movimientos</h3>
-                        <p style="font-size: 0.82rem; color: var(--text-secondary);">Orden cronológico descendente · Clic en 🧾 para ver comprobante</p>
+                        <h3 style="font-size: 1.2rem;">Historial de Movimientos</h3>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary);">Movimientos en tiempo real · Clic en 🧾 para ver o imprimir comprobante</p>
                     </div>
                     <div>
                         <select id="filtro-tipo-movimiento" class="form-control" style="font-size: 0.82rem; padding: 0.4rem 0.6rem;">
@@ -355,20 +355,10 @@
                     </div>
                 </div>
 
-                <!-- Barra de Auditoría de Arreglos (Tema 7: filter, pop, shift) -->
-                <div class="array-tools-bar">
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="filtro-busqueda-texto" class="form-control" placeholder="Filtrar con .filter() por concepto, fecha o monto...">
-                    </div>
-                    <div class="array-actions">
-                        <button type="button" id="btn-pop-movimiento" class="btn btn-outline-warning btn-sm" title="Remueve el último movimiento y revierte su saldo usando array.pop()">
-                            ⎌ Deshacer Último <code>.pop()</code>
-                        </button>
-                        <button type="button" id="btn-shift-movimiento" class="btn btn-outline-secondary btn-sm" title="Remueve el registro más antiguo del historial usando array.shift()">
-                            🧹 Depurar Primero <code>.shift()</code>
-                        </button>
-                    </div>
+                <!-- Barra de Búsqueda de Transacciones -->
+                <div class="search-box" style="margin-bottom: 0.85rem;">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="filtro-busqueda-texto" class="form-control" placeholder="Buscar transacción por concepto, fecha o valor...">
                 </div>
 
                 <div class="table-responsive">
