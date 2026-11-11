@@ -44,12 +44,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputRetirarMonto = document.getElementById('retirar-monto');
     const previewRetiroSim = document.getElementById('retiro-sim-preview');
 
-    // Campos de transferencia Bre-B
+    // Campos y paneles de transferencia Bre-B
     const selectTransferirCanal = document.getElementById('transferir-canal');
     const labelTransferirDestino = document.getElementById('label-transferir-destino');
     const inputTransferirDestino = document.getElementById('transferir-destino');
     const helperTransferirDestino = document.getElementById('helper-transferir-destino');
-    const btnChipMiOtraCuenta = document.getElementById('btn-chip-mi-otra-cuenta');
+    const contenedorChipsBreb = document.getElementById('contenedor-chips-breb');
+    const txtContadorDestinatarios = document.getElementById('txt-contador-destinatarios');
+    const txtBrebMiCelular = document.getElementById('breb-mi-celular');
+    const txtBrebMiDoc = document.getElementById('breb-mi-doc');
+    const txtBrebMiAlias = document.getElementById('breb-mi-alias');
+    const txtBrebMiCuentaAbono = document.getElementById('breb-mi-cuenta-abono');
+    const btnCopiarMiCel = document.getElementById('btn-copiar-mi-cel');
+    const btnCopiarMiDoc = document.getElementById('btn-copiar-mi-doc');
+    const btnCopiarMiAlias = document.getElementById('btn-copiar-mi-alias');
+    const btnCopiarMiCuenta = document.getElementById('btn-copiar-mi-cuenta');
 
     // Tarjeta de crédito
     const tcAvisoNoCuenta = document.getElementById('tc-aviso-no-cuenta');
@@ -322,6 +331,9 @@ document.addEventListener('DOMContentLoaded', () => {
         actualizarMetricasKPI();
         actualizarResumenPagoTC();
         actualizarPreviewRetiro();
+        actualizarMisLlavesBreB();
+        renderizarDirectorioBreB();
+        actualizarCamposCanalTransferencia();
     }
 
     function mostrarAlertaCajero(tipo, mensaje) {
@@ -578,32 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Directorio rápido de destinatarios Bre-B
-    document.querySelectorAll('.chip-contacto-breb').forEach(chip => {
-        chip.addEventListener('click', () => {
-            reproducirSonido('click');
-            selectTransferirCanal.value = chip.dataset.canal;
-            selectTransferirCanal.dispatchEvent(new Event('change'));
-            inputTransferirDestino.value = chip.dataset.destino;
-        });
-    });
-
-    if (btnChipMiOtraCuenta) {
-        btnChipMiOtraCuenta.addEventListener('click', () => {
-            reproducirSonido('click');
-            const otraCuenta = clienteActivo.cuentas.find(
-                c => c.tipo !== 'CREDITO' && (!cuentaSeleccionada || c.numeroCuenta !== cuentaSeleccionada.numeroCuenta)
-            );
-            if (!otraCuenta) {
-                mostrarAlertaCajero('warning', 'Solo tienes una cuenta de depósito activa. Solicita primero tu Cuenta Corriente para transferir entre tus propias cuentas.');
-                return;
-            }
-            selectTransferirCanal.value = 'CUENTA';
-            selectTransferirCanal.dispatchEvent(new Event('change'));
-            inputTransferirDestino.value = otraCuenta.numeroCuenta;
-            document.getElementById('transferir-concepto').value = `Traspaso propio hacia ${otraCuenta.tipo}`;
-        });
-    }
+    // Directorio dinámico Bre-B gestionado automáticamente en renderizarDirectorioBreB()
 
     // 1. Consignar
     formConsignar.addEventListener('submit', (e) => {
@@ -656,23 +643,197 @@ document.addEventListener('DOMContentLoaded', () => {
         recargarDatosCliente();
     });
 
-    // 3. Canales de Transferencia Bre-B
-    selectTransferirCanal.addEventListener('change', () => {
+    // =========================================================================
+    // ECOSISTEMA BRE-B: GENERACIÓN AUTOMÁTICA DE LLAVES Y DIRECTORIO EN RED
+    // =========================================================================
+    function actualizarMisLlavesBreB() {
+        if (!clienteActivo) return;
+        if (txtBrebMiCelular) txtBrebMiCelular.textContent = clienteActivo.celular || 'Sin celular';
+        if (txtBrebMiDoc) txtBrebMiDoc.textContent = clienteActivo.documento || 'Sin doc';
+        if (txtBrebMiAlias) txtBrebMiAlias.textContent = `@${clienteActivo.username || 'usuario'}`;
+
+        const ctaAbono = clienteActivo.obtenerCuentaPorTipo('AHORROS') || clienteActivo.cuentas.find(c => c.tipo !== 'CREDITO') || clienteActivo.cuentas[0];
+        if (txtBrebMiCuentaAbono) {
+            txtBrebMiCuentaAbono.textContent = ctaAbono ? `${ctaAbono.numeroCuenta} (${ctaAbono.tipo})` : 'Sin cuenta';
+        }
+    }
+
+    function copiarTextoPortapapeles(texto, etiqueta) {
+        if (!texto) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(texto).then(() => {
+                reproducirSonido('click');
+                mostrarAlertaCajero('info', `📋 Copiado al portapapeles: ${etiqueta} (${texto})`);
+            }).catch(() => {
+                mostrarAlertaCajero('info', `${etiqueta}: ${texto}`);
+            });
+        } else {
+            mostrarAlertaCajero('info', `${etiqueta}: ${texto}`);
+        }
+    }
+
+    if (btnCopiarMiCel) {
+        btnCopiarMiCel.addEventListener('click', () => {
+            if (clienteActivo) copiarTextoPortapapeles(clienteActivo.celular, 'Mi Llave Celular Bre-B');
+        });
+    }
+    if (btnCopiarMiDoc) {
+        btnCopiarMiDoc.addEventListener('click', () => {
+            if (clienteActivo) copiarTextoPortapapeles(clienteActivo.documento, 'Mi Llave Cédula Bre-B');
+        });
+    }
+    if (btnCopiarMiAlias) {
+        btnCopiarMiAlias.addEventListener('click', () => {
+            if (clienteActivo) copiarTextoPortapapeles(clienteActivo.username, 'Mi Llave Alias Bre-B');
+        });
+    }
+    if (btnCopiarMiCuenta) {
+        btnCopiarMiCuenta.addEventListener('click', () => {
+            if (clienteActivo) {
+                const ctaAbono = clienteActivo.obtenerCuentaPorTipo('AHORROS') || clienteActivo.cuentas.find(c => c.tipo !== 'CREDITO') || clienteActivo.cuentas[0];
+                if (ctaAbono) copiarTextoPortapapeles(ctaAbono.numeroCuenta, 'Mi Cuenta Receptora');
+            }
+        });
+    }
+
+    function renderizarDirectorioBreB() {
+        if (!contenedorChipsBreb) return;
+        contenedorChipsBreb.innerHTML = '';
+
+        const todosLosClientes = StorageService.obtenerClientes();
+        // Excluir al cliente actualmente logueado para no transferirse a sí mismo por llave externa
+        const otrosClientes = todosLosClientes.filter(c => c.documento !== clienteActivo.documento);
+
+        if (txtContadorDestinatarios) {
+            txtContadorDestinatarios.textContent = `${otrosClientes.length} destinatario(s) en red`;
+        }
+
+        if (otrosClientes.length === 0) {
+            contenedorChipsBreb.innerHTML = `
+                <div style="font-size: 0.78rem; color: var(--text-secondary); padding: 0.4rem 0;">
+                    No hay otros clientes en el banco aún. Crea un nuevo usuario desde el Login o Inicio para enviarle fondos.
+                </div>
+            `;
+        } else {
+            otrosClientes.forEach(dest => {
+                const primerNombre = dest.nombreCompleto.split(' ')[0];
+                const ctaReceptora = dest.obtenerCuentaPorTipo('AHORROS') || dest.cuentas.find(c => c.tipo !== 'CREDITO') || dest.cuentas[0];
+
+                // 1. Chip Llave Celular
+                if (dest.celular) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'chip-btn chip-contacto-breb';
+                    btn.title = `Transferir por Llave Celular a ${dest.nombreCompleto}`;
+                    btn.innerHTML = `📱 ${primerNombre} (${dest.celular})`;
+                    btn.addEventListener('click', () => {
+                        seleccionarDestinatarioBreB('LLAVE_CELULAR', dest.celular, `Transferencia Bre-B a ${dest.nombreCompleto}`);
+                    });
+                    contenedorChipsBreb.appendChild(btn);
+                }
+
+                // 2. Chip Llave Cédula
+                if (dest.documento) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'chip-btn chip-contacto-breb';
+                    btn.title = `Transferir por Llave Cédula a ${dest.nombreCompleto}`;
+                    btn.innerHTML = `🪪 C.C. ${primerNombre} (${dest.documento})`;
+                    btn.addEventListener('click', () => {
+                        seleccionarDestinatarioBreB('LLAVE_DOCUMENTO', dest.documento, `Transferencia Bre-B a ${dest.nombreCompleto}`);
+                    });
+                    contenedorChipsBreb.appendChild(btn);
+                }
+
+                // 3. Chip Llave Alias / Username
+                if (dest.username) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'chip-btn chip-contacto-breb';
+                    btn.title = `Transferir por Llave Alias a @${dest.username} (${dest.nombreCompleto})`;
+                    btn.innerHTML = `⚡ @${dest.username}`;
+                    btn.addEventListener('click', () => {
+                        seleccionarDestinatarioBreB('LLAVE_ALFANUMERICA', dest.username, `Transferencia Bre-B a ${dest.nombreCompleto}`);
+                    });
+                    contenedorChipsBreb.appendChild(btn);
+                }
+
+                // 4. Chip Cuenta Bancaria
+                if (ctaReceptora) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'chip-btn chip-contacto-breb';
+                    btn.title = `Transferir por Cuenta a ${dest.nombreCompleto} (${ctaReceptora.numeroCuenta})`;
+                    btn.innerHTML = `🏦 Cta. ${primerNombre} (${ctaReceptora.numeroCuenta})`;
+                    btn.addEventListener('click', () => {
+                        seleccionarDestinatarioBreB('CUENTA', ctaReceptora.numeroCuenta, `Transferencia a cuenta de ${dest.nombreCompleto}`);
+                    });
+                    contenedorChipsBreb.appendChild(btn);
+                }
+            });
+        }
+
+        // Traspaso entre mis propias cuentas (si el cliente tiene más de 1 cuenta de depósito)
+        const cuentasPropias = clienteActivo.cuentas.filter(c => c.tipo !== 'CREDITO');
+        if (cuentasPropias.length > 1) {
+            const btnPropio = document.createElement('button');
+            btnPropio.type = 'button';
+            btnPropio.className = 'chip-btn';
+            btnPropio.style.borderColor = 'var(--cesde-magenta)';
+            btnPropio.style.background = '#ffffff';
+            btnPropio.title = 'Traspasar fondos entre mis propias cuentas (Ahorros <-> Corriente)';
+            btnPropio.innerHTML = '🔄 A mi otra cuenta';
+            btnPropio.addEventListener('click', () => {
+                reproducirSonido('click');
+                const otraCuenta = clienteActivo.cuentas.find(
+                    c => c.tipo !== 'CREDITO' && (!cuentaSeleccionada || c.numeroCuenta !== cuentaSeleccionada.numeroCuenta)
+                );
+                if (otraCuenta) {
+                    seleccionarDestinatarioBreB('CUENTA', otraCuenta.numeroCuenta, `Traspaso propio hacia ${otraCuenta.tipo}`);
+                }
+            });
+            contenedorChipsBreb.appendChild(btnPropio);
+        }
+    }
+
+    function seleccionarDestinatarioBreB(canal, destino, concepto) {
+        reproducirSonido('click');
+        selectTransferirCanal.value = canal;
+        actualizarCamposCanalTransferencia();
+        inputTransferirDestino.value = destino;
+        if (concepto) {
+            document.getElementById('transferir-concepto').value = concepto;
+        }
+        document.getElementById('transferir-monto').focus();
+    }
+
+    function actualizarCamposCanalTransferencia() {
         const canal = selectTransferirCanal.value;
+        const otros = StorageService.obtenerClientes().filter(c => c.documento !== clienteActivo.documento);
+        const primerOtro = otros[0];
+
         if (canal === 'LLAVE_CELULAR') {
             labelTransferirDestino.textContent = 'Celular del Destinatario (Bre-B):';
-            inputTransferirDestino.placeholder = 'Ej: 3209876543 (María Fernanda)';
-            helperTransferirDestino.textContent = 'Transfiere inmediatamente a cualquier cuenta asociada a este celular.';
+            inputTransferirDestino.placeholder = primerOtro ? `Ej: ${primerOtro.celular} (${primerOtro.nombreCompleto.split(' ')[0]})` : 'Ej: 3209876543';
+            helperTransferirDestino.textContent = 'Transfiere sin costo en segundos usando el número de celular del destinatario.';
         } else if (canal === 'LLAVE_DOCUMENTO') {
             labelTransferirDestino.textContent = 'Cédula / Documento del Destinatario (Bre-B):';
-            inputTransferirDestino.placeholder = 'Ej: 987654321';
+            inputTransferirDestino.placeholder = primerOtro ? `Ej: ${primerOtro.documento} (${primerOtro.nombreCompleto.split(' ')[0]})` : 'Ej: 987654321';
             helperTransferirDestino.textContent = 'Transfiere usando el documento de identidad como llave bancaria.';
+        } else if (canal === 'LLAVE_ALFANUMERICA') {
+            labelTransferirDestino.textContent = 'Usuario / Alias Bre-B del Destinatario:';
+            inputTransferirDestino.placeholder = primerOtro ? `Ej: @${primerOtro.username} (${primerOtro.nombreCompleto.split(' ')[0]})` : 'Ej: mafe_ospina';
+            helperTransferirDestino.textContent = 'Transfiere usando el alias o nombre de usuario Bre-B del destinatario.';
         } else {
             labelTransferirDestino.textContent = 'Número de Cuenta Bancaria:';
-            inputTransferirDestino.placeholder = 'Ej: 401-9900112-5';
-            helperTransferirDestino.textContent = 'Transfiere directamente al número de cuenta registrado.';
+            const ctaOtro = primerOtro ? (primerOtro.obtenerCuentaPorTipo('AHORROS') || primerOtro.cuentas[0]) : null;
+            inputTransferirDestino.placeholder = ctaOtro ? `Ej: ${ctaOtro.numeroCuenta}` : 'Ej: 401-9900112-5';
+            helperTransferirDestino.textContent = 'Transfiere directamente al número de cuenta tradicional registrado.';
         }
-    });
+    }
+
+    // 3. Canales de Transferencia Bre-B
+    selectTransferirCanal.addEventListener('change', actualizarCamposCanalTransferencia);
 
     formTransferir.addEventListener('submit', (e) => {
         e.preventDefault();

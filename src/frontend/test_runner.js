@@ -128,6 +128,72 @@ assert(cPrueba.saldo === 650000, 'pop() restauró el saldo contable previo ($650
 const primero = cPrueba.eliminarPrimerMovimiento();
 assert(primero.tipo === 'APERTURA' && cPrueba.movimientos.length === 2, 'shift() removió el primer movimiento histórico');
 
+
+console.log('\n=== TEST 7: ECOSISTEMA BRE-B INTEROPERABLE (CELULAR, CÉDULA, ALIAS) ===');
+const mockStorage = {};
+global.localStorage = {
+    getItem: (k) => mockStorage[k] || null,
+    setItem: (k, v) => { mockStorage[k] = String(v); },
+    removeItem: (k) => { delete mockStorage[k]; }
+};
+
+// Cargar clientes demo en el mock storage
+StorageService.guardarClientes(StorageService.crearClientesDemo());
+const demoClientes = StorageService.obtenerClientes();
+const cCarlos = demoClientes[0];
+const cMaria = demoClientes[1];
+
+// 1. Transferencia por Llave Celular
+const resBrebCel = StorageService.transferir(
+    cCarlos.cuentas[0].numeroCuenta,
+    cMaria.celular,
+    50000,
+    'Almuerzo equipo',
+    'LLAVE_CELULAR'
+);
+assert(resBrebCel.exito === true, 'Transferencia exitosa por Llave Bre-B Celular');
+assert(resBrebCel.nuevoSaldo === 2450000, 'Debita $50.000 de la cuenta origen de Carlos');
+
+// 2. Transferencia de regreso por Llave Documento (Cédula)
+const resBrebDoc = StorageService.transferir(
+    cMaria.cuentas[0].numeroCuenta,
+    cCarlos.documento,
+    20000,
+    'Reembolso café',
+    'LLAVE_DOCUMENTO'
+);
+assert(resBrebDoc.exito === true, 'Transferencia exitosa por Llave Bre-B Cédula');
+
+// 3. Transferencia por Llave Alfanumérica (Username / Alias)
+const resBrebAlias = StorageService.transferir(
+    cCarlos.cuentas[0].numeroCuenta,
+    '@mafe_ospina',
+    10000,
+    'Aporte Bre-B',
+    'LLAVE_ALFANUMERICA'
+);
+assert(resBrebAlias.exito === true, 'Transferencia exitosa por Llave Bre-B Alias (@mafe_ospina)');
+
+// 4. Rechazar llave inexistente
+const resBrebInvalida = StorageService.transferir(
+    cCarlos.cuentas[0].numeroCuenta,
+    '3000000000',
+    15000,
+    'Prueba fallo',
+    'LLAVE_CELULAR'
+);
+assert(resBrebInvalida.exito === false, 'Rechaza transferencia a Llave Bre-B no registrada');
+
+// 5. Rechazar fondos insuficientes
+const resBrebSinFondos = StorageService.transferir(
+    cCarlos.cuentas[0].numeroCuenta,
+    cMaria.celular,
+    999999999,
+    'Exceso fondos',
+    'LLAVE_CELULAR'
+);
+assert(resBrebSinFondos.exito === false, 'Rechaza transferencia si los fondos son insuficientes');
+
 console.log(`\n========================================`);
 console.log(`RESULTADOS: ${pruebasPasadas}/${totalPruebas} pruebas pasadas.`);
 console.log(`========================================\n`);

@@ -182,23 +182,49 @@
                         </button>
                     </form>
 
-                    <!-- 3. Formulario Transferir con Llave Bre-B -->
+                                        <!-- 3. Formulario Transferir con Llave Bre-B -->
                     <form id="form-op-transferir" style="display: none;">
+                        <!-- Panel Informativo: Mis Llaves Bre-B (Perfil Activo) -->
+                        <div class="breb-my-keys-card">
+                            <div class="breb-my-keys-header">
+                                <span class="breb-status-pill">⚡ Mis Llaves Bre-B Activas</span>
+                                <span class="breb-info-tag">Autogeneradas en el Banco</span>
+                            </div>
+                            <p class="breb-my-keys-desc">
+                                Tus llaves están vinculadas automáticamente a tu cuenta. Cualquier cliente te puede transferir dinero inmediato usando tu celular, cédula o usuario:
+                            </p>
+                            <div class="breb-keys-grid">
+                                <div class="breb-key-badge" id="btn-copiar-mi-cel" title="Clic para copiar mi Llave Celular">
+                                    <span class="breb-key-lbl">📱 Celular:</span>
+                                    <strong id="breb-mi-celular">---</strong>
+                                    <span class="breb-copy-icon">📋</span>
+                                </div>
+                                <div class="breb-key-badge" id="btn-copiar-mi-doc" title="Clic para copiar mi Llave Cédula">
+                                    <span class="breb-key-lbl">🪪 Cédula:</span>
+                                    <strong id="breb-mi-doc">---</strong>
+                                    <span class="breb-copy-icon">📋</span>
+                                </div>
+                                <div class="breb-key-badge" id="btn-copiar-mi-alias" title="Clic para copiar mi Llave Alias / Usuario">
+                                    <span class="breb-key-lbl">⚡ Alias:</span>
+                                    <strong id="breb-mi-alias">---</strong>
+                                    <span class="breb-copy-icon">📋</span>
+                                </div>
+                                <div class="breb-key-badge" id="btn-copiar-mi-cuenta" title="Clic para copiar mi Cuenta Receptora">
+                                    <span class="breb-key-lbl">🏦 Abono:</span>
+                                    <strong id="breb-mi-cuenta-abono">---</strong>
+                                    <span class="breb-copy-icon">📋</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Directorio Dinámico de Destinatarios (1 Clic) -->
                         <div class="quick-chips-wrapper">
-                            <span class="quick-chips-label">Directorio Rápido de Destinatarios (1 Clic):</span>
-                            <div class="quick-chips">
-                                <button type="button" class="chip-btn chip-contacto-breb" data-canal="LLAVE_CELULAR" data-destino="3209876543" title="Transferir por Llave Celular a María Fernanda Ospina">
-                                    📱 María F. (3209876543)
-                                </button>
-                                <button type="button" class="chip-btn chip-contacto-breb" data-canal="LLAVE_DOCUMENTO" data-destino="987654321" title="Transferir por Llave Cédula a María Fernanda Ospina">
-                                    🪪 C.C. María (987654321)
-                                </button>
-                                <button type="button" class="chip-btn chip-contacto-breb" data-canal="CUENTA" data-destino="401-9900112-5" title="Transferir por Número de Cuenta a María Fernanda">
-                                    🏦 Cta. María (401-9900112-5)
-                                </button>
-                                <button type="button" class="chip-btn" id="btn-chip-mi-otra-cuenta" title="Transferir entre mis propias cuentas (Ahorros <-> Corriente)">
-                                    🔄 A mi otra cuenta
-                                </button>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem; flex-wrap: wrap; gap: 0.35rem;">
+                                <span class="quick-chips-label" style="margin-bottom: 0;">Destinatarios Registrados (1 Clic para transferir):</span>
+                                <span style="font-size: 0.72rem; color: var(--cesde-magenta-dark); font-weight: 600;" id="txt-contador-destinatarios">---</span>
+                            </div>
+                            <div class="quick-chips" id="contenedor-chips-breb">
+                                <!-- Se rellena automáticamente con los otros cuentahabientes del banco -->
                             </div>
                         </div>
 
@@ -207,12 +233,13 @@
                             <select id="transferir-canal" class="form-control">
                                 <option value="LLAVE_CELULAR">⚡ Llave Bre-B (Número de Celular)</option>
                                 <option value="LLAVE_DOCUMENTO">⚡ Llave Bre-B (Cédula / Documento)</option>
-                                <option value="CUENTA">🏦 Número de Cuenta Tradicional</option>
+                                <option value="LLAVE_ALFANUMERICA">⚡ Llave Bre-B (Usuario / Alias)</option>
+                                <option value="CUENTA">🏦 Número de Cuenta Bancaria</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" id="label-transferir-destino" for="transferir-destino">Celular del Destinatario (Bre-B):</label>
-                            <input type="text" id="transferir-destino" class="form-control" placeholder="Ej: 3209876543 (María Fernanda)" required>
+                            <input type="text" id="transferir-destino" class="form-control" placeholder="Ej: 3209876543" required>
                             <span class="form-helper" id="helper-transferir-destino">Transfiere sin costo en segundos usando la llave del destinatario.</span>
                         </div>
                         <div class="form-group">

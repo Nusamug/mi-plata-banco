@@ -394,6 +394,12 @@ class StorageService {
             if (titularDestino) {
                 cuentaDestino = titularDestino.obtenerCuentaPorTipo('AHORROS') || titularDestino.cuentas.find(c => c.tipo !== 'CREDITO') || titularDestino.cuentas[0];
             }
+        } else if (tipoDestino === 'LLAVE_ALFANUMERICA') {
+            const aliasLimpio = idLimpio.toLowerCase().replace('@', '');
+            titularDestino = clientes.find(c => c.username && c.username.toLowerCase() === aliasLimpio);
+            if (titularDestino) {
+                cuentaDestino = titularDestino.obtenerCuentaPorTipo('AHORROS') || titularDestino.cuentas.find(c => c.tipo !== 'CREDITO') || titularDestino.cuentas[0];
+            }
         } else {
             // Búsqueda por número de cuenta directo
             for (const c of clientes) {
@@ -407,7 +413,7 @@ class StorageService {
         }
 
         if (!titularDestino || !cuentaDestino) {
-            const detalleTipo = tipoDestino === 'LLAVE_CELULAR' ? 'celular' : (tipoDestino === 'LLAVE_DOCUMENTO' ? 'cédula' : 'número de cuenta');
+            const detalleTipo = tipoDestino === 'LLAVE_CELULAR' ? 'celular' : (tipoDestino === 'LLAVE_DOCUMENTO' ? 'cédula' : (tipoDestino === 'LLAVE_ALFANUMERICA' ? 'usuario/alias Bre-B' : 'número de cuenta'));
             return { exito: false, mensaje: `No se encontró ningún cuentahabiente asociado al ${detalleTipo} ingresado (${idLimpio}).` };
         }
 

@@ -1433,3 +1433,116 @@ a:hover {
         font-size: 2.1rem;
     }
 }
+
+
+/* ==========================================================================
+   Ecosistema de Transferencias Interoperables Bre-B (Banco de la República)
+   ========================================================================== */
+.breb-my-keys-card {
+    background: linear-gradient(135deg, rgba(228, 0, 124, 0.05) 0%, rgba(9, 9, 13, 0.02) 100%);
+    border: 1px solid rgba(228, 0, 124, 0.28);
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.breb-my-keys-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+    flex-wrap: wrap;
+}
+
+.breb-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--cesde-magenta-dark);
+}
+
+.breb-info-tag {
+    font-size: 0.68rem;
+    background: #e6f9f0;
+    color: #0d824d;
+    padding: 0.18rem 0.5rem;
+    border-radius: 999px;
+    font-weight: 700;
+    border: 1px solid rgba(13, 130, 77, 0.25);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.breb-my-keys-desc {
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+    margin: 0 0 0.65rem 0;
+    line-height: 1.35;
+}
+
+.breb-keys-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+    gap: 0.45rem;
+}
+
+.breb-key-badge {
+    background: #ffffff;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 0.45rem 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.3rem;
+    font-size: 0.77rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.breb-key-badge:hover {
+    border-color: var(--cesde-magenta);
+    background: var(--cesde-magenta-tint);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(228, 0, 124, 0.15);
+}
+
+.breb-key-lbl {
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.breb-key-badge strong {
+    color: var(--cesde-black);
+    font-size: 0.78rem;
+    font-family: monospace;
+}
+
+.breb-copy-icon {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.breb-key-badge:hover .breb-copy-icon {
+    opacity: 1;
+    transform: scale(1.15);
+}
+
+.chip-contacto-breb {
+    background: #ffffff;
+    border: 1px solid rgba(228, 0, 124, 0.35);
+    color: var(--cesde-black);
+}
+
+.chip-contacto-breb:hover {
+    background: var(--cesde-magenta);
+    color: #ffffff;
+    border-color: var(--cesde-magenta);
+}
