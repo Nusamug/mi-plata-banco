@@ -8,6 +8,7 @@
 **Estudiante:** Miguel David Rojas González  
 **Estándar:** INVEST · Formato Oficial (`Como... quiero... para...`)  
 **Criterios de Aceptación:** Given-When-Then + Checklist de verificación  
+**Cobertura:** Frontend Web (`US-01` a `US-10` · 42 pruebas en Node.js) + Backend Java/MySQL (`US-03`, `US-11` a `US-14` · 11 pruebas integrales)  
 
 ---
 
@@ -19,7 +20,7 @@ Cada historia de usuario documentada cumple rigurosamente con los principios **I
 - **Valuable (Valiosa):** Entrega valor directo al cuentahabiente o al administrador del banco.
 - **Estimable (Estimable):** Dimensionada en Story Points mediante la serie Fibonacci.
 - **Small (Pequeña):** Acotada para completarse e integrarse dentro del ciclo de desarrollo.
-- **Testable (Testeable):** Respaldada por criterios Given-When-Then y **36 pruebas unitarias automatizadas**.
+- **Testable (Testeable):** Respaldada por criterios Given-When-Then, **42 pruebas unitarias de Front-end** y **11 pruebas integrales de Back-end Java + MySQL**.
 
 ---
 
@@ -35,6 +36,10 @@ Cada historia de usuario documentada cumple rigurosamente con los principios **I
 8. [US-08: Simulación y Compras a Cuotas con Tarjeta de Crédito](#us-08-simulación-y-compras-a-cuotas-con-tarjeta-de-crédito) (5 SP - Must Have)
 9. [US-09: Pagos y Abonos a Tarjeta de Crédito con Liberación de Cupo](#us-09-pagos-y-abonos-a-tarjeta-de-crédito-con-liberación-de-cupo) (3 SP - Should Have)
 10. [US-10: Estudio Financiero y Crediticio en Línea para Nuevos Productos](#us-10-estudio-financiero-y-crediticio-en-línea-para-nuevos-productos) (5 SP - Should Have)
+11. [US-11: Persistencia Relacional en MySQL y Respaldo en Memoria](#us-11-persistencia-relacional-en-mysql-y-respaldo-en-memoria) (5 SP - Must Have)
+12. [US-12: Gestión de Cuentas Bancarias con Herencia y Polimorfismo en Java](#us-12-gestión-de-cuentas-bancarias-con-herencia-y-polimorfismo-en-java) (5 SP - Must Have)
+13. [US-13: Transferencias Atómicas entre Usuarios e Historial en BD](#us-13-transferencias-atómicas-entre-usuarios-e-historial-en-bd) (8 SP - Must Have)
+14. [US-14: Gestión de Créditos Independientes y Pago por Transferencia](#us-14-gestión-de-créditos-independientes-y-pago-por-transferencia) (5 SP - Should Have)
 
 ---
 
@@ -106,10 +111,10 @@ Cada historia de usuario documentada cumple rigurosamente con los principios **I
 > **para** mantener actualizada la información personal y de seguridad.
 
 #### Criterios de Aceptación (Given-When-Then)
-* **Escenario 1: Operaciones CRUD en Back-end Java (`UserService`)**
-  * **Dado que** ejecuto el módulo administrativo en Java,
-  * **Cuando** invoco `selectUserById`, `updateUser`, `deleteUser` y `countUsers` sobre el `ArrayList<User>`,
-  * **Entonces** cada operación modifica o consulta la colección en memoria respetando el encapsulamiento y la herencia desde `Person`.
+* **Escenario 1: Operaciones CRUD en Back-end Java (`UserService` + `UserRepositoryAdapterDB`)**
+  * **Dado que** ejecuto el módulo administrativo en Java conectado a `mi_plata_db` (o en modo respaldo en memoria),
+  * **Cuando** invoco creación, `selectUserById`, `updateUser`, `deleteUser` y `countUsers`,
+  * **Entonces** cada operación modifica o consulta los registros respetando el encapsulamiento, la herencia desde `Person` y la persistencia JDBC.
 * **Escenario 2: Actualización de perfil y llave celular en el Cajero Web**
   * **Dado que** abro el modal *"👤 Mi Perfil"* en `cajero.html`,
   * **Cuando** modifico mi nombre, celular (Llave Bre-B) o contraseña actualizando los campos requeridos,
@@ -280,3 +285,123 @@ Cada historia de usuario documentada cumple rigurosamente con los principios **I
 * **Escenario 2: Estudio de Tarjeta de Crédito Escalonado (Visa Clásica vs Visa Gold)**
   * **Dado que** inicio el estudio crediticio para Tarjeta de Crédito,
   * **Cuando** reporto ingresos entre $1.500.000 y $3.499.999 COP se me aprueba una **Visa Clásica ($2.500.000 cupo)**, y si reporto $\ge \$3.500.000\text{ COP}$ se me aprueba una **Visa Gold ($6.000.000 cupo)** con numeración de 16 dígitos (`4509 XXXX XXXX XXXX`).
+
+---
+
+### US-11: Persistencia Relacional en MySQL y Respaldo en Memoria
+
+| Atributo | Detalle |
+| :--- | :--- |
+| **Identificador** | `US-11` |
+| **Épica / Feature** | Épica 4: Back-end Java & MySQL / Feature 4.1: Arquitectura de Persistencia JDBC |
+| **Prioridad / Estimación** | **Must Have** · **5 Story Points** · **Estado: Completada** |
+
+#### Declaración de la Historia
+> **Como** desarrollador y administrador del sistema Mi Plata,  
+> **quiero** persistir usuarios, cuentas, créditos y transacciones en MySQL (`mi_plata_db`) mediante JDBC, Mappers y Repositorios con respaldo automático en memoria,  
+> **para** conservar todos los saldos y movimientos entre ejecuciones y evitar caídas si el servidor de base de datos está apagado.
+
+#### Criterios de Aceptación (Given-When-Then)
+* **Escenario 1: Conexión activa a MySQL mediante Singleton y esquema relacional**
+  * **Dado que** MySQL en XAMPP está ejecutándose con el esquema `schema_mi_plata.sql` importado,
+  * **Cuando** inicio `Main` o `TestRunner`,
+  * **Entonces** `DataBaseConnection.getInstance()` establece conexión con `mi_plata_db` y `UserService` / `BankService` operan contra las tablas `users`, `accounts`, `credits` y `transactions`.
+* **Escenario 2: Modo respaldo (Fallback) en memoria cuando MySQL no está disponible**
+  * **Dado que** el servicio MySQL está detenido o inaccesible,
+  * **Cuando** se instancian `UserService` y `BankService`,
+  * **Entonces** el sistema informa que inicia en modo `MEMORIA TEMPORAL (Fallback)` y carga datos de ejemplo para operar sin excepciones.
+
+#### Checklist de Verificación
+- [x] `schema_mi_plata.sql` crea las 4 tablas con llaves primarias y foráneas (`ON DELETE CASCADE` / `ON DELETE SET NULL`).
+- [x] Mappers genéricos implementan `RowMapper<T>` (`UserMapper`, `AccountMapper`, `CreditMapper`, `TransactionMapper`).
+- [x] Repositorios implementan consultas parametrizadas con `PreparedStatement` sin exposición a inyección SQL.
+
+---
+
+### US-12: Gestión de Cuentas Bancarias con Herencia y Polimorfismo en Java
+
+| Atributo | Detalle |
+| :--- | :--- |
+| **Identificador** | `US-12` |
+| **Épica / Feature** | Épica 4: Back-end Java & MySQL / Feature 4.2: Cuentas Ahorros y Corriente |
+| **Prioridad / Estimación** | **Must Have** · **5 Story Points** · **Estado: Completada** |
+
+#### Declaración de la Historia
+> **Como** cliente titular registrado en Mi Plata,  
+> **quiero** crear Cuentas de Ahorros y Cuentas Corrientes, consignar dinero y realizar retiros gobernados por las reglas de cada tipo de cuenta,  
+> **para** administrar mis productos bancarios aplicando encapsulamiento, herencia y polimorfismo en Java.
+
+#### Criterios de Aceptación (Given-When-Then)
+* **Escenario 1: Rechazo de sobregiro en Cuenta de Ahorros (`CuentaAhorros.retirar`)**
+  * **Dado que** un usuario tiene una `CuentaAhorros` con saldo de $100.000,
+  * **Cuando** intenta retirar $150.000,
+  * **Entonces** el método polimórfico `retirar(150000)` retorna `false` y el saldo permanece intacto en $100.000 en la tabla `accounts`.
+* **Escenario 2: Uso autorizado de cupo de sobregiro en Cuenta Corriente (`CuentaCorriente.retirar`)**
+  * **Dado que** un usuario tiene una `CuentaCorriente` con saldo de $50.000 y cupo de sobregiro de $100.000,
+  * **Cuando** retira $120.000,
+  * **Entonces** `retirar(120000)` autoriza la operación, actualiza el saldo en BD a -$70.000 y registra un movimiento de tipo `RETIRO`.
+
+#### Checklist de Verificación
+- [x] `Cuenta` es clase abstracta con método común `consignar(double)` y métodos abstractos `retirar(double)` y `getAccountType()`.
+- [x] Únicamente `CuentaAhorros` y `CuentaCorriente` heredan de `Cuenta`.
+- [x] Las consignaciones y retiros válidos registran automáticamente su movimiento en la tabla `transactions`.
+
+---
+
+### US-13: Transferencias Atómicas entre Usuarios e Historial en BD
+
+| Atributo | Detalle |
+| :--- | :--- |
+| **Identificador** | `US-13` |
+| **Épica / Feature** | Épica 4: Back-end Java & MySQL / Feature 4.3: Transferencias y Trazabilidad |
+| **Prioridad / Estimación** | **Must Have** · **8 Story Points** · **Estado: Completada** |
+
+#### Declaración de la Historia
+> **Como** cliente bancario en Mi Plata,  
+> **quiero** transferir dinero desde mi cuenta hacia la cuenta de otro usuario garantizando atomicidad transaccional y consultar el historial completo o filtrado por cuenta,  
+> **para** asegurar que el débito, el crédito y el registro contable ocurran como una sola operación íntegra en MySQL.
+
+#### Criterios de Aceptación (Given-When-Then)
+* **Escenario 1: Transferencia atómica exitosa entre usuarios distintos**
+  * **Dado que** la cuenta origen tiene fondos disponibles (incluyendo sobregiro si es corriente) y la cuenta destino existe y es distinta a la origen,
+  * **Cuando** ejecuto `transferBetweenAccounts(origen, destino, monto, descripcion)`,
+  * **Entonces** dentro de una transacción JDBC (`setAutoCommit(false)` / `commit()`), se descuenta el monto en origen, se acredita en destino y se inserta un registro `TRANSFERENCIA` en `transactions`.
+* **Escenario 2: Reversión automática y rechazo por fondos insuficientes o cuenta inexistente**
+  * **Dado que** el monto supera los fondos disponibles o falla una operación SQL intermedia,
+  * **Cuando** se procesa la transferencia,
+  * **Entonces** la operación retorna `false`, ejecuta `rollback()` si la transacción SQL ya inició, y los saldos de ambas cuentas permanecen inalterados.
+
+#### Checklist de Verificación
+- [x] `BankService.transferBetweenAccounts` valida `amount > 0`, cuentas distintas y existencia de ambas cuentas.
+- [x] `TransactionRepositoryAdapterDB.selectAll()` y `selectByAccount()` listan movimientos ordenados por `tx_id DESC`.
+- [x] Probado en vivo entre usuarios (`104` $\leftrightarrow$ `102` en `TestRunner` y `101` $\rightarrow$ `103` en `Main`).
+
+---
+
+### US-14: Gestión de Créditos Independientes y Pago por Transferencia
+
+| Atributo | Detalle |
+| :--- | :--- |
+| **Identificador** | `US-14` |
+| **Épica / Feature** | Épica 4: Back-end Java & MySQL / Feature 4.4: Entidad Credito y Abonos |
+| **Prioridad / Estimación** | **Should Have** · **5 Story Points** · **Estado: Completada** |
+
+#### Declaración de la Historia
+> **Como** titular de un crédito aprobado en Mi Plata,  
+> **quiero** solicitar créditos registrados de manera independiente a las cuentas bancarias y pagarlos total o parcialmente mediante transferencia desde una cuenta origen,  
+> **para** reducir mi deuda de forma segura hasta liquidar el crédito en estado `PAGADO`.
+
+#### Criterios de Aceptación (Given-When-Then)
+* **Escenario 1: Solicitud y persistencia de crédito con ID autogenerado**
+  * **Dado que** existe un usuario registrado en `users`,
+  * **Cuando** solicito un crédito con monto y plazo en meses positivos,
+  * **Entonces** `CreditRepositoryAdapterDB` inserta el crédito con `current_debt = approved_amount`, estado `ACTIVO` y recupera el `credit_id` generado.
+* **Escenario 2: Abono y cancelación total mediante transferencia desde una cuenta**
+  * **Dado que** tengo un crédito en estado `ACTIVO` con deuda pendiente de $150.000,
+  * **Cuando** abono $50.000 y luego $100.000 desde mi cuenta con saldo suficiente mediante `payCreditFromAccount`,
+  * **Entonces** cada pago debita la cuenta origen, descuenta `current_debt`, registra una transacción `PAGO_CREDITO` con `target_credit_id`, y al llegar la deuda a `$0.00` el estado cambia a `PAGADO` (rechazando abonos superiores a la deuda).
+
+#### Checklist de Verificación
+- [x] `Credito` es una entidad separada (no hereda de `Cuenta`) vinculada por `user_id`.
+- [x] `BankService.payCreditFromAccount` valida saldo en cuenta, estado distinto de `PAGADO` y `monto <= currentDebt` de manera atómica.
+- [x] `CreditRepositoryAdapterDB` retorna el `credit_id` mediante `Statement.RETURN_GENERATED_KEYS`.

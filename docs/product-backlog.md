@@ -36,7 +36,7 @@ Los requerimientos se estructuran en tres niveles:
 | :---: | :--- | :--- | :--- | :---: | :---: | :---: |
 | **US-01** | Autenticación y Clientes | Onboarding | Registro realista de nuevos clientes con apertura de Cuenta de Ahorros y bono inicial | **Must Have** | 5 pts | Completada |
 | **US-02** | Autenticación y Clientes | Seguridad | Inicio de sesión seguro con contador visible y bloqueo automático al 3er intento fallido | **Must Have** | 3 pts | Completada |
-| **US-03** | Autenticación y Clientes | Vertical User | CRUD administrativo de usuarios en Java (`select`, `update`, `delete`, `count`) y perfil web | **Must Have** | 5 pts | Completada |
+| **US-03** | Autenticación y Clientes | Vertical User | CRUD administrativo de usuarios en Java con persistencia MySQL y respaldo en memoria, y perfil web | **Must Have** | 5 pts | Completada |
 | **US-04** | Cajero y Transacciones | Fondos y KPIs | Consulta de portafolio, dashboard de KPIs con `.reduce()` y consignación con chips rápidos | **Must Have** | 3 pts | Completada |
 | **US-05** | Cajero y Transacciones | Retiros | Retiros inteligentes con reglas de negocio (1.5% rendimiento en Ahorros y 20% sobregiro en Corriente) | **Must Have** | 8 pts | Completada |
 | **US-06** | Cajero y Transacciones | Transferencias | Transferencias inmediatas entre cuentas y mediante **Llave Bre-B** (Celular o Cédula) | **Should Have** | 5 pts | Completada |
@@ -44,9 +44,13 @@ Los requerimientos se estructuran en tres niveles:
 | **US-08** | Crédito y Estudios | Financiamiento | Simulación y compras a cuotas (1 a 36 meses) con fórmula de amortización francesa | **Must Have** | 5 pts | Completada |
 | **US-09** | Crédito y Estudios | Pagos de Deuda | Abonos y pagos a la Tarjeta de Crédito (en efectivo o débito de cuenta) con liberación de cupo | **Should Have** | 3 pts | Completada |
 | **US-10** | Crédito y Estudios | Estudio en Línea | Estudio financiero y crediticio por ingresos para aperturar Cuenta Corriente y Tarjeta Visa | **Should Have** | 5 pts | Completada |
+| **US-11** | Back-end Java & MySQL | Persistencia JDBC | Esquema `mi_plata_db`, conexión Singleton, Mappers, Repositorios y respaldo automático en memoria | **Must Have** | 5 pts | Completada |
+| **US-12** | Back-end Java & MySQL | Cuentas y POO | Cuentas `CuentaAhorros` y `CuentaCorriente` (herencia de `Cuenta`), consignaciones y retiros polimórficos | **Must Have** | 5 pts | Completada |
+| **US-13** | Back-end Java & MySQL | Transferencias ACID | Transferencias atómicas entre usuarios/cuentas (`commit`/`rollback`) e historial persistente en BD | **Must Have** | 8 pts | Completada |
+| **US-14** | Back-end Java & MySQL | Créditos | Entidad independiente `Credito`, solicitudes y pagos mediante transferencia desde cuenta origen | **Should Have** | 5 pts | Completada |
 
-* **Total de puntos estimados en el Backlog:** 47 Story Points.  
-* **Total de puntos completados y verificados:** 47 Story Points (**100% de alcance entregado**).  
+* **Total de puntos estimados en el Backlog:** 70 Story Points (`US-01` a `US-10`: 47 SP en Sprint 1 · `US-11` a `US-14`: 23 SP en Sprint 2).  
+* **Total de puntos completados y verificados:** 70 Story Points (**100% de alcance entregado**).  
 
 ---
 
@@ -58,7 +62,7 @@ Los requerimientos se estructuran en tres niveles:
 * **Feature 1.2: Acceso Seguro y Control de Intentos (`US-02`)**  
   Validación de credenciales con contador dinámico (`3 de 3`, `2 de 3`, `1 de 3`) y bloqueo preventivo tras 3 fallos consecutivos.
 * **Feature 1.3: Administración de Usuarios (`US-03`)**  
-  Gestión CRUD en consola Java sobre `ArrayList<User>` y modal de edición/eliminación de perfil y cambio de contraseña en el cajero web.
+  Gestión CRUD en consola Java (`UserService` conectado a MySQL vía `UserRepositoryAdapterDB`, con respaldo en memoria) y modal de edición/eliminación de perfil y cambio de contraseña en el cajero web.
 
 ### Épica 2: Módulo de Transacciones del Cajero Automático y Estructuras de Datos
 * **Feature 2.1: Portafolio Consolidado, KPIs y Depósitos (`US-04`)**  
@@ -77,3 +81,13 @@ Los requerimientos se estructuran en tres niveles:
   Pago de cuota mensual estimada o deuda total, permitiendo pagar en efectivo o debitando directamente de la Cuenta de Ahorros o Corriente.
 * **Feature 3.3: Estudio Financiero y Crediticio en Línea (`US-10`)**  
   Evaluación automática de capacidad de pago según ingresos mensuales certificados ($2.000.000 COP mínimos para Cuenta Corriente; $1.500.000 COP para Visa Clásica y $3.500.000 COP para Visa Gold).
+
+### Épica 4: Back-end Java, Persistencia MySQL y Transacciones Bancarias
+* **Feature 4.1: Arquitectura JDBC, Mappers y Esquema Relacional (`US-11`)**  
+  Base de datos `mi_plata_db` (`users`, `accounts`, `credits`, `transactions`), conexión Singleton (`DataBaseConnection`), mappers (`RowMapper<T>`) y adaptadores DAO/Repository con modo respaldo en memoria.
+* **Feature 4.2: Cuentas Bancarias con Herencia y Polimorfismo (`US-12`)**  
+  Clase abstracta `Cuenta` y subclases `CuentaAhorros` y `CuentaCorriente` aplicando reglas diferenciadas en `retirar(double)` (saldo estricto vs cupo de sobregiro).
+* **Feature 4.3: Transferencias Atómicas e Historial Contable (`US-13`)**  
+  Operaciones transaccionales en `BankService` (`setAutoCommit(false)`, `commit()`, `rollback()`) garantizando integridad entre débito, crédito y registro en `transactions`.
+* **Feature 4.4: Créditos Independientes y Abono por Transferencia (`US-14`)**  
+  Entidad `Credito` separada de `Cuenta`, aprobación con ID autogenerado y abonos desde cuenta origen con transición automática a estado `PAGADO`.
