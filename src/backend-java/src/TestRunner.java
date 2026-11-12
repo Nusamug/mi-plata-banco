@@ -1,76 +1,164 @@
+import models.Credito;
+import models.Cuenta;
+import models.CuentaAhorros;
+import models.CuentaCorriente;
+import models.Transaccion;
 import models.User;
+import services.BankService;
 import services.UserService;
 
-/**
- * Clase de prueba automatizada para verificar la vertical User
- * y generar evidencia de ejecución para la entrega de Back-end.
- */
+import java.util.List;
+
 public class TestRunner {
+
     public static void main(String[] args) {
-        System.out.println("==================================================================");
-        System.out.println("   SUITE DE PRUEBAS AUTOMATIZADAS - VERTICAL DE USUARIO (JAVA)    ");
-        System.out.println("==================================================================");
+        System.out.println("=== INICIANDO PRUEBAS INTEGRALES DE MI PLATA ===\n");
 
-        UserService service = new UserService();
+        UserService userService = new UserService();
+        BankService bankService = new BankService();
+
         int passed = 0;
-        int total = 5;
+        int total = 11;
 
-        // 1. Prueba: countUsers() inicial
-        System.out.print("\n[TEST 1] Verificando countUsers() inicial (esperado: 3)... ");
-        if (service.countUsers() == 3) {
-            System.out.println("PASO (OK)");
+        cleanupTestData(bankService, userService);
+
+        if (userService.isDbConnected() && bankService.isDbConnected()) {
+            System.out.println("[PASS] 1. Conexion activa a MySQL (mi_plata_db)");
             passed++;
         } else {
-            System.out.println("FALLO");
+            System.out.println("[FAIL] 1. Conexion activa a MySQL (se esperaba BD conectada)");
         }
 
-        // 2. Prueba: selectUserById()
-        System.out.print("[TEST 2] Verificando selectUserById(101) (Carlos Restrepo)... ");
-        User u101 = service.selectUserById(101);
-        if (u101 != null && u101.getName().equals("Carlos")) {
-            System.out.println("PASO (OK) -> " + u101.getFullName() + " [" + u101.getCity() + "]");
+        if (userService.countUsers() >= 3 && userService.selectUserById(101) != null) {
+            System.out.println("[PASS] 2. Datos semilla de usuarios cargados (" + userService.countUsers() + ")");
             passed++;
         } else {
-            System.out.println("FALLO");
+            System.out.println("[FAIL] 2. Datos semilla de usuarios");
         }
 
-        // 3. Prueba: createUser()
-        System.out.print("[TEST 3] Verificando createUser() con nuevo usuario (ID 104)... ");
-        User nuevo = new User(104, "Mariana", "Perez", "mariana@banco.com", "3154443322",
-                "ClaveSegura*", true, "Sabaneta", "Extracto físico");
-        boolean created = service.createUser(nuevo);
-        if (created && service.countUsers() == 4 && service.selectUserById(104) != null) {
-            System.out.println("PASO (OK) -> Total usuarios ahora: " + service.countUsers());
+        User testUser = new User(104, "Prueba", "Backend", "prueba104@banco.com", "3000001122",
+                "Secret1*", true, "Medellin", "Digital");
+        boolean userCreated = userService.createUser(testUser);
+        User updatedPayload = new User(104, "Prueba Editada", "Backend", "prueba104@banco.com", "3000001122",
+                "Secret1*", true, "Envigado", "SMS");
+        boolean userUpdated = userService.updateUser(104, updatedPayload);
+        User fetchedUser = userService.selectUserById(104);
+
+        if (userCreated && userUpdated && fetchedUser != null && "Envigado".equals(fetchedUser.getCity())) {
+            System.out.println("[PASS] 3. CRUD de usuario (Crear + Actualizar + Consultar)");
             passed++;
         } else {
-            System.out.println("FALLO");
+            System.out.println("[FAIL] 3. CRUD de usuario");
         }
 
-        // 4. Prueba: updateUser()
-        System.out.print("[TEST 4] Verificando updateUser() sobre ID 104... ");
-        User actualizacion = new User(104, "Mariana", "Perez R.", "mariana.perez@banco.com", "3159998877",
-                "NuevaClave*", true, "Itagüí", "Extracto digital");
-        boolean updated = service.updateUser(104, actualizacion);
-        User verificado = service.selectUserById(104);
-        if (updated && verificado.getCity().equals("Itagüí") && verificado.getPhone().equals("3159998877")) {
-            System.out.println("PASO (OK) -> Ciudad actualizada a: " + verificado.getCity());
+        boolean savingsCreated = bankService.createAccount(new CuentaAhorros("9991-104", 104, 100000.0, 0.015));
+        boolean checkingCreated = bankService.createAccount(new CuentaCorriente("9992-104", 104, 50000.0, 100000.0));
+        if (savingsCreated && checkingCreated) {
+            System.out.println("[PASS] 4. Creacion de cuentas Ahorros y Corriente");
             passed++;
         } else {
-            System.out.println("FALLO");
+            System.out.println("[FAIL] 4. Creacion de cuentas");
         }
 
-        // 5. Prueba: deleteUser()
-        System.out.print("[TEST 5] Verificando deleteUser() sobre ID 104... ");
-        boolean deleted = service.deleteUser(104);
-        if (deleted && service.selectUserById(104) == null && service.countUsers() == 3) {
-            System.out.println("PASO (OK) -> Total usuarios restaurado a: " + service.countUsers());
+        boolean savingsOverRetire = bankService.withdraw("9991-104", 150000.0);
+        boolean checkingOverdraftRetire = bankService.withdraw("9992-104", 120000.0);
+        Cuenta checkingAfter = bankService.getAccountByNumber("9992-104");
+
+        if (!savingsOverRetire && checkingOverdraftRetire && checkingAfter != null
+                && Math.abs(checkingAfter.getBalance() - (-70000.0)) < 0.01) {
+            System.out.println("[PASS] 5. Polimorfismo en retiro (Ahorros rechaza, Corriente usa sobregiro)");
             passed++;
         } else {
-            System.out.println("FALLO");
+            System.out.println("[FAIL] 5. Polimorfismo en retiro");
         }
 
-        System.out.println("\n------------------------------------------------------------------");
-        System.out.println(" RESULTADO FINAL: " + passed + "/" + total + " pruebas superadas exitosamente.");
-        System.out.println("------------------------------------------------------------------");
+        boolean restoredChecking = bankService.deposit("9992-104", 120000.0);
+        Cuenta checkingRestored = bankService.getAccountByNumber("9992-104");
+        if (restoredChecking && checkingRestored != null && Math.abs(checkingRestored.getBalance() - 50000.0) < 0.01) {
+            System.out.println("[PASS] 6. Consignacion a cuenta corriente restaurada a $50000.00");
+            passed++;
+        } else {
+            System.out.println("[FAIL] 6. Consignacion a cuenta");
+        }
+
+        Cuenta targetBefore = bankService.getAccountByNumber("1001-102");
+        double initialTargetBalance = targetBefore != null ? targetBefore.getBalance() : -1;
+        boolean transferredOut = bankService.transferBetweenAccounts("9991-104", "1001-102", 40000.0, "Transferencia prueba");
+        Cuenta sourceAfterTx = bankService.getAccountByNumber("9991-104");
+        Cuenta targetAfterTx = bankService.getAccountByNumber("1001-102");
+        boolean revertedTransfer = bankService.transferBetweenAccounts("1001-102", "9991-104", 40000.0, "Reversion prueba");
+
+        if (transferredOut && revertedTransfer && sourceAfterTx != null && targetAfterTx != null
+                && Math.abs(sourceAfterTx.getBalance() - 60000.0) < 0.01
+                && Math.abs(targetAfterTx.getBalance() - (initialTargetBalance + 40000.0)) < 0.01) {
+            System.out.println("[PASS] 7. Transferencia atomica entre usuarios (104 <-> 102)");
+            passed++;
+        } else {
+            System.out.println("[FAIL] 7. Transferencia entre usuarios");
+        }
+
+        Credito credit = bankService.requestCredit(104, 150000.0, 6);
+        if (credit != null && credit.getCreditId() > 0 && Math.abs(credit.getCurrentDebt() - 150000.0) < 0.01) {
+            System.out.println("[PASS] 8. Solicitud de credito independiente (ID #" + credit.getCreditId() + ")");
+            passed++;
+        } else {
+            System.out.println("[FAIL] 8. Solicitud de credito");
+        }
+
+        boolean creditPaid = false;
+        if (credit != null) {
+            boolean rejectOverpay = bankService.payCreditFromAccount("9991-104", credit.getCreditId(), 200000.0);
+            boolean partialPay = bankService.payCreditFromAccount("9991-104", credit.getCreditId(), 50000.0);
+            boolean fundAccount = bankService.deposit("9991-104", 50000.0);
+            boolean finalPay = bankService.payCreditFromAccount("9991-104", credit.getCreditId(), 100000.0);
+            Credito updatedCredit = bankService.getCreditById(credit.getCreditId());
+
+            if (!rejectOverpay && partialPay && fundAccount && finalPay && updatedCredit != null
+                    && updatedCredit.getCurrentDebt() == 0.0 && "PAGADO".equals(updatedCredit.getStatus())) {
+                creditPaid = true;
+            }
+        }
+        if (creditPaid) {
+            System.out.println("[PASS] 9. Pago de credito por transferencia hasta quedar PAGADO");
+            passed++;
+        } else {
+            System.out.println("[FAIL] 9. Pago de credito por transferencia");
+        }
+
+        List<Transaccion> history = bankService.getTransactionsByAccount("9991-104");
+        boolean hasTransfer = history.stream().anyMatch(t -> "TRANSFERENCIA".equals(t.getTxType()));
+        boolean hasCreditPay = history.stream().anyMatch(t -> "PAGO_CREDITO".equals(t.getTxType()));
+        if (hasTransfer && hasCreditPay) {
+            System.out.println("[PASS] 10. Registro de historial de transacciones en BD (" + history.size() + " movimientos)");
+            passed++;
+        } else {
+            System.out.println("[FAIL] 10. Registro de historial de transacciones");
+        }
+
+        if (credit != null) {
+            bankService.deleteCredit(credit.getCreditId());
+        }
+        boolean cleaned = cleanupTestData(bankService, userService) && userService.selectUserById(104) == null;
+        if (cleaned) {
+            System.out.println("[PASS] 11. Limpieza y eliminacion de datos de prueba");
+            passed++;
+        } else {
+            System.out.println("[FAIL] 11. Limpieza de datos de prueba");
+        }
+
+        System.out.println("\n=== RESUMEN: " + passed + " / " + total + " PRUEBAS SUPERADAS ===");
+        if (passed != total) {
+            System.exit(1);
+        }
+    }
+
+    private static boolean cleanupTestData(BankService bankService, UserService userService) {
+        bankService.deleteAccount("9991-104");
+        bankService.deleteAccount("9992-104");
+        for (Credito c : bankService.getCreditsByUser(104)) {
+            bankService.deleteCredit(c.getCreditId());
+        }
+        userService.deleteUser(104);
+        return true;
     }
 }

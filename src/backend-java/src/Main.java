@@ -1,73 +1,152 @@
+import models.Credito;
+import models.Cuenta;
+import models.CuentaAhorros;
+import models.CuentaCorriente;
+import models.Transaccion;
 import models.User;
+import services.BankService;
 import services.UserService;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-/**
- * Clase principal Main para el backend del sistema bancario "Mi Plata".
- * Implementa el menú interactivo por consola menuUser() evaluado en el Momento 2.
- */
 public class Main {
+
     private static final Scanner scanner = new Scanner(System.in);
     private static final UserService userService = new UserService();
+    private static final BankService bankService = new BankService();
 
     public static void main(String[] args) {
-        System.out.println("===============================================================");
-        System.out.println("   SISTEMA BANCARIO 'MI PLATA' - MODULO BACK-END (JAVA)");
-        System.out.println("   Desarrollador: Back-end Engineer | CESDE Desarrollo Software");
-        System.out.println("===============================================================");
-        menuUser();
-    }
+        System.out.println("===================================================");
+        System.out.println("   BIENVENIDO A MI PLATA - BACKEND BANCARIO JAVA   ");
+        System.out.println("===================================================");
 
-    /**
-     * Menú interactivo por consola para la gestión vertical de usuarios (CRUD).
-     */
-    public static void menuUser() {
-        int option = -1;
-
+        int option;
         do {
-            System.out.println("\n---------------------------------------------------------------");
-            System.out.println("                   MENU DE GESTION DE USUARIOS                 ");
-            System.out.println("---------------------------------------------------------------");
-            System.out.println(" 1. Registrar nuevo usuario (createUser)");
-            System.out.println(" 2. Consultar usuario por ID (selectUserById)");
-            System.out.println(" 3. Listar todos los usuarios (selectAll)");
-            System.out.println(" 4. Actualizar datos de usuario (updateUser)");
-            System.out.println(" 5. Eliminar usuario (deleteUser)");
-            System.out.println(" 6. Conteo total de usuarios (countUsers)");
-            System.out.println(" 7. Salir del sistema");
-            System.out.println("---------------------------------------------------------------");
-            System.out.print("Seleccione una opcion [1-7]: ");
+            System.out.println("\n==================== MENU PRINCIPAL ====================");
+            System.out.println("1. Gestion de Usuarios");
+            System.out.println("2. Cuentas Bancarias y Transferencias");
+            System.out.println("3. Creditos y Pagos");
+            System.out.println("4. Historial de Transacciones");
+            System.out.println("0. Salir");
+            System.out.print("Seleccione una opcion: ");
 
             option = readInt();
 
             switch (option) {
-                case 1:
-                    handleCreateUser();
-                    break;
-                case 2:
-                    handleSelectUserById();
-                    break;
-                case 3:
-                    handleSelectAllUsers();
-                    break;
-                case 4:
-                    handleUpdateUser();
-                    break;
-                case 5:
-                    handleDeleteUser();
-                    break;
-                case 6:
-                    handleCountUsers();
-                    break;
-                case 7:
-                    System.out.println("\n[INFO] Saliendo del modulo de gestion de usuarios. ¡Hasta pronto!");
-                    break;
-                default:
-                    System.out.println("\n[ERROR] Opcion no valida. Ingrese un numero entre 1 y 7.");
+                case 1 -> menuUser();
+                case 2 -> menuAccounts();
+                case 3 -> menuCredits();
+                case 4 -> menuTransactions();
+                case 0 -> System.out.println("\nGracias por utilizar Mi Plata. Hasta pronto.");
+                default -> System.out.println("\n[AVISO] Opcion no valida.");
             }
-        } while (option != 7);
+        } while (option != 0);
+
+        scanner.close();
+    }
+
+    private static void menuUser() {
+        int option;
+        do {
+            System.out.println("\n--- GESTION DE USUARIOS ---");
+            System.out.println("1. Registrar Nuevo Usuario");
+            System.out.println("2. Consultar Usuario por ID");
+            System.out.println("3. Listar Todos los Usuarios");
+            System.out.println("4. Actualizar Datos de Usuario");
+            System.out.println("5. Eliminar Usuario");
+            System.out.println("6. Contar Total de Usuarios");
+            System.out.println("0. Volver al Menu Principal");
+            System.out.print("Seleccione una opcion: ");
+
+            option = readInt();
+
+            switch (option) {
+                case 1 -> handleCreateUser();
+                case 2 -> handleSelectUserById();
+                case 3 -> handleSelectAllUsers();
+                case 4 -> handleUpdateUser();
+                case 5 -> handleDeleteUser();
+                case 6 -> handleCountUsers();
+                case 0 -> { }
+                default -> System.out.println("\n[AVISO] Opcion no valida.");
+            }
+        } while (option != 0);
+    }
+
+    private static void menuAccounts() {
+        int option;
+        do {
+            System.out.println("\n--- CUENTAS BANCARIAS Y TRANSFERENCIAS ---");
+            System.out.println("1. Crear Cuenta Bancaria (Ahorros / Corriente)");
+            System.out.println("2. Listar Todas las Cuentas");
+            System.out.println("3. Consultar Cuentas por Usuario");
+            System.out.println("4. Consignar a Cuenta");
+            System.out.println("5. Retirar de Cuenta");
+            System.out.println("6. Transferir entre Usuarios / Cuentas");
+            System.out.println("0. Volver al Menu Principal");
+            System.out.print("Seleccione una opcion: ");
+
+            option = readInt();
+
+            switch (option) {
+                case 1 -> handleCreateAccount();
+                case 2 -> handleListAccounts();
+                case 3 -> handleListAccountsByUser();
+                case 4 -> handleDeposit();
+                case 5 -> handleWithdraw();
+                case 6 -> handleTransfer();
+                case 0 -> { }
+                default -> System.out.println("\n[AVISO] Opcion no valida.");
+            }
+        } while (option != 0);
+    }
+
+    private static void menuCredits() {
+        int option;
+        do {
+            System.out.println("\n--- CREDITOS Y PAGOS ---");
+            System.out.println("1. Solicitar Nuevo Credito");
+            System.out.println("2. Listar Creditos");
+            System.out.println("3. Pagar Credito desde Cuenta");
+            System.out.println("0. Volver al Menu Principal");
+            System.out.print("Seleccione una opcion: ");
+
+            option = readInt();
+
+            switch (option) {
+                case 1 -> handleRequestCredit();
+                case 2 -> handleListCredits();
+                case 3 -> handlePayCredit();
+                case 0 -> { }
+                default -> System.out.println("\n[AVISO] Opcion no valida.");
+            }
+        } while (option != 0);
+    }
+
+    private static void menuTransactions() {
+        int option;
+        do {
+            System.out.println("\n--- HISTORIAL DE TRANSACCIONES ---");
+            System.out.println("1. Listar Todas las Transacciones");
+            System.out.println("2. Consultar Movimientos por Cuenta");
+            System.out.println("0. Volver al Menu Principal");
+            System.out.print("Seleccione una opcion: ");
+
+            option = readInt();
+
+            switch (option) {
+                case 1 -> printTransactions(bankService.getAllTransactions());
+                case 2 -> {
+                    System.out.print("Numero de cuenta: ");
+                    String acc = readString();
+                    printTransactions(bankService.getTransactionsByAccount(acc));
+                }
+                case 0 -> { }
+                default -> System.out.println("\n[AVISO] Opcion no valida.");
+            }
+        } while (option != 0);
     }
 
     private static void handleCreateUser() {
@@ -102,10 +181,8 @@ public class Main {
         String preferences = readString();
 
         User newUser = new User(id, name, lastName, email, phone, password, true, city, preferences);
-        boolean created = userService.createUser(newUser);
-
-        if (created) {
-            System.out.println("\n[EXITO] Usuario registrado correctamente en el sistema.");
+        if (userService.createUser(newUser)) {
+            System.out.println("\n[EXITO] Usuario registrado correctamente.");
             System.out.println(newUser);
         } else {
             System.out.println("\n[ERROR] No se pudo registrar el usuario (posible email duplicado).");
@@ -127,22 +204,21 @@ public class Main {
     }
 
     private static void handleSelectAllUsers() {
-        System.out.println("\n--- LISTADO GENERAL DE USUARIOS REGISTRADOS ---");
+        System.out.println("\n--- LISTADO GENERAL DE USUARIOS ---");
         ArrayList<User> list = userService.selectAllUsers();
 
         if (list.isEmpty()) {
-            System.out.println("[AVISO] No hay usuarios registrados en el sistema.");
+            System.out.println("[AVISO] No hay usuarios registrados.");
             return;
         }
 
-        System.out.printf("%-6s | %-20s | %-22s | %-12s | %-12s | %-8s\n",
+        System.out.printf("%-6s | %-20s | %-22s | %-12s | %-12s | %-8s%n",
                 "ID", "NOMBRE COMPLETO", "CORREO", "TELEFONO", "CIUDAD", "ESTADO");
         System.out.println("-------------------------------------------------------------------------------------------------");
         for (User u : list) {
-            System.out.printf("%-6d | %-20s | %-22s | %-12s | %-12s | %-8s\n",
+            System.out.printf("%-6d | %-20s | %-22s | %-12s | %-12s | %-8s%n",
                     u.getId(), u.getFullName(), u.getEmail(), u.getPhone(), u.getCity(), u.getStateDescription());
         }
-        System.out.println("-------------------------------------------------------------------------------------------------");
         System.out.println("Total visualizados: " + list.size());
     }
 
@@ -157,8 +233,7 @@ public class Main {
             return;
         }
 
-        System.out.println("\nDatos actuales:");
-        System.out.println(existing);
+        System.out.println("\nDatos actuales:\n" + existing);
 
         System.out.print("\nNuevo Nombre (Enter para mantener '" + existing.getName() + "'): ");
         String name = readOptionalString(existing.getName());
@@ -181,15 +256,13 @@ public class Main {
         System.out.print("Nuevas Preferencias (Enter para mantener '" + existing.getPreferences() + "'): ");
         String preferences = readOptionalString(existing.getPreferences());
 
-        System.out.print("Estado activo? (1 = Si / Activo, 0 = No / Inactivo, Enter = Mantener): ");
+        System.out.print("Estado activo? (1 = Si, 0 = No, Enter = Mantener): ");
         String stateInput = scanner.nextLine().trim();
         boolean state = stateInput.isEmpty() ? existing.isState() : stateInput.equals("1");
 
         User updatedData = new User(id, name, lastName, email, phone, password, state, city, preferences);
-        boolean updated = userService.updateUser(id, updatedData);
-
-        if (updated) {
-            System.out.println("\n[EXITO] Datos del usuario actualizados satisfactoriamente.");
+        if (userService.updateUser(id, updatedData)) {
+            System.out.println("\n[EXITO] Datos del usuario actualizados.");
             System.out.println(userService.selectUserById(id));
         } else {
             System.out.println("\n[ERROR] Error al actualizar el usuario.");
@@ -208,58 +281,250 @@ public class Main {
         }
 
         System.out.println("Usuario a eliminar: " + user.getFullName() + " (" + user.getEmail() + ")");
-        System.out.print("¿Confirma la eliminacion? (S/N): ");
+        System.out.print("Confirma la eliminacion? (S/N): ");
         String confirm = scanner.nextLine().trim();
 
         if (confirm.equalsIgnoreCase("S")) {
-            boolean deleted = userService.deleteUser(id);
-            if (deleted) {
-                System.out.println("\n[EXITO] Usuario eliminado del sistema correctamente.");
+            if (userService.deleteUser(id)) {
+                System.out.println("\n[EXITO] Usuario eliminado correctamente.");
             } else {
                 System.out.println("\n[ERROR] No se pudo eliminar el usuario.");
             }
         } else {
-            System.out.println("\n[INFO] Operacion de eliminacion cancelada por el usuario.");
+            System.out.println("\n[INFO] Operacion cancelada.");
         }
     }
 
     private static void handleCountUsers() {
-        System.out.println("\n--- CONTEO DE USUARIOS REGISTRADOS ---");
-        int total = userService.countUsers();
-        int active = userService.countActiveUsers();
-        int inactive = total - active;
-
-        System.out.println("===========================================");
-        System.out.println(" Total de usuarios en memoria : " + total);
-        System.out.println(" Usuarios activos             : " + active);
-        System.out.println(" Usuarios inactivos           : " + inactive);
-        System.out.println("===========================================");
+        System.out.println("\n--- TOTAL DE USUARIOS REGISTRADOS ---");
+        System.out.println("Origen de datos: " + (userService.isDbConnected() ? "Base de Datos MySQL" : "Memoria Temporal"));
+        System.out.println("Total de usuarios: " + userService.countUsers());
+        System.out.println("Usuarios activos: " + userService.countActiveUsers());
     }
 
-    // Métodos auxiliares de lectura robusta por consola
+    private static void handleCreateAccount() {
+        System.out.println("\n--- CREAR CUENTA BANCARIA ---");
+        System.out.print("ID del usuario titular: ");
+        int userId = readInt();
+        if (userService.selectUserById(userId) == null) {
+            System.out.println("[ERROR] No existe usuario registrado con ID: " + userId);
+            return;
+        }
+
+        System.out.print("Numero de cuenta (ej. 1001-104): ");
+        String accNumber = readString();
+
+        System.out.print("Saldo inicial: ");
+        double balance = readDouble();
+
+        System.out.println("Tipo de cuenta: 1 = Ahorros | 2 = Corriente");
+        System.out.print("Seleccione tipo: ");
+        int type = readInt();
+
+        Cuenta account;
+        if (type == 1) {
+            account = new CuentaAhorros(accNumber, userId, balance, 0.015);
+        } else if (type == 2) {
+            System.out.print("Cupo de sobregiro (ej. 100000): ");
+            double overdraft = readDouble();
+            account = new CuentaCorriente(accNumber, userId, balance, overdraft);
+        } else {
+            System.out.println("[ERROR] Tipo de cuenta invalido.");
+            return;
+        }
+
+        if (bankService.createAccount(account)) {
+            System.out.println("\n[EXITO] Cuenta creada:");
+            System.out.println(account);
+        } else {
+            System.out.println("\n[ERROR] No se pudo crear la cuenta (verifique numero o saldo).");
+        }
+    }
+
+    private static void handleListAccounts() {
+        System.out.println("\n--- LISTADO DE CUENTAS BANCARIAS ---");
+        List<Cuenta> accounts = bankService.getAllAccounts();
+        if (accounts.isEmpty()) {
+            System.out.println("[AVISO] No hay cuentas registradas.");
+            return;
+        }
+        for (Cuenta c : accounts) {
+            System.out.println(c);
+        }
+    }
+
+    private static void handleListAccountsByUser() {
+        System.out.print("\nIngrese ID del usuario: ");
+        int userId = readInt();
+        List<Cuenta> accounts = bankService.getAccountsByUser(userId);
+        if (accounts.isEmpty()) {
+            System.out.println("[AVISO] El usuario " + userId + " no tiene cuentas registradas.");
+            return;
+        }
+        for (Cuenta c : accounts) {
+            System.out.println(c);
+        }
+    }
+
+    private static void handleDeposit() {
+        System.out.println("\n--- CONSIGNAR A CUENTA ---");
+        System.out.print("Numero de cuenta destino: ");
+        String accNumber = readString();
+        System.out.print("Monto a consignar: ");
+        double amount = readDouble();
+
+        if (bankService.deposit(accNumber, amount)) {
+            System.out.println("\n[EXITO] Consignacion realizada. Nuevo estado:");
+            System.out.println(bankService.getAccountByNumber(accNumber));
+        } else {
+            System.out.println("\n[ERROR] No se pudo realizar la consignacion.");
+        }
+    }
+
+    private static void handleWithdraw() {
+        System.out.println("\n--- RETIRAR DE CUENTA ---");
+        System.out.print("Numero de cuenta origen: ");
+        String accNumber = readString();
+        System.out.print("Monto a retirar: ");
+        double amount = readDouble();
+
+        if (bankService.withdraw(accNumber, amount)) {
+            System.out.println("\n[EXITO] Retiro realizado. Nuevo estado:");
+            System.out.println(bankService.getAccountByNumber(accNumber));
+        } else {
+            System.out.println("\n[ERROR] Fondos insuficientes o cuenta no valida.");
+        }
+    }
+
+    private static void handleTransfer() {
+        System.out.println("\n--- TRANSFERIR ENTRE CUENTAS ---");
+        System.out.print("Cuenta origen: ");
+        String source = readString();
+        System.out.print("Cuenta destino: ");
+        String target = readString();
+        System.out.print("Monto a transferir: ");
+        double amount = readDouble();
+        System.out.print("Descripcion / Concepto: ");
+        String desc = scanner.nextLine().trim();
+
+        if (bankService.transferBetweenAccounts(source, target, amount, desc)) {
+            System.out.println("\n[EXITO] Transferencia completada.");
+            System.out.println("Origen:  " + bankService.getAccountByNumber(source));
+            System.out.println("Destino: " + bankService.getAccountByNumber(target));
+        } else {
+            System.out.println("\n[ERROR] No se pudo completar la transferencia (verifique cuentas y fondos).");
+        }
+    }
+
+    private static void handleRequestCredit() {
+        System.out.println("\n--- SOLICITAR CREDITO ---");
+        System.out.print("ID del usuario solicitante: ");
+        int userId = readInt();
+        if (userService.selectUserById(userId) == null) {
+            System.out.println("[ERROR] No existe usuario registrado con ID: " + userId);
+            return;
+        }
+
+        System.out.print("Monto del credito: ");
+        double amount = readDouble();
+        System.out.print("Plazo en meses: ");
+        int termMonths = readInt();
+
+        Credito credit = bankService.requestCredit(userId, amount, termMonths);
+        if (credit != null) {
+            System.out.println("\n[EXITO] Credito aprobado:");
+            System.out.println(credit);
+        } else {
+            System.out.println("\n[ERROR] No se pudo registrar el credito.");
+        }
+    }
+
+    private static void handleListCredits() {
+        System.out.println("\n--- LISTADO DE CREDITOS ---");
+        List<Credito> credits = bankService.getAllCredits();
+        if (credits.isEmpty()) {
+            System.out.println("[AVISO] No hay creditos registrados.");
+            return;
+        }
+        for (Credito c : credits) {
+            System.out.println(c);
+        }
+    }
+
+    private static void handlePayCredit() {
+        System.out.println("\n--- PAGAR CREDITO DESDE CUENTA ---");
+        System.out.print("Cuenta origen del pago: ");
+        String source = readString();
+        System.out.print("ID del credito a abonar: ");
+        int creditId = readInt();
+        System.out.print("Monto del abono: ");
+        double amount = readDouble();
+
+        if (bankService.payCreditFromAccount(source, creditId, amount)) {
+            System.out.println("\n[EXITO] Abono aplicado al credito #" + creditId);
+            System.out.println("Cuenta:  " + bankService.getAccountByNumber(source));
+            System.out.println("Credito: " + bankService.getCreditById(creditId));
+        } else {
+            System.out.println("\n[ERROR] No se pudo realizar el pago (verifique saldo, cuenta o deuda pendiente).");
+        }
+    }
+
+    private static void printTransactions(List<Transaccion> txs) {
+        if (txs.isEmpty()) {
+            System.out.println("[AVISO] No hay transacciones registradas.");
+            return;
+        }
+        for (Transaccion tx : txs) {
+            System.out.println(tx);
+        }
+    }
+
     private static int readInt() {
         while (true) {
             try {
-                String input = scanner.nextLine().trim();
-                return Integer.parseInt(input);
+                if (!scanner.hasNextLine()) {
+                    return 0;
+                }
+                String line = scanner.nextLine().trim();
+                return Integer.parseInt(line);
             } catch (NumberFormatException e) {
-                System.out.print("[ERROR] Debe ingresar un numero entero valido. Intente nuevamente: ");
+                System.out.print("[ERROR] Ingrese un numero entero valido: ");
+            }
+        }
+    }
+
+    private static double readDouble() {
+        while (true) {
+            try {
+                if (!scanner.hasNextLine()) {
+                    return 0.0;
+                }
+                String line = scanner.nextLine().trim();
+                return Double.parseDouble(line);
+            } catch (NumberFormatException e) {
+                System.out.print("[ERROR] Ingrese un valor numerico valido: ");
             }
         }
     }
 
     private static String readString() {
         while (true) {
-            String input = scanner.nextLine().trim();
-            if (!input.isEmpty()) {
-                return input;
+            if (!scanner.hasNextLine()) {
+                return "";
             }
-            System.out.print("[ERROR] El campo no puede estar vacio. Ingrese nuevamente: ");
+            String line = scanner.nextLine().trim();
+            if (!line.isEmpty()) {
+                return line;
+            }
+            System.out.print("[ERROR] El campo no puede estar vacio. Ingreselo nuevamente: ");
         }
     }
 
-    private static String readOptionalString(String defaultValue) {
-        String input = scanner.nextLine().trim();
-        return input.isEmpty() ? defaultValue : input;
+    private static String readOptionalString(String currentValue) {
+        if (!scanner.hasNextLine()) {
+            return currentValue;
+        }
+        String line = scanner.nextLine().trim();
+        return line.isEmpty() ? currentValue : line;
     }
 }

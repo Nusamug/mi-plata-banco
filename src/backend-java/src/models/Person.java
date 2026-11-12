@@ -1,10 +1,5 @@
 package models;
 
-/**
- * Clase base Person para el proyecto bancario "Mi Plata".
- * Modela la información fundamental de una persona en el sistema.
- * Aplica encapsulamiento estricto con atributos privados y métodos accesores.
- */
 public class Person {
     private int id;
     private String name;
@@ -12,14 +7,12 @@ public class Person {
     private String email;
     private String phone;
     private String password;
-    private boolean state; // true = ACTIVO, false = INACTIVO
+    private boolean state;
 
-    // Constructor por defecto
     public Person() {
         this.state = true;
     }
 
-    // Constructor completo parametrizado
     public Person(int id, String name, String lastName, String email, String phone, String password, boolean state) {
         this.id = id;
         this.name = name;
@@ -30,7 +23,6 @@ public class Person {
         this.state = state;
     }
 
-    // Getters y Setters
     public int getId() {
         return id;
     }
