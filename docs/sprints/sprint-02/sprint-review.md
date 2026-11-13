@@ -11,7 +11,7 @@
 
 El Sprint 2 completó el 100% de las historias comprometidas para el Back-end Java + MySQL (`US-11` a `US-14`), dejando el proyecto **Mi Plata** totalmente operativo con base de datos relacional en XAMPP y arquitectura limpia por capas:
 
-* **Persistencia MySQL (`mi_plata_db`):** Tablas relacionales `users`, `accounts`, `credits` y `transactions` servidas mediante `mysql-connector-j-8.3.0.jar`, `RowMapper<T>` y repositorios JDBC con respaldo automático en memoria.
+* **Persistencia MySQL (`mi_plata_db`):** Tablas relacionales `usuarios`, `cuentas`, `creditos` y `transacciones` servidas mediante `mysql-connector-j-8.3.0.jar`, `RowMapper<T>` y repositorios JDBC con respaldo automático en memoria.
 * **POO Bancario en Java:** Clase abstracta `Cuenta` con polimorfismo real en `retirar()` para `CuentaAhorros` y `CuentaCorriente`, más `Credito` como entidad independiente pagable mediante transferencia desde una cuenta.
 * **Atomicidad y Trazabilidad:** `BankService` envuelve consignaciones, retiros, transferencias entre usuarios y pagos de crédito en transacciones SQL con confirmación (`commit`) o reversión (`rollback`).
 * **Código Limpio y Validado:** Los 26 archivos `.java` compilan con `javac -encoding UTF-8 -Xlint:all` sin advertencias ni errores, y superaron tanto las pruebas automatizadas como las pruebas interactivas de consola contra la base de datos real.

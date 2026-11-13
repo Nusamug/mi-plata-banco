@@ -23,7 +23,7 @@ public class UserRepositoryAdapterDB implements UserRepository {
 
     @Override
     public User save(User user) {
-        String sql = "INSERT INTO users (id, name, last_name, email, phone, password, state, city, preferences) " +
+        String sql = "INSERT INTO usuarios (id, nombre, apellido, correo, telefono, clave, estado, ciudad, preferencias) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -46,7 +46,7 @@ public class UserRepositoryAdapterDB implements UserRepository {
 
     @Override
     public Optional<User> selectById(int id) {
-        String sql = "SELECT * FROM users WHERE id = ?";
+        String sql = "SELECT * FROM usuarios WHERE id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -65,7 +65,7 @@ public class UserRepositoryAdapterDB implements UserRepository {
     @Override
     public List<User> selectAll() {
         List<User> list = new ArrayList<>();
-        String sql = "SELECT * FROM users ORDER BY id ASC";
+        String sql = "SELECT * FROM usuarios ORDER BY id ASC";
 
         try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -81,8 +81,8 @@ public class UserRepositoryAdapterDB implements UserRepository {
 
     @Override
     public User updateUser(User user) {
-        String sql = "UPDATE users SET name = ?, last_name = ?, email = ?, phone = ?, password = ?, " +
-                     "state = ?, city = ?, preferences = ? WHERE id = ?";
+        String sql = "UPDATE usuarios SET nombre = ?, apellido = ?, correo = ?, telefono = ?, clave = ?, " +
+                     "estado = ?, ciudad = ?, preferencias = ? WHERE id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, user.getName());
@@ -107,7 +107,7 @@ public class UserRepositoryAdapterDB implements UserRepository {
 
     @Override
     public boolean deleteById(int id) {
-        String sql = "DELETE FROM users WHERE id = ?";
+        String sql = "DELETE FROM usuarios WHERE id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -121,7 +121,7 @@ public class UserRepositoryAdapterDB implements UserRepository {
 
     @Override
     public int countUsers() {
-        String sql = "SELECT COUNT(*) AS total FROM users";
+        String sql = "SELECT COUNT(*) AS total FROM usuarios";
 
         try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {

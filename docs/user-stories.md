@@ -305,7 +305,7 @@ Cada historia de usuario documentada cumple rigurosamente con los principios **I
 * **Escenario 1: Conexión activa a MySQL mediante Singleton y esquema relacional**
   * **Dado que** MySQL en XAMPP está ejecutándose con el esquema `schema_mi_plata.sql` importado,
   * **Cuando** inicio `Main` o `TestRunner`,
-  * **Entonces** `DataBaseConnection.getInstance()` establece conexión con `mi_plata_db` y `UserService` / `BankService` operan contra las tablas `users`, `accounts`, `credits` y `transactions`.
+  * **Entonces** `DataBaseConnection.getInstance()` establece conexión con `mi_plata_db` y `UserService` / `BankService` operan contra las tablas `usuarios`, `cuentas`, `creditos` y `transacciones`.
 * **Escenario 2: Modo respaldo (Fallback) en memoria cuando MySQL no está disponible**
   * **Dado que** el servicio MySQL está detenido o inaccesible,
   * **Cuando** se instancian `UserService` y `BankService`,
@@ -335,7 +335,7 @@ Cada historia de usuario documentada cumple rigurosamente con los principios **I
 * **Escenario 1: Rechazo de sobregiro en Cuenta de Ahorros (`CuentaAhorros.retirar`)**
   * **Dado que** un usuario tiene una `CuentaAhorros` con saldo de $100.000,
   * **Cuando** intenta retirar $150.000,
-  * **Entonces** el método polimórfico `retirar(150000)` retorna `false` y el saldo permanece intacto en $100.000 en la tabla `accounts`.
+  * **Entonces** el método polimórfico `retirar(150000)` retorna `false` y el saldo permanece intacto en $100.000 en la tabla `cuentas`.
 * **Escenario 2: Uso autorizado de cupo de sobregiro en Cuenta Corriente (`CuentaCorriente.retirar`)**
   * **Dado que** un usuario tiene una `CuentaCorriente` con saldo de $50.000 y cupo de sobregiro de $100.000,
   * **Cuando** retira $120.000,
@@ -344,7 +344,7 @@ Cada historia de usuario documentada cumple rigurosamente con los principios **I
 #### Checklist de Verificación
 - [x] `Cuenta` es clase abstracta con método común `consignar(double)` y métodos abstractos `retirar(double)` y `getAccountType()`.
 - [x] Únicamente `CuentaAhorros` y `CuentaCorriente` heredan de `Cuenta`.
-- [x] Las consignaciones y retiros válidos registran automáticamente su movimiento en la tabla `transactions`.
+- [x] Las consignaciones y retiros válidos registran automáticamente su movimiento en la tabla `transacciones`.
 
 ---
 
@@ -365,7 +365,7 @@ Cada historia de usuario documentada cumple rigurosamente con los principios **I
 * **Escenario 1: Transferencia atómica exitosa entre usuarios distintos**
   * **Dado que** la cuenta origen tiene fondos disponibles (incluyendo sobregiro si es corriente) y la cuenta destino existe y es distinta a la origen,
   * **Cuando** ejecuto `transferBetweenAccounts(origen, destino, monto, descripcion)`,
-  * **Entonces** dentro de una transacción JDBC (`setAutoCommit(false)` / `commit()`), se descuenta el monto en origen, se acredita en destino y se inserta un registro `TRANSFERENCIA` en `transactions`.
+  * **Entonces** dentro de una transacción JDBC (`setAutoCommit(false)` / `commit()`), se descuenta el monto en origen, se acredita en destino y se inserta un registro `TRANSFERENCIA` en `transacciones`.
 * **Escenario 2: Reversión automática y rechazo por fondos insuficientes o cuenta inexistente**
   * **Dado que** el monto supera los fondos disponibles o falla una operación SQL intermedia,
   * **Cuando** se procesa la transferencia,
@@ -393,15 +393,15 @@ Cada historia de usuario documentada cumple rigurosamente con los principios **I
 
 #### Criterios de Aceptación (Given-When-Then)
 * **Escenario 1: Solicitud y persistencia de crédito con ID autogenerado**
-  * **Dado que** existe un usuario registrado en `users`,
+  * **Dado que** existe un usuario registrado en `usuarios`,
   * **Cuando** solicito un crédito con monto y plazo en meses positivos,
-  * **Entonces** `CreditRepositoryAdapterDB` inserta el crédito con `current_debt = approved_amount`, estado `ACTIVO` y recupera el `credit_id` generado.
+  * **Entonces** `CreditRepositoryAdapterDB` inserta el crédito con `deuda_actual = monto_aprobado`, estado `ACTIVO` y recupera el `id_credito` generado.
 * **Escenario 2: Abono y cancelación total mediante transferencia desde una cuenta**
   * **Dado que** tengo un crédito en estado `ACTIVO` con deuda pendiente de $150.000,
   * **Cuando** abono $50.000 y luego $100.000 desde mi cuenta con saldo suficiente mediante `payCreditFromAccount`,
-  * **Entonces** cada pago debita la cuenta origen, descuenta `current_debt`, registra una transacción `PAGO_CREDITO` con `target_credit_id`, y al llegar la deuda a `$0.00` el estado cambia a `PAGADO` (rechazando abonos superiores a la deuda).
+  * **Entonces** cada pago debita la cuenta origen, descuenta `deuda_actual`, registra una transacción `PAGO_CREDITO` con `id_credito_destino`, y al llegar la deuda a `$0.00` el estado cambia a `PAGADO` (rechazando abonos superiores a la deuda).
 
 #### Checklist de Verificación
-- [x] `Credito` es una entidad separada (no hereda de `Cuenta`) vinculada por `user_id`.
+- [x] `Credito` es una entidad separada (no hereda de `Cuenta`) vinculada por `id_usuario`.
 - [x] `BankService.payCreditFromAccount` valida saldo en cuenta, estado distinto de `PAGADO` y `monto <= currentDebt` de manera atómica.
-- [x] `CreditRepositoryAdapterDB` retorna el `credit_id` mediante `Statement.RETURN_GENERATED_KEYS`.
+- [x] `CreditRepositoryAdapterDB` retorna el `id_credito` mediante `Statement.RETURN_GENERATED_KEYS`.

@@ -101,9 +101,21 @@ public class Transaccion {
 
     @Override
     public String toString() {
-        String origen = sourceAccount != null ? sourceAccount : "-";
-        String destino = targetAccount != null ? targetAccount : (targetCreditId != null ? "CRED-" + targetCreditId : "-");
-        return String.format("TX #%-3d | %-13s | Origen: %-9s | Destino: %-9s | Monto: $%-10.2f | %s",
-                txId, txType, origen, destino, amount, description);
+        String detalle;
+        if ("CONSIGNACION".equalsIgnoreCase(txType)) {
+            detalle = "Cuenta: " + (targetAccount != null ? targetAccount : "-");
+        } else if ("RETIRO".equalsIgnoreCase(txType)) {
+            detalle = "Cuenta: " + (sourceAccount != null ? sourceAccount : "-");
+        } else if ("PAGO_CREDITO".equalsIgnoreCase(txType)) {
+            String origen = sourceAccount != null ? sourceAccount : "-";
+            String credito = targetCreditId != null ? "CRED-" + targetCreditId : "-";
+            detalle = "De: " + origen + " -> " + credito;
+        } else {
+            String origen = sourceAccount != null ? sourceAccount : "-";
+            String destino = targetAccount != null ? targetAccount : "-";
+            detalle = "De: " + origen + " -> A: " + destino;
+        }
+        return String.format("TX #%-3d | %-13s | %-22s | Monto: $%-10.2f | %s",
+                txId, txType, detalle, amount, description);
     }
 }

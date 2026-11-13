@@ -10,12 +10,12 @@ public class CreditMapper implements RowMapper<Credito> {
     @Override
     public Credito mapRow(ResultSet rs) throws SQLException {
         return new Credito(
-                rs.getInt("credit_id"),
-                rs.getInt("user_id"),
-                rs.getDouble("approved_amount"),
-                rs.getDouble("current_debt"),
-                rs.getInt("term_months"),
-                rs.getString("status")
+                rs.getInt("id_credito"),
+                rs.getInt("id_usuario"),
+                rs.getDouble("monto_aprobado"),
+                rs.getDouble("deuda_actual"),
+                rs.getInt("plazo_meses"),
+                rs.getString("estado")
         );
     }
 }

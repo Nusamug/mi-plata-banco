@@ -32,7 +32,7 @@
 ## 3. Desglose de Tareas Técnicas (Slicing Vertical)
 
 ### 3.1 Base de Datos y Capa de Persistencia JDBC
-- [x] **TB-02:** Creación del script `src/backend-java/schema_mi_plata.sql` con tablas `users`, `accounts`, `credits`, `transactions` y datos semilla en UTF-8.
+- [x] **TB-02:** Creación del script `src/backend-java/schema_mi_plata.sql` con tablas `usuarios`, `cuentas`, `creditos`, `transacciones` y datos semilla en UTF-8.
 - [x] **TB-03:** Implementación de `DataBaseConnection` (Singleton JDBC), interfaz `RowMapper<T>` y mappers (`UserMapper`, `AccountMapper`, `CreditMapper`, `TransactionMapper`).
 - [x] **TB-04:** Implementación de repositorios y adaptadores JDBC (`UserRepositoryAdapterDB`, `AccountRepositoryAdapterDB`, `CreditRepositoryAdapterDB`, `TransactionRepositoryAdapterDB`).
 

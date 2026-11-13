@@ -300,7 +300,7 @@ public class Main {
 
     private static void handleClientDeposit(User activeUser) {
         System.out.println("\n--- CONSIGNAR A MI CUENTA ---");
-        Cuenta target = selectOwnedAccount(activeUser.getId(), "Numero de cuenta propia a consignar: ");
+        Cuenta target = selectOwnedAccount(activeUser.getId(), "Ingresa el numero de tu cuenta donde deseas consignar: ");
         if (target == null) {
             return;
         }
@@ -316,13 +316,13 @@ public class Main {
     }
 
     private static void handleClientWithdraw(User activeUser) {
-        System.out.println("\n--- RETIRAR DE MI CUENTA ---");
-        Cuenta source = selectOwnedAccount(activeUser.getId(), "Numero de cuenta propia origen: ");
+        System.out.println("\n--- RETIRAR DINERO DE MI CUENTA ---");
+        Cuenta source = selectOwnedAccount(activeUser.getId(), "Ingresa el numero de tu cuenta de la cual deseas retirar: ");
         if (source == null) {
             return;
         }
 
-        System.out.print("Monto a retirar: ");
+        System.out.print("Monto a retirar en efectivo: ");
         double amount = readDouble();
         if (bankService.withdraw(source.getAccountNumber(), amount)) {
             System.out.println("\n[EXITO] Retiro realizado. Nuevo estado:");
@@ -334,12 +334,12 @@ public class Main {
 
     private static void handleClientTransfer(User activeUser) {
         System.out.println("\n--- TRANSFERIR A OTRO USUARIO / CUENTA ---");
-        Cuenta source = selectOwnedAccount(activeUser.getId(), "Tu cuenta origen: ");
+        Cuenta source = selectOwnedAccount(activeUser.getId(), "Tu cuenta desde donde envias el dinero: ");
         if (source == null) {
             return;
         }
 
-        System.out.print("Cuenta destino: ");
+        System.out.print("Cuenta destino que recibe el dinero: ");
         String targetNumber = readString();
         System.out.print("Monto a transferir: ");
         double amount = readDouble();
@@ -530,8 +530,15 @@ public class Main {
             return null;
         }
         printAccountList(owned, "");
-        System.out.print(prompt);
-        String accNumber = readString();
+        String accNumber;
+        if (owned.size() == 1) {
+            String onlyAccount = owned.get(0).getAccountNumber();
+            System.out.print(prompt.replace(": ", "") + " (Enter para usar '" + onlyAccount + "'): ");
+            accNumber = readOptionalString(onlyAccount);
+        } else {
+            System.out.print(prompt);
+            accNumber = readString();
+        }
         Cuenta account = bankService.getAccountByNumber(accNumber);
         if (account == null || account.getUserId() != userId) {
             System.out.println("[ERROR] La cuenta no existe o no pertenece a tu usuario.");

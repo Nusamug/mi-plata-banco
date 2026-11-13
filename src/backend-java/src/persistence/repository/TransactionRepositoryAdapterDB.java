@@ -24,7 +24,7 @@ public class TransactionRepositoryAdapterDB implements TransactionRepository {
 
     @Override
     public Transaccion save(Transaccion tx) {
-        String sql = "INSERT INTO transactions (source_account, target_account, target_credit_id, tx_type, amount, description) " +
+        String sql = "INSERT INTO transacciones (cuenta_origen, cuenta_destino, id_credito_destino, tipo_transaccion, monto, descripcion) " +
                      "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -66,7 +66,7 @@ public class TransactionRepositoryAdapterDB implements TransactionRepository {
     @Override
     public List<Transaccion> selectAll() {
         List<Transaccion> list = new ArrayList<>();
-        String sql = "SELECT * FROM transactions ORDER BY tx_id DESC";
+        String sql = "SELECT * FROM transacciones ORDER BY id_transaccion DESC";
 
         try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -83,7 +83,7 @@ public class TransactionRepositoryAdapterDB implements TransactionRepository {
     @Override
     public List<Transaccion> selectByAccount(String accountNumber) {
         List<Transaccion> list = new ArrayList<>();
-        String sql = "SELECT * FROM transactions WHERE source_account = ? OR target_account = ? ORDER BY tx_id DESC";
+        String sql = "SELECT * FROM transacciones WHERE cuenta_origen = ? OR cuenta_destino = ? ORDER BY id_transaccion DESC";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, accountNumber);

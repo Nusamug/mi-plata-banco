@@ -9,16 +9,16 @@ public class TransactionMapper implements RowMapper<Transaccion> {
 
     @Override
     public Transaccion mapRow(ResultSet rs) throws SQLException {
-        Integer creditId = rs.getObject("target_credit_id") != null ? rs.getInt("target_credit_id") : null;
+        Integer creditId = rs.getObject("id_credito_destino") != null ? rs.getInt("id_credito_destino") : null;
         return new Transaccion(
-                rs.getInt("tx_id"),
-                rs.getString("source_account"),
-                rs.getString("target_account"),
+                rs.getInt("id_transaccion"),
+                rs.getString("cuenta_origen"),
+                rs.getString("cuenta_destino"),
                 creditId,
-                rs.getString("tx_type"),
-                rs.getDouble("amount"),
-                rs.getString("description"),
-                rs.getString("tx_date")
+                rs.getString("tipo_transaccion"),
+                rs.getDouble("monto"),
+                rs.getString("descripcion"),
+                rs.getString("fecha_transaccion")
         );
     }
 }

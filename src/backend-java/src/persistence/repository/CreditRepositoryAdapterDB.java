@@ -24,7 +24,7 @@ public class CreditRepositoryAdapterDB implements CreditRepository {
 
     @Override
     public Credito save(Credito credit) {
-        String sql = "INSERT INTO credits (user_id, approved_amount, current_debt, term_months, status) " +
+        String sql = "INSERT INTO creditos (id_usuario, monto_aprobado, deuda_actual, plazo_meses, estado) " +
                      "VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -49,7 +49,7 @@ public class CreditRepositoryAdapterDB implements CreditRepository {
 
     @Override
     public Optional<Credito> selectById(int creditId) {
-        String sql = "SELECT * FROM credits WHERE credit_id = ?";
+        String sql = "SELECT * FROM creditos WHERE id_credito = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, creditId);
@@ -68,7 +68,7 @@ public class CreditRepositoryAdapterDB implements CreditRepository {
     @Override
     public List<Credito> selectByUserId(int userId) {
         List<Credito> list = new ArrayList<>();
-        String sql = "SELECT * FROM credits WHERE user_id = ? ORDER BY credit_id";
+        String sql = "SELECT * FROM creditos WHERE id_usuario = ? ORDER BY id_credito";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
@@ -87,7 +87,7 @@ public class CreditRepositoryAdapterDB implements CreditRepository {
     @Override
     public List<Credito> selectAll() {
         List<Credito> list = new ArrayList<>();
-        String sql = "SELECT * FROM credits ORDER BY credit_id";
+        String sql = "SELECT * FROM creditos ORDER BY id_credito";
 
         try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -103,7 +103,7 @@ public class CreditRepositoryAdapterDB implements CreditRepository {
 
     @Override
     public boolean updateDebt(int creditId, double newDebt, String status) {
-        String sql = "UPDATE credits SET current_debt = ?, status = ? WHERE credit_id = ?";
+        String sql = "UPDATE creditos SET deuda_actual = ?, estado = ? WHERE id_credito = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setDouble(1, newDebt);
@@ -119,7 +119,7 @@ public class CreditRepositoryAdapterDB implements CreditRepository {
 
     @Override
     public boolean deleteById(int creditId) {
-        String sql = "DELETE FROM credits WHERE credit_id = ?";
+        String sql = "DELETE FROM creditos WHERE id_credito = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, creditId);

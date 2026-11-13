@@ -84,10 +84,10 @@ Los requerimientos se estructuran en tres niveles:
 
 ### Épica 4: Back-end Java, Persistencia MySQL y Transacciones Bancarias
 * **Feature 4.1: Arquitectura JDBC, Mappers y Esquema Relacional (`US-11`)**  
-  Base de datos `mi_plata_db` (`users`, `accounts`, `credits`, `transactions`), conexión Singleton (`DataBaseConnection`), mappers (`RowMapper<T>`) y adaptadores DAO/Repository con modo respaldo en memoria.
+  Base de datos `mi_plata_db` (`usuarios`, `cuentas`, `creditos`, `transacciones`), conexión Singleton (`DataBaseConnection`), mappers (`RowMapper<T>`) y adaptadores DAO/Repository con modo respaldo en memoria.
 * **Feature 4.2: Cuentas Bancarias con Herencia y Polimorfismo (`US-12`)**  
   Clase abstracta `Cuenta` y subclases `CuentaAhorros` y `CuentaCorriente` aplicando reglas diferenciadas en `retirar(double)` (saldo estricto vs cupo de sobregiro).
 * **Feature 4.3: Transferencias Atómicas e Historial Contable (`US-13`)**  
-  Operaciones transaccionales en `BankService` (`setAutoCommit(false)`, `commit()`, `rollback()`) garantizando integridad entre débito, crédito y registro en `transactions`.
+  Operaciones transaccionales en `BankService` (`setAutoCommit(false)`, `commit()`, `rollback()`) garantizando integridad entre débito, crédito y registro en `transacciones`.
 * **Feature 4.4: Créditos Independientes y Abono por Transferencia (`US-14`)**  
   Entidad `Credito` separada de `Cuenta`, aprobación con ID autogenerado y abonos desde cuenta origen con transición automática a estado `PAGADO`.

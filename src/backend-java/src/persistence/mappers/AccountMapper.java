@@ -11,17 +11,16 @@ public class AccountMapper implements RowMapper<Cuenta> {
 
     @Override
     public Cuenta mapRow(ResultSet rs) throws SQLException {
-        String type = rs.getString("account_type");
-        String number = rs.getString("account_number");
-        int userId = rs.getInt("user_id");
-        double balance = rs.getDouble("balance");
+        String type = rs.getString("tipo_cuenta");
+        String number = rs.getString("numero_cuenta");
+        int userId = rs.getInt("id_usuario");
+        double balance = rs.getDouble("saldo");
 
         if ("CORRIENTE".equalsIgnoreCase(type)) {
-            double overdraft = rs.getDouble("overdraft_limit");
+            double overdraft = rs.getDouble("limite_sobregiro");
             return new CuentaCorriente(number, userId, balance, overdraft);
-        } else {
-            double rate = rs.getDouble("interest_rate");
-            return new CuentaAhorros(number, userId, balance, rate);
         }
+        double rate = rs.getDouble("tasa_interes");
+        return new CuentaAhorros(number, userId, balance, rate);
     }
 }

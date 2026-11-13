@@ -25,7 +25,7 @@ public class AccountRepositoryAdapterDB implements AccountRepository {
 
     @Override
     public Cuenta save(Cuenta account) {
-        String sql = "INSERT INTO accounts (account_number, user_id, account_type, balance, overdraft_limit, interest_rate) " +
+        String sql = "INSERT INTO cuentas (numero_cuenta, id_usuario, tipo_cuenta, saldo, limite_sobregiro, tasa_interes) " +
                      "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -49,7 +49,7 @@ public class AccountRepositoryAdapterDB implements AccountRepository {
 
     @Override
     public Optional<Cuenta> selectByNumber(String accountNumber) {
-        String sql = "SELECT * FROM accounts WHERE account_number = ?";
+        String sql = "SELECT * FROM cuentas WHERE numero_cuenta = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, accountNumber);
@@ -68,7 +68,7 @@ public class AccountRepositoryAdapterDB implements AccountRepository {
     @Override
     public List<Cuenta> selectByUserId(int userId) {
         List<Cuenta> list = new ArrayList<>();
-        String sql = "SELECT * FROM accounts WHERE user_id = ? ORDER BY account_type";
+        String sql = "SELECT * FROM cuentas WHERE id_usuario = ? ORDER BY tipo_cuenta";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
@@ -87,7 +87,7 @@ public class AccountRepositoryAdapterDB implements AccountRepository {
     @Override
     public List<Cuenta> selectAll() {
         List<Cuenta> list = new ArrayList<>();
-        String sql = "SELECT * FROM accounts ORDER BY user_id, account_number";
+        String sql = "SELECT * FROM cuentas ORDER BY id_usuario, numero_cuenta";
 
         try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -103,7 +103,7 @@ public class AccountRepositoryAdapterDB implements AccountRepository {
 
     @Override
     public boolean updateBalance(String accountNumber, double newBalance) {
-        String sql = "UPDATE accounts SET balance = ? WHERE account_number = ?";
+        String sql = "UPDATE cuentas SET saldo = ? WHERE numero_cuenta = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setDouble(1, newBalance);
@@ -118,7 +118,7 @@ public class AccountRepositoryAdapterDB implements AccountRepository {
 
     @Override
     public boolean deleteByNumber(String accountNumber) {
-        String sql = "DELETE FROM accounts WHERE account_number = ?";
+        String sql = "DELETE FROM cuentas WHERE numero_cuenta = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, accountNumber);
