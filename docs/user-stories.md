@@ -8,7 +8,7 @@
 **Estudiante:** Miguel David Rojas González  
 **Estándar:** INVEST · Formato Oficial (`Como... quiero... para...`)  
 **Criterios de Aceptación:** Given-When-Then + Checklist de verificación  
-**Cobertura:** Frontend Web (`US-01` a `US-10` · 42 pruebas en Node.js) + Backend Java/MySQL (`US-03`, `US-11` a `US-14` · 11 pruebas integrales)  
+**Cobertura:** Frontend Web (`US-01` a `US-10` · 42 pruebas en Node.js) + Backend Java/MySQL (`US-03`, `US-11` a `US-14` · 13 pruebas integrales)  
 
 ---
 
@@ -20,7 +20,7 @@ Cada historia de usuario documentada cumple rigurosamente con los principios **I
 - **Valuable (Valiosa):** Entrega valor directo al cuentahabiente o al administrador del banco.
 - **Estimable (Estimable):** Dimensionada en Story Points mediante la serie Fibonacci.
 - **Small (Pequeña):** Acotada para completarse e integrarse dentro del ciclo de desarrollo.
-- **Testable (Testeable):** Respaldada por criterios Given-When-Then, **42 pruebas unitarias de Front-end** y **11 pruebas integrales de Back-end Java + MySQL**.
+- **Testable (Testeable):** Respaldada por criterios Given-When-Then, **42 pruebas unitarias de Front-end** y **13 pruebas integrales de Back-end Java + MySQL**.
 
 ---
 
@@ -111,10 +111,10 @@ Cada historia de usuario documentada cumple rigurosamente con los principios **I
 > **para** mantener actualizada la información personal y de seguridad.
 
 #### Criterios de Aceptación (Given-When-Then)
-* **Escenario 1: Operaciones CRUD en Back-end Java (`UserService` + `UserRepositoryAdapterDB`)**
-  * **Dado que** ejecuto el módulo administrativo en Java conectado a `mi_plata_db` (o en modo respaldo en memoria),
-  * **Cuando** invoco creación, `selectUserById`, `updateUser`, `deleteUser` y `countUsers`,
-  * **Entonces** cada operación modifica o consulta los registros respetando el encapsulamiento, la herencia desde `Person` y la persistencia JDBC.
+* **Escenario 1: Operaciones CRUD de Administrador y autenticación Cliente/Admin en Java**
+  * **Dado que** inicio `Main.java` en el Portal Mi Plata (`1. Iniciar Sesión Cliente`, `2. Registrarme`, `3. Entrar como Administrador`),
+  * **Cuando** me registro como cliente nuevo se crea automáticamente mi `CuentaAhorros` con bono inicial de $100.000, al iniciar sesión opero únicamente sobre mis productos, y al entrar como `Admin` accedo al CRUD completo de usuarios en `mi_plata_db`,
+  * **Entonces** cada operación respeta el control de acceso por rol, la herencia `Person` $\rightarrow$ `User`/`Admin` y la persistencia JDBC (`authenticateUser`, `authenticateAdmin`, `selectUserById`, `updateUser`, `deleteUser`, `countUsers`).
 * **Escenario 2: Actualización de perfil y llave celular en el Cajero Web**
   * **Dado que** abro el modal *"👤 Mi Perfil"* en `cajero.html`,
   * **Cuando** modifico mi nombre, celular (Llave Bre-B) o contraseña actualizando los campos requeridos,

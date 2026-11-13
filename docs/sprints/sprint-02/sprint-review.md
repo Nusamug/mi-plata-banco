@@ -24,7 +24,7 @@ El Sprint 2 completó el 100% de las historias comprometidas para el Back-end Ja
 | :--- | :---: | :--- |
 | **Story Points Sprint 2** | **23 / 23 SP** | `US-11` a `US-14` completadas (Acumulado total: **70 / 70 SP**) |
 | **Compilación Java (`javac -Xlint:all`)** | **0 errores / 0 advertencias** | 26 archivos `.java` compilados en `src/backend-java/src/` |
-| **Pruebas Integrales Back-end Java + MySQL** | **11 / 11 (100%)** | Ejecutadas en vivo con `java -cp bin;lib\mysql-connector-j-8.3.0.jar TestRunner` |
+| **Pruebas Integrales Back-end Java + MySQL** | **13 / 13 (100%)** | Ejecutadas en vivo con `java -cp bin;lib\mysql-connector-j-8.3.0.jar TestRunner` |
 | **Pruebas Automatizadas Front-end** | **42 / 42 (100%)** | Ejecutadas con `node src/frontend/test_runner.js` |
 
 ---

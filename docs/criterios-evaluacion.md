@@ -19,10 +19,10 @@ El sistema se evalúa de manera integral sobre tres tipos de evidencia: **Conoci
 | **Conocimiento** | **Diseño Relacional SQL e Integridad** | Esquema normalizado (`users`, `accounts`, `credits`, `transactions`) con llaves primarias, foráneas (`ON DELETE CASCADE`, `ON DELETE SET NULL`), `AUTO_INCREMENT` y tipos `ENUM`/`DECIMAL`. | `src/backend-java/schema_mi_plata.sql` | Cumple |
 | **Conocimiento** | **Gestión Ágil e INVEST** | Product Backlog priorizado (MoSCoW), estimación en Fibonacci (70 SP), Slicing en Sprints 1 y 2, e Historias `US-01` a `US-14` con criterios Given-When-Then. | `docs/product-backlog.md`<br>`docs/user-stories.md` | Cumple |
 | **Desempeño** | **Operaciones Transaccionales Atómicas (ACID)** | Consignaciones, retiros, transferencias entre cuentas/usuarios y pagos a créditos ejecutados bajo transacción JDBC (`setAutoCommit(false)`, `commit()`, `rollback()`). | `BankService.java` (`executeAtomic`) | Cumple |
-| **Desempeño** | **Flujo Interactivo Completo y Validaciones** | Menú modular en consola Java (`Main.java`) con validación de tipos numéricos/cadenas, rechazo de sobregiro en ahorros, rechazo de sobrepago a crédito y respaldo en memoria si MySQL está detenido. | `src/backend-java/src/Main.java`<br>`UserService.java` / `BankService.java` | Cumple |
+| **Desempeño** | **Flujo Interactivo por Roles y Validaciones** | Portal inicial en `Main.java` con login de Cliente (`ID`/correo + clave), registro con apertura automática de `CuentaAhorros`, aislamiento de cuentas por usuario en sesión y panel `Admin` para CRUD y auditoría global. | `src/backend-java/src/Main.java`<br>`UserService.java` / `BankService.java` | Cumple |
 | **Desempeño** | **Flujo Front-end e Interoperabilidad** | Registro, bloqueo tras 3 intentos, consignación, retiros (1.5% rendimiento / 20% sobregiro), transferencias por Llave Bre-B y amortización de cuotas en vivo. | `src/frontend/` | Cumple |
 | **Producto** | **Calidad de Código y Compilación Limpia** | Los 26 archivos `.java` compilan con `javac -encoding UTF-8 -Xlint:all` con salida `0` y sin advertencias; comentarios reducidos al mínimo indispensable. | `src/backend-java/src/` | Cumple |
-| **Producto** | **Pruebas Automatizadas Integrales** | Ejecución en vivo contra MySQL (`mi_plata_db`) con **11 / 11 pruebas pasadas** en Java y **42 / 42 pruebas pasadas** en Node.js. | `src/backend-java/src/TestRunner.java`<br>`src/frontend/test_runner.js` | Cumple |
+| **Producto** | **Pruebas Automatizadas Integrales** | Ejecución en vivo contra MySQL (`mi_plata_db`) con **13 / 13 pruebas pasadas** en Java y **42 / 42 pruebas pasadas** en Node.js. | `src/backend-java/src/TestRunner.java`<br>`src/frontend/test_runner.js` | Cumple |
 | **Producto** | **Versionamiento Limpio en GitHub** | Ramas `develop` y `main`, `.gitignore` excluyendo binarios (`bin/`, `out/`, `*.class`, `.idea/`, `*.iml`) y commits descriptivos bajo Conventional Commits. | Repositorio GitHub (`Nusamug/mi-plata-banco`) | Cumple |
 
 ---
@@ -48,6 +48,6 @@ Para considerar completada cualquier Historia de Usuario en el repositorio **Mi 
 
 1. **Código funcional y tipado limpio:** Compila sin errores ni advertencias (`javac -Xlint:all`) y mantiene comentarios mínimos.
 2. **Persistencia y atomicidad validadas:** Toda escritura relevante queda reflejada en MySQL (`mi_plata_db`) con manejo controlado de errores y rollback ante fallos.
-3. **Pruebas automatizadas en verde:** `TestRunner` (**11 / 11** en Java + MySQL) y `test_runner.js` (**42 / 42** en Frontend) ejecutados después de la última edición sin fallos.
+3. **Pruebas automatizadas en verde:** `TestRunner` (**13 / 13** en Java + MySQL) y `test_runner.js` (**42 / 42** en Frontend) ejecutados después de la última edición sin fallos.
 4. **Trazabilidad ágil:** Historia documentada en `docs/user-stories.md` (INVEST + Given-When-Then) y trazada en `docs/product-backlog.md` y el Sprint correspondiente.
 5. **Integración en GitHub:** Cambios versionados en `develop` (y sincronizados con `main`) mediante commits claros, sin subir carpetas compiladas (`bin/`, `out/`) ni configuraciones locales del IDE.

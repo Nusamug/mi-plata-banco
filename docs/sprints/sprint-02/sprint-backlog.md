@@ -39,8 +39,8 @@
 ### 3.2 Dominio POO, Lógica Transaccional y Consola CLI
 - [x] **TB-05:** Modelado de `Cuenta` (abstracta), `CuentaAhorros`, `CuentaCorriente`, `Credito` (entidad independiente) y `Transaccion`.
 - [x] **TB-06:** Refactorización de `UserService` y creación de `BankService` con atomicidad SQL (`setAutoCommit(false)`, `commit()`, `rollback()`) y fallback en memoria.
-- [x] **TB-07:** Ampliación de `Main.java` con menús modulares para Usuarios, Cuentas/Transferencias, Créditos y Transacciones, junto con limpieza general de comentarios redundantes en Java.
+- [x] **TB-07:** Portal inicial en `Main.java` con login/registro de Cliente (apertura automática de `CuentaAhorros`), panel transaccional por sesión y módulo Administrador para CRUD de usuarios y auditoría global, con limpieza general de comentarios redundantes en Java.
 
 ### 3.3 Aseguramiento de Calidad y Criterios de Evaluación
-- [x] **TQ-02:** Ampliación de `TestRunner.java` con **11 pruebas integrales** ejecutadas en vivo contra MySQL (`mi_plata_db`).
+- [x] **TQ-02:** Ampliación de `TestRunner.java` con **13 pruebas integrales** ejecutadas en vivo contra MySQL (`mi_plata_db`).
 - [x] **TD-01:** Documentación de `US-11` a `US-14`, actualización del Product Backlog y creación de `docs/criterios-evaluacion.md`.

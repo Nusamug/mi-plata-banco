@@ -31,7 +31,7 @@ Proyecto integrador de software para el **Momento 2**.
 | **Tema 7: Estructuras de Datos JS (Arreglos y Métodos)** | Uso de `.push()` al registrar movimientos, `.pop()` para deshacer el último movimiento y revertir saldo, `.shift()` para depurar el registro más antiguo, `.filter()` en el buscador en vivo y `.reduce()` en el cálculo de KPIs de patrimonio y rendimientos. | `src/frontend/js/models/Cuenta.js`<br>`src/frontend/js/cajero.js` |
 | **Tema 8: Programación Orientada a Objetos (POO)** | Clases ES6, encapsulamiento con getters/setters, herencia (`extends` y `super`) desde la clase abstracta `Cuenta` hacia `CuentaAhorros`, `CuentaCorriente` y `TarjetaCredito`, y polimorfismo en `calcularRetiro()`. | `src/frontend/js/models/Cuenta.js`<br>`CuentaAhorros.js` · `CuentaCorriente.js` · `TarjetaCredito.js` · `Cliente.js` |
 | **Temas 9, 10 y 11: DOM en JavaScript y Eventos** | Selección con `document.getElementById`, `querySelector`, `querySelectorAll`; renderizado dinámico de tarjetas, tabla de historial y voucher térmico; manejo de eventos `submit` (`e.preventDefault()`), `click`, `input` y `change`. | `src/frontend/js/cajero.js`<br>`src/frontend/js/auth.js`<br>`src/frontend/js/landing.js` |
-| **Tema 12: Evidencias del Momento 2** | **Conocimiento:** sustentación teórica de DOM, POO y arreglos.<br>**Desempeño:** flujo transaccional completo en vivo.<br>**Producto:** aplicativo responsive en 3 resoluciones + **42 pruebas** en Front-end y **11 pruebas** en Back-end Java/MySQL. | `src/frontend/test_runner.js`<br>`src/backend-java/src/TestRunner.java` |
+| **Tema 12: Evidencias del Momento 2** | **Conocimiento:** sustentación teórica de DOM, POO y arreglos.<br>**Desempeño:** flujo transaccional completo en vivo.<br>**Producto:** aplicativo responsive en 3 resoluciones + **42 pruebas** en Front-end y **13 pruebas** en Back-end Java/MySQL. | `src/frontend/test_runner.js`<br>`src/backend-java/src/TestRunner.java` |
 
 ---
 
@@ -96,6 +96,6 @@ mi-plata-banco/
 ```powershell
 cmd /c "mkdir bin 2>nul & dir /s /b src\*.java > sources.txt && javac -encoding UTF-8 -cp .;lib\mysql-connector-j-8.3.0.jar -d bin @sources.txt && del sources.txt"
 java -cp "bin;lib\mysql-connector-j-8.3.0.jar" Main
-# O para correr las 11 pruebas integrales contra MySQL:
+# O para correr las 13 pruebas integrales contra MySQL:
 java -cp "bin;lib\mysql-connector-j-8.3.0.jar" TestRunner
 ```
