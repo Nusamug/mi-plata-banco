@@ -1,5 +1,6 @@
 package services;
 
+import models.Admin;
 import models.User;
 import persistence.dbconnection.DataBaseConnection;
 import persistence.mappers.UserMapper;
@@ -14,10 +15,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final ArrayList<User> memoryFallbackUsers;
+    private final Admin defaultAdmin;
     private boolean isDbConnected;
 
     public UserService() {
         this.memoryFallbackUsers = new ArrayList<>();
+        this.defaultAdmin = new Admin(1, "Administrador", "Mi Plata", "admin@banco.com",
+                "3000000000", "Admin123*", true, "ADMIN", "Sistemas");
         Connection connection = DataBaseConnection.getInstance().getConnection();
 
         if (connection != null) {
@@ -35,6 +39,8 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
         this.memoryFallbackUsers = new ArrayList<>();
+        this.defaultAdmin = new Admin(1, "Administrador", "Mi Plata", "admin@banco.com",
+                "3000000000", "Admin123*", true, "ADMIN", "Sistemas");
         this.isDbConnected = (userRepository != null);
     }
 
@@ -48,27 +54,67 @@ public class UserService {
     }
 
     public boolean createUser(User user) {
-        if (user == null) {
+        if (user == null || user.getId() <= 0) {
             return false;
         }
 
         if (isDbConnected && userRepository != null) {
             Optional<User> existing = userRepository.selectById(user.getId());
-            if (existing.isPresent()) {
+            if (existing.isPresent() || selectUserByEmail(user.getEmail()) != null) {
                 return false;
             }
             return userRepository.save(user) != null;
         }
 
-        if (selectUserById(user.getId()) != null) {
+        if (selectUserById(user.getId()) != null || selectUserByEmail(user.getEmail()) != null) {
             return false;
         }
-        for (User u : memoryFallbackUsers) {
-            if (u.getEmail().equalsIgnoreCase(user.getEmail())) {
-                return false;
+        return memoryFallbackUsers.add(user);
+    }
+
+    public User selectUserByEmail(String email) {
+        if (email == null || email.isBlank()) {
+            return null;
+        }
+        for (User u : selectAllUsers()) {
+            if (u.getEmail().equalsIgnoreCase(email.trim())) {
+                return u;
             }
         }
-        return memoryFallbackUsers.add(user);
+        return null;
+    }
+
+    public User authenticateUser(String identifier, String password) {
+        if (identifier == null || identifier.isBlank() || password == null) {
+            return null;
+        }
+
+        String trimmed = identifier.trim();
+        User candidate = null;
+        try {
+            int id = Integer.parseInt(trimmed);
+            candidate = selectUserById(id);
+        } catch (NumberFormatException ignored) {
+            candidate = selectUserByEmail(trimmed);
+        }
+
+        if (candidate != null && candidate.isState() && candidate.getPassword().equals(password)) {
+            return candidate;
+        }
+        return null;
+    }
+
+    public Admin authenticateAdmin(String identifier, String password) {
+        if (identifier == null || password == null) {
+            return null;
+        }
+        String trimmed = identifier.trim();
+        boolean idMatch = String.valueOf(defaultAdmin.getId()).equals(trimmed)
+                || defaultAdmin.getEmail().equalsIgnoreCase(trimmed);
+        if (idMatch && defaultAdmin.isState() && defaultAdmin.getPassword().equals(password)) {
+            return defaultAdmin;
+        }
+        return null;
     }
 
     public User selectUserById(int id) {

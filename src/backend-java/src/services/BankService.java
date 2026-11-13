@@ -21,7 +21,9 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BooleanSupplier;
 
 public class BankService {
@@ -297,6 +299,29 @@ public class BankService {
         for (int i = memoryTransactions.size() - 1; i >= 0; i--) {
             Transaccion tx = memoryTransactions.get(i);
             if (accountNumber.equals(tx.getSourceAccount()) || accountNumber.equals(tx.getTargetAccount())) {
+                result.add(tx);
+            }
+        }
+        return result;
+    }
+
+    public List<Transaccion> getTransactionsByUser(int userId) {
+        Set<String> userAccounts = new HashSet<>();
+        for (Cuenta c : getAccountsByUser(userId)) {
+            userAccounts.add(c.getAccountNumber());
+        }
+
+        Set<Integer> userCredits = new HashSet<>();
+        for (Credito cr : getCreditsByUser(userId)) {
+            userCredits.add(cr.getCreditId());
+        }
+
+        List<Transaccion> result = new ArrayList<>();
+        for (Transaccion tx : getAllTransactions()) {
+            boolean matchesAccount = (tx.getSourceAccount() != null && userAccounts.contains(tx.getSourceAccount()))
+                    || (tx.getTargetAccount() != null && userAccounts.contains(tx.getTargetAccount()));
+            boolean matchesCredit = tx.getTargetCreditId() != null && userCredits.contains(tx.getTargetCreditId());
+            if (matchesAccount || matchesCredit) {
                 result.add(tx);
             }
         }
