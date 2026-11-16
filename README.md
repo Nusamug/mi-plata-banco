@@ -1,6 +1,6 @@
 # Mi Plata - Sistema de Cajero Automático y Gestión Bancaria
 
-Proyecto integrador de software para el **Momento 2**.  
+Proyecto integrador de software para **Momento 2** (Front-end Web & Metodologías Ágiles) y **Momento 3** (Back-end Java + MySQL).  
 **Institución:** CESDE  
 **Programa:** Técnico Laboral como Asistente en Desarrollo de Software  
 **Submódulos Integrados:** Front-end I (JS, POO & DOM) · Back-end (Java POO) · Metodologías Ágiles (Scrum)  

@@ -1,9 +1,9 @@
 # Historias de Usuario – Sistema Bancario "Mi Plata"
 
-**Proyecto:** Mi Plata (Banca Digital y Cajero Automático)  
+**Proyecto:** Mi Plata (Banca Digital, Cajero Automático y Back-end Java + MySQL)  
 **Institución:** CESDE  
 **Programa:** Técnico Laboral como Asistente en Desarrollo de Software  
-**Momento Evaluativo:** Momento 2  
+**Momento Evaluativo:** Momento 2 (Front-end) y Momento 3 (Back-end Java + MySQL)  
 **Docentes:** Jorge Albeiro Muriel Vélez / Ing. Jorge Eliécer Hernández S.  
 **Estudiante:** Miguel David Rojas González  
 **Estándar:** INVEST · Formato Oficial (`Como... quiero... para...`)  
@@ -16,7 +16,7 @@
 
 Cada historia de usuario documentada cumple rigurosamente con los principios **INVEST**:
 - **Independent (Independiente):** Desarrollable y verificable de manera modular.
-- **Negotiable (Negociable):** Refinada según las reglas de negocio bancarias y el plan de estudio del Momento 2.
+- **Negotiable (Negociable):** Refinada según las reglas de negocio bancarias y el plan de estudio del Momento 2 y Momento 3.
 - **Valuable (Valiosa):** Entrega valor directo al cuentahabiente o al administrador del banco.
 - **Estimable (Estimable):** Dimensionada en Story Points mediante la serie Fibonacci.
 - **Small (Pequeña):** Acotada para completarse e integrarse dentro del ciclo de desarrollo.

@@ -1,9 +1,9 @@
 # Product Backlog – Sistema Bancario "Mi Plata"
 
-**Proyecto:** Mi Plata (Banca Digital y Cajero Automático)  
+**Proyecto:** Mi Plata (Banca Digital, Cajero Automático y Back-end Java + MySQL)  
 **Institución:** CESDE  
 **Programa:** Técnico Laboral como Asistente en Desarrollo de Software  
-**Momento:** Momento 2  
+**Momento:** Momento 2 (Sprint 1) y Momento 3 (Sprint 2)  
 **Desarrollador / Equipo:** Miguel David Rojas González  
 **Docentes:** Jorge Albeiro Muriel Vélez / Ing. Jorge Eliécer Hernández S.  
 

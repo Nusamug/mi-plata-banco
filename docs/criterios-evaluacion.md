@@ -3,7 +3,7 @@
 **Proyecto:** Mi Plata (Banca Digital, Cajero Automático Web y Back-end Java + MySQL)  
 **Institución:** CESDE  
 **Programa:** Técnico Laboral como Asistente en Desarrollo de Software  
-**Momento Evaluativo:** Momento 2  
+**Momento Evaluativo:** Momento 2 (Front-end) y Momento 3 (Back-end Java + MySQL)  
 **Estudiante:** Miguel David Rojas González  
 
 ---
